@@ -7,6 +7,4 @@
 *.user
 *.suo
 /packages
-/Performance1.psess
-/Performance.psess
-/HchWebPhr_.psess
+*.psess
