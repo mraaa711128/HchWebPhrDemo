@@ -3,7 +3,7 @@
     top: 0;
     left: 0;
     background-color: black;
-    z-index: 999;
+    z-index: 1999;
     opacity: 0.5;
     filter: alpha(opacity=50);
     -moz-opacity: 0.5;
@@ -26,7 +26,7 @@
     opacity: 0.8;
     filter: alpha(opacity=80);
     -moz-opacity: 0.8;
-    z-index: 1000;
+    z-index: 2000;
     *padding-top: 29.5px;
     *height: 59px;
 }
@@ -34,8 +34,8 @@
 #pn-loading h4 {
     display: inline-block;
     margin: 0 auto;
-    padding-left: 42px;
-    background: transparent url("../img/ajax-loading.gif") no-repeat 0px 3px;
+    /*padding-left: 42px;*/
+    /*background: transparent url("../img/ajax-loading.gif") no-repeat 0px 3px;*/
     height: 36px;
     line-height: 36px;
     *display: inline;

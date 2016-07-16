@@ -142,8 +142,12 @@
                         trigger: 'hover',
                         container: 'body'
                     });
-                </text>
+            </text>
             }
+
+            $('form').submit(function () {
+                showLoading('登入中...');
+            });
         });
     </script>
 }

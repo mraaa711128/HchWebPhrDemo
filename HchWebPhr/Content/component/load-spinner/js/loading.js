@@ -9,7 +9,7 @@ function showLoading(msg) {
     var loading = $('<div id="pn-loading" class="loading" />');
     $('body').append(loading);
     loading.show();
-    loading.append('<h4>' + msg + '</h4>');
+    loading.append('<h4>' + '<i class="fa fa-spinner fa-2x fa-pulse fa-fw pull-left"></i>' + '<span>' + msg + '</span></h4>');
     //var img_top = loading[0].offsetHeight / 2 - 32 / 2;
     //$("#pn-loading img").css({ 'margin-top': img_top });
     var h4_top = loading[0].offsetHeight / 2 - $("#pn-loading h4").outerHeight() / 2;
