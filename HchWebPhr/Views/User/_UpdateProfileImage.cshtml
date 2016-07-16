@@ -1,0 +1,103 @@
+﻿@using HchWebPhr.Data.Models
+
+@model UserInfo
+
+@if (Model != null)
+{
+    var imageUrl = Model.ProfileImage;
+    if (string.IsNullOrEmpty(imageUrl) == false)
+    {
+        if (File.Exists(Server.MapPath(imageUrl)) == false)
+        {
+            imageUrl = "~/Content/img/avatars/profile.jpg";
+        }
+    }
+    else
+    {
+        imageUrl = "~/Content/img/avatars/profile.jpg";
+    }
+
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">關閉</span></button>
+                <h4 class="modal-title">更新大頭貼</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row" style="margin: 0px 5px 0px 5px;">
+                    <div class="col-xxxs-12">
+                        <img class="img-responsive" src="@Url.Content(imageUrl)" style="min-width: 150px; min-height: 150px;" id="img-cropper" />
+                    </div>
+                    <div class="col-xxxs-12">
+                        <label id="btn-file" class="btn btn-primary btn-block" for="fileUpload">
+                            <input type="file" id="fileUpload" class="sr-only" name="file" accept="image/*" />
+                            <span class="fa fa-upload"></span>
+                            選擇圖檔...
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <center>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" id="btn-save">確定</button>
+                </center>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        $(function () {
+            $("#fileUpload").change(function (e) {
+                var files = this.files;
+                var file = files[0];
+
+                if (/^image\/\w+$/.test(file.type)) {
+                    var reader = new FileReader();
+                    reader.onloadend = function (e) {
+                        var imgUrl = reader.result;
+                        if (imgUrl) {
+                            //$("#img-cropper").prop("src", imgUrl);
+                            $("#img-cropper").cropper('reset').cropper('replace', imgUrl)
+                        } else {
+                            window.alert("檔案讀取錯誤，請重新開啟瀏覽器再試一次！");
+                        }
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    window.alert("請選擇圖片檔！！");
+                }
+            });
+
+            $("#btn-save").click(function (e) {
+                var newImgUrl = $("#img-cropper").cropper('getCroppedCanvas').toDataURL();
+                var updateSuccess = false;
+                var errmsg = "";
+                showLoading("儲存中...");
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("UpdateProfileImage","User")',
+                    data: { ImageDataUrl: newImgUrl },
+                    success: function(data) {
+                        if (data) {
+                            if (data.status == 'success') {
+                                updateSuccess = true;
+                            } else {
+                                errmsg = data.code + '-' + data.message;
+                            }
+                        }
+                    },
+                    complete: function () {
+                        hideLoading();
+                        if (updateSuccess) {
+                            window.location.reload(true);
+                        } else {
+                            window.alert(errmsg);
+                        }
+                    },
+                    async: true
+                });
+            });
+        });
+    </script>
+}
+

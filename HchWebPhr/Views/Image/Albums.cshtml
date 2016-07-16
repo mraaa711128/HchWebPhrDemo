@@ -1,0 +1,181 @@
+﻿@using HchWebPhr.Models.FormModels
+@using HchWebPhr.Utilities.Helper
+@model SearchAlbumModel
+
+@{
+    Layout = "~/Views/Shared/_SideNavLayout.cshtml";
+    ViewBag.Title = "胎兒印象";
+    ViewBag.actionName = "Albums";
+}
+
+@section Styles {
+    @Styles.Render("~/Content/css/bootstrap-datetimepicker")
+    @Styles.Render("~/Content/css/load-spinner")
+}
+
+<ol class="breadcrumb">
+    @*<li>@Html.ActionLink("首頁","Index","Home")</li>*@
+    <li class="active">胎兒印象</li>
+</ol>
+<div class="row">
+    @using (Html.BeginForm("Albums", "Image", FormMethod.Post, new { @role = "form" }))
+    {
+        <div class="col-xxxs-12 col-sm-3">
+            <div class="form-group">
+                @Html.LabelFor(x => x.StartDate)
+                <div class="input-group date datetime-picker">
+                    @if (ConfigHelper.GetBoolean("USE_TAIWAN_YEAR"))
+                {
+                        @Html.TextBoxFor(x => x.TwStartDate,
+                                 new { @id = Html.IdFor(x => x.StartDate), @class = "form-control date-input" })
+                    }
+                    else
+                    {
+                        @Html.TextBoxFor(x => x.StartDate, "{0:yyyy/MM/dd}",
+                                 new { @id = Html.IdFor(x => x.StartDate), @class = "form-control date-input" })
+                    }
+                    <span class="input-group-addon">
+                        <i class="fa fa-calendar"></i>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="col-xxxs-12 col-sm-3">
+            <div class="form-group">
+                @Html.LabelFor(x => x.EndDate)
+                <div class="input-group date datetime-picker">
+                    @if (ConfigHelper.GetBoolean("USE_TAIWAN_YEAR"))
+                {
+                        @Html.TextBoxFor(x => x.TwEndDate,
+                                 new { @id = Html.IdFor(x => x.EndDate), @class = "form-control date-input" })
+                    }
+                    else
+                    {
+                        @Html.TextBoxFor(x => x.EndDate, "{0:yyyy/MM/dd}",
+                                 new { @id = Html.IdFor(x => x.EndDate), @class = "form-control date-input" })
+                    }
+                    <span class="input-group-addon">
+                        <i class="fa fa-calendar"></i>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="col-xxxs-12 col-sm-3">
+            @Html.HiddenFor(x => x.ExamCode)
+        </div>
+        <div class="col-xxxs-12 col-sm-3">
+            @Html.HiddenFor(x => x.ExamType)
+        </div>
+    }
+</div>
+<div class="row">
+    <div id="div_albumlist"></div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/Content/js/bootstrap-datetimepicker")
+    @Scripts.Render("~/Content/js/load-spinner")
+
+    <script type="text/javascript">
+        function refreshSearchResults() {
+            var startDate = $("#@Html.IdFor(x => x.StartDate)").datetimepicker('getDateValue').toISOString();
+            var endDate = $("#@Html.IdFor(x => x.EndDate)").datetimepicker('getDateValue').toISOString();
+
+            $("#div_albumlist").html("");
+            isNoResult = true;
+
+            showLoading('載入中...');
+            searchResult(startDate, endDate);
+        }
+
+        function searchResult(startDate, endDate) {
+            var searchUrl = '@(Url.Action("GetAlbums", "Image"))';
+            var div_id = "#div_albumlist";
+            var isEmpty = false;
+            $.ajax({
+                method: 'Get',
+                url: searchUrl,
+                data: { StartDate: startDate, EndDate: endDate },
+                cache: false,
+                success: function (data) {
+                    $(div_id).html(data);
+                },
+                fail: function () {
+                    $(div_id).html("<h2 class='center-block'>載入影像失敗，請聯絡系統管理員！</h2>");
+                },
+                complete: function () {
+                    checkImageAvailable();
+                    hideLoading();
+                },
+                async: true
+            });
+        }
+
+        function checkImageAvailable() {
+            $(".img-thumbnail").on("error", function (e) {
+                this.src = '@Url.Content("~/Content/img/noimage.png")';
+            });
+        }
+
+        $(function () {
+            var today = new Date();
+            var minDate = new Date('2011-01-01')
+            
+            $("#@Html.IdFor(x => x.StartDate)").datetimepicker({
+                @if (ConfigHelper.GetBoolean("USE_TAIWAN_YEAR"))
+                {
+                    <text>format: "yyy/mm/dd",</text>
+                }
+                else
+                {
+                    <text>format: "yyyy/mm/dd",</text>
+                }
+                startView: 2,
+                minView: 2,
+                startDate: minDate,
+                endDate: today,
+                todayBtn: true,
+                todayHighlight: true,
+                forceParse: true,
+                autoclose: true,
+                pickerPosition: 'bottom-left',
+                keyboardNavigation: false,
+                language: 'zh-TW'
+            }).on('changeDate', function (ev) {
+                refreshSearchResults();
+            });
+
+            $("#@Html.IdFor(x => x.EndDate)").datetimepicker({
+                @if (ConfigHelper.GetBoolean("USE_TAIWAN_YEAR"))
+                {
+                    <text>format: "yyy/mm/dd",</text>
+                }
+                else
+                {
+                    <text>format: "yyyy/mm/dd",</text>
+                }
+                startView: 2,
+                minView: 2,
+                startDate: minDate,
+                endDate: today,
+                todayBtn: true,
+                todayHighlight: true,
+                forceParse: true,
+                autoclose: true,
+                pickerPosition: 'bottom-left',
+                keyboardNavigation: false,
+                language: 'zh-TW'
+            }).on('changeDate', function (ev) {
+                refreshSearchResults();
+            });
+
+            $(".date-input").change(function () {
+                $("#@Html.IdFor(x => x.StartDate)").datetimepicker("update");
+                $("#@Html.IdFor(x => x.EndDate)").datetimepicker("update");
+                refreshSearchResults();
+            });
+
+            refreshSearchResults();
+        });
+    </script>
+}

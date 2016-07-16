@@ -1,0 +1,194 @@
+﻿@using HchWebPhr.Data.Models
+@using HchWebPhr.Utilities.Helper
+@using HchWebPhr.Utilities.Extensions
+
+@model UserInfo
+@{
+    Layout = "~/Views/Shared/_SideNavLayout.cshtml";
+    ViewBag.Title = "基本資料";
+    ViewBag.actionName = "Dashboard";
+}
+@{ 
+    //var loginUser = FormAuthHelper.GetLoginUser();
+    var avatarImgUrl = Model.ProfileImage;
+    if (string.IsNullOrEmpty(avatarImgUrl) == false)
+    {
+        if (File.Exists(Server.MapPath(avatarImgUrl)) == false)
+        {
+            avatarImgUrl = "~/Content/img/avatars/profile.jpg";
+        }
+    } else
+    {
+        avatarImgUrl = "~/Content/img/avatars/profile.jpg";
+    }
+    //if (loginUser != null)
+    //{
+    //    //avatarImgUrl = "~Content/img/avatars/" + loginUser.UserName + "/avatar.jpg";
+    //    avatarImgUrl = Model.ProfileImage;
+    //    if (File.Exists(Server.MapPath(avatarImgUrl)) == false)
+    //    {
+    //        avatarImgUrl = "~/Content/img/avatars/profile.jpg";
+    //    }
+    //}
+}
+
+@section Styles {
+    @Styles.Render("~/Content/css/cropper")
+    @Styles.Render("~/Content/css/load-spinner")
+}
+
+@*<h3>儀錶板</h3>*@
+<ol class="breadcrumb">
+    @*<li>@Html.ActionLink("首頁", "Index", "Home")</li>*@
+    <li class="active">基本資料</li>
+</ol>
+<div class="row">
+    <div class="col-xxxs-12 col-xs-6 col-lg-4">
+        @*<p id="id_userinfo" class="lead"><span class="fa fa-caret-down"></span> 個人資料</p>*@
+        <div id="id_userinfo_div" class="collapse in">
+            <div class="panel panel-hotpink">
+                <div class="panel-heading" id="id_userinfo_panelhead">
+                    <h2 class="panel-title">
+                        <a data-toggle="collapse" data-parent="id_userinfo_div" href="#id_userinfo_panel" aria-expanded="true" aria-controls="id_userinfo_panel">
+                            <span class="fa fa-lg fa-user"></span>&nbsp;@Model.Name &nbsp;的基本資料
+                        </a>
+                    </h2>
+                </div>
+                <div id="id_userinfo_panel" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="id_userinfo_panelhead">
+                    <div class="panel-body" style="color: #000;">
+                        <div class="col-xxxs-12">
+                            <a href="#" id="btn-image">
+                                <img class="img-rounded center-block"
+                                     src="@Url.Content(avatarImgUrl)"
+                                     style="width: 150px; height: 150px; margin-bottom: 15px;"
+                                     data-toggle="tooltip" title="點選更換圖示！" data-placement="bottom" />
+                            </a>
+                        </div>
+                        <div class="col-xxxs-12">
+                            <table class="table table-condensed">
+                                <tbody>
+                                    <tr>
+                                        <th>病歷號碼:</th>
+                                        <td>@Model.ChartNo</td>
+                                    </tr>
+                                    <tr>
+                                        <th>身分證號碼:</th>
+                                        <td>@Model.IdNo</td>
+                                    </tr>
+                                    <tr>
+                                        <th>性別:</th>
+                                        <td>
+                                            @switch (@Model.Sex)
+                                            {
+                                                case "M":
+                                                    Html.Raw("<span style=\"color: blue\">男</span>");
+                                                    break;
+                                                case "F":
+                                                    Html.Raw("<span style=\"color: hotpink\">女</span>");
+                                                    break;
+                                                default:
+                                                    Html.Raw("其他");
+                                                    break;
+                                            }
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>血型:</th>
+                                        <td>@Model.BloodType</td>
+                                    </tr>
+                                    <tr>
+                                        <th>出生日期:</th>
+                                        <td>
+                                            @if (ConfigHelper.GetBoolean("USE_TAIWAN_YEAR"))
+                                            {
+                                                @(Model.BirthDate.toTaiwanDate())
+                                            }
+                                            else
+                                            {
+                                                @(Model.BirthDate.ToString("yyyy/MM/dd"))
+                                            }
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>連絡電話:</th>
+                                        <td>@Model.PhoneNo</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/Content/js/cropper")
+    @Scripts.Render("~/Content/js/load-spinner")
+
+    <script type="text/javascript">
+        $(function () {
+            $("#model-notice").modal({
+                backdrop: true,
+                keyboard: true,
+                show: false
+            });
+
+            $("#btn-image").click(function () {
+                var hasModal = false;
+                showLoading("讀取中...");
+                $.ajax({
+                    type: 'GET',
+                    url: '@Url.Action("UpdateProfileImage","User")',
+                    success: function (data) {
+                        data = data.trim();
+                        $("#modal-notice").html(data);
+                        if (data != "") {
+                            var modalBodyMaxHeight = window.innerHeight - 150;
+                            $(".modal-body").css("max-height", modalBodyMaxHeight);
+                            $(".modal-body").css("overflow-y", "auto");
+
+                            hasModal = true;
+                        }
+                    },
+                    complete: function () {
+                        hideLoading();
+                        if (hasModal) {
+                            $("#modal-notice").modal('show');
+                        }
+                    },
+                    async: true
+                });
+            });
+
+            $("#modal-notice").on('shown.bs.modal', function (e) {
+                $("#img-cropper").cropper({
+                    dragMode: 'move',
+                    aspectRatio: 1,
+                    crop: function (e) {
+                        console.log(e);
+                    }
+                });
+                //$("#fileUpload").change(function (e) {
+                //    var files = this.files;
+                //    var file = files[0];
+
+                //    if (/^image\/\w+$/.test(file.type)) {
+                //        var reader = new FileReader();
+                //        reader.onloadend = function (e) {
+                //            var imgUrl = reader.result;
+                //            if (imgUrl) {
+                //                $("#img-cropper").prop("src", imgUrl);
+                //            }
+                //        };
+                //        reader.readAsDataURL(file);
+                //    }
+                //});
+
+            });
+
+
+        });
+    </script>    
+}

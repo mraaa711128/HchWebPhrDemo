@@ -1,0 +1,84 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{57408A53-5251-46D2-A078-61F122DE819C}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>HchWebPhr.Biz</RootNamespace>
+    <AssemblyName>HchWebPhr.Biz</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
+      <HintPath>..\packages\NLog.4.3.5\lib\net45\NLog.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Base\BaseBiz.cs" />
+    <Compile Include="AccountBiz.cs" />
+    <Compile Include="ImageBiz.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\HchWebApi\ShareDll\ShareDll.csproj">
+      <Project>{c8ec7e6e-392c-4808-8666-4c64ad12abfb}</Project>
+      <Name>ShareDll</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\HchWebPhr.Data\HchWebPhr.Data.csproj">
+      <Project>{cece6974-3835-47e2-893b-fd9f7d9ba177}</Project>
+      <Name>HchWebPhr.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\HchWebPhr.Models\HchWebPhr.Models.csproj">
+      <Project>{6db43f7f-b787-49a9-a3a3-66c63c302324}</Project>
+      <Name>HchWebPhr.Models</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\HchWebPhr.Service\HchWebPhr.Service.csproj">
+      <Project>{0e73667b-ece6-4cda-aad8-5892d9954cb8}</Project>
+      <Name>HchWebPhr.Service</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\HchWebPhr.Utilities\HchWebPhr.Utilities.csproj">
+      <Project>{3968bcbb-b282-48cc-b67c-7bd426ae92f2}</Project>
+      <Name>HchWebPhr.Utilities</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

@@ -1,0 +1,106 @@
+﻿@using HchWebPhr.Models.ViewModels
+@using Newtonsoft.Json
+@using HchWebPhr.Utilities.Helper
+
+@model IList<SignUpPatient>
+
+@{ 
+    Layout = "~/Views/Shared/_TopNavLayout.cshtml";
+    ViewBag.Title = "確認註冊";
+    ViewBag.TopBarOnly = true;
+}
+@section styles {
+    @Styles.Render("~/Content/css/bootstrap-table")    
+}
+<h3 class="page-header">確認註冊</h3>
+<div class="row">
+    <div class="col-xxxs-push-0 col-xxxs-12 col-xs-push-1 col-xs-10">
+        <p class="lead"><span class="fa fa-caret-down"></span> 請選取符合您的個人資訊：</p>
+        <div class="row">
+            <div class="col-xxxs-12">
+                <table id="signup_table"></table>
+            </div>
+        </div>
+        <div class="row">
+            @*<div class="col-xxs-12 col-md-4"></div>*@
+            <div class="col-xxxs-12 col-xxxs-ppush-0 col-md-8 col-md-push-2" style="padding: 0px;">
+                <div class="col-xxxs-6">
+                    @*<a href="@Url.Action("Index","Home")" id="btn_cancel" type="button" class="btn btn-default btn-block">取消</a>*@
+                    @Html.ActionLink("取消", "Index", "Home", new { @class = "btn btn-default btn-block" })
+                </div>
+                <div class="col-xxxs-6">
+                    <button id="btn_confirm" type="button" class="btn btn-primary btn-block">確認</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    @Scripts.Render("~/Content/js/bootstrap-table")
+
+    <script type="text/javascript">
+        function ConfirmSignUp() {
+            var confirmUrl = '@(Url.Action("SignUpConfirm","Account"))';
+            var selObjs = $("#signup_table").bootstrapTable('getSelections');
+            if (typeof selObjs !== 'undefined' && selObjs.length > 0) {
+                var confirmPt = selObjs[0];
+                $.ajax({
+                    url: confirmUrl,
+                    type: 'POST',
+                    data: {ConfirmPatient: confirmPt},
+                    success: function(data) {
+                        var newDoc = document.open("text/html","replace");
+                        newDoc.write(data);
+                        newDoc.close();
+                    }
+                });
+            }
+        }
+
+        $(function () {
+            $("#signup_table").bootstrapTable({
+                pagination: true,
+                pageSize: 5,
+                idField: 'IdNo',
+                uniqueId: 'IdNo',
+                columns: [{
+                    radio: true,
+                    title: '選取',
+                    align: 'left'
+                }, {
+                    field: "IdNo",
+                    title: "身分證號",
+                    align: 'left'
+                }, {
+                    field: "PatientName",
+                    title: "姓名",
+                    align: 'left'
+                }, {
+                    @if (ConfigHelper.GetBoolean("USE_TAIWAN_YEAR")) {
+                        <text>
+                        field: "TwBirthDate",
+                        </text>
+                    } else {
+                        <text>
+                        field: "JsonBirthDate",
+                        </text>
+                    }  
+                    title: "出生年月日",
+                    align: "left"
+                }, {
+                    field: "Sex",
+                    title: "性別",
+                    align: 'left'
+                }],
+                data: @Html.Raw(JsonConvert.SerializeObject(Model)),
+                mobileResponsive: true,
+                minWidth: 480
+            });
+
+            $("#btn_confirm").click(function() {
+                ConfirmSignUp();
+            });
+        });
+    </script>
+}

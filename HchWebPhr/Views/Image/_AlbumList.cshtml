@@ -1,0 +1,37 @@
+﻿@using HchWebPhr.Models.ViewModels
+@using HchWebPhr.Utilities.Helper
+@using HchWebPhr.Utilities.Extensions
+@model IList<PhotoAlbumInfo>
+
+@if (Model.Count <= 0)
+{
+    <div class="col-xxxs-12">
+        <p class="lead">找不到影像資料，請聯絡宏其婦幼醫院確認是否影像仍在製作中！</p>
+    </div>
+}
+@foreach (var PhotoAlbum in Model)
+{
+    var coverUrl = PhotoAlbum.ThumbnailImage;
+    if (string.IsNullOrEmpty(coverUrl))
+    {
+        coverUrl = "~/Content/img/noimage.png";
+    }
+    <div class="col-xxxs-12 col-xxs-6 col-sm-4 col-md-3 col-lg-2">
+        <a href="@Url.Action("Images","Image",new { ApplyNo = PhotoAlbum.ApplyNo })">
+            <img class="img-thumbnail img-responsive center-block" src="@Url.Content(coverUrl)" />
+            @if (ConfigHelper.GetBoolean("USE_TAIWAN_YEAR"))
+            {
+                @*<h4 style="text-align: center;">@PhotoAlbum.ExamDate.toTaiwanDate()</h4>
+                <h4 style="text-align: center;">@PhotoAlbum.ExamTypeDesc</h4>*@
+                <h4 class="center-block" style="text-align: center; min-height: 60px;">@PhotoAlbum.ExamDate.toTaiwanDate() <br /> @PhotoAlbum.ExamTypeDesc</h4>
+
+            }
+            else
+            {
+                @*<h4 style="text-align: center;">@PhotoAlbum.ExamDate.ToString("yyyy/MM/dd")</h4>
+                <h4 style="text-align: center;">@PhotoAlbum.ExamTypeDesc</h4>*@
+                <h4 class="center-block" style="text-align: center; min-height: 60px; max-width: 200px;">@PhotoAlbum.ExamDate.ToString("yyyy/MM/dd") <br /> @PhotoAlbum.ExamTypeDesc</h4>
+            }
+        </a>
+    </div>
+}

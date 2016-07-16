@@ -1,0 +1,30 @@
+﻿@using HchWebPhr.Models.ViewModels
+
+@model ErrorContext
+
+<h3 class="page-header">失敗</h3>
+<div class="row">
+    <div class="col-xxxs-push-0 col-xxxs-12 col-xs-push-1 col-xs-10">
+        <p class="lead"><span class="fa fa-caret-down"></span> 詳細說明：</p>
+        <div class="row">
+            <div class="col-xxxs-12">
+                <div class="alert alert-danger" role="alert">
+                    <p class="lead"><strong>錯誤代碼:</strong> @Model.ErrorCode</p>
+                    <p class="lead"><strong>錯誤說明:</strong> @Model.ErrorMessage</p>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            @*<div class="col-xxs-12 col-md-4"></div>*@
+            <div class="col-xxxs-12 col-xxxs-push-0 col-md-8 col-md-push-2" style="padding: 0px;">
+                @*<div class="col-xxs-6">
+                        <button id="clear_check" type="button" class="btn btn-default btn-block">取消勾選</button>
+                    </div>*@
+                <div class="col-xxxs-6 col-xxxs-push-3">
+                    @Html.ActionLink("回到首頁", "Index", "Home", null, new { @class = "btn btn-primary btn-block" })
+                    @*<button id="go_home" type="button" class="btn btn-primary btn-block">回到首頁</button>*@
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

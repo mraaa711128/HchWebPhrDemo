@@ -1,0 +1,25 @@
+{
+  "name": "HchWebPhr",
+  "version": "1.0.0",
+  "description": "Hch Personal Health Records (PHR) WebSite",
+  "authors": [
+    "Stanley"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "2.2.4",
+    "bootstrap": "~3.3.6",
+    "bootstrap-table": "~1.10.1",
+    "respond": "~1.4.2",
+    "photoswipe": "4.1.1",
+    "caman": "4.1.2",
+    "cropper": "2.3.0"
+  }
+}

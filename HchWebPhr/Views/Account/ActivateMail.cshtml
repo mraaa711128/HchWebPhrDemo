@@ -1,0 +1,57 @@
+﻿@using HchWebPhr.Models.ViewModels
+
+@model SignUpMailContext
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title></title>
+    <style type="text/css">
+        @ViewBag.BootstrapCss
+    </style>
+</head>
+<body>
+    <div class="container body-content">
+
+        <h3 class="page-header">親愛的使用者 @Model.PatientName 您好:</h3>
+
+        <div class="row">
+            <div class="col-xxxs-push-0 col-xxxs-12 col-xs-push-1 col-xs-10">
+                <p class="lead"> 您最近申請註冊成為 宏其婦幼醫院個人化電子病歷系統 的使用者。請確認下方基本資料是否為您的本人的基本資料:</p>
+                <p>身分證號: @Model.IdNo</p>
+                <p>姓名: @Model.PatientName</p>
+                <p>電子郵件: @Model.EMail</p>
+                <p>生日: @Model.BirthDate.ToString("yyyy/MM/dd")</p>
+                <p class="lead"> 如果您並未申請過，請不必理會本封電子郵件。如果您連續收到類似的電子郵件，請聯絡宏其婦幼醫院資訊部門，謝謝！</p>
+                <div class="row">
+                    @*<div class="col-xxs-12 col-md-4"></div>*@
+                    <div class="col-xxxs-12 col-xxxs-push-0 col-md-8 col-md-push-2" style="padding: 0px;">
+                        @*<div class="col-xxs-6">
+                                <button id="clear_check" type="button" class="btn btn-default btn-block">取消勾選</button>
+                            </div>*@
+                        <div class="col-xxxs-6 col-xxxs-push-3">
+                            @{
+                                var activeUrl = "";
+                                if (ViewBag.IsDebug) {
+                                    activeUrl = "http://localhost:60919/Account/Activate?Token=" + Model.ActiveToken;
+                                }
+                                else
+                                {
+                                    activeUrl = "http://web.hch.org.tw/Account/Activate?Token=" + Model.ActiveToken;
+                                }
+                            }
+                            <a class="btn btn-primary btn-block" href="@activeUrl">我確認上述基本資料是我本人</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <hr />
+        <footer>
+            <p>&copy; @DateTime.Now.Year - 宏其婦幼醫院個人化電子病歷</p>
+        </footer>
+    </div>
+</body>
+</html>
