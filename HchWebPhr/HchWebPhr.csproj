@@ -77,8 +77,8 @@
       <HintPath>..\packages\NLog.Web.4.2.1\lib\net35\NLog.Web.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="RazorEngine, Version=3.8.2.0, Culture=neutral, PublicKeyToken=9ee697374c7e744a, processorArchitecture=MSIL">
-      <HintPath>..\packages\RazorEngine.3.8.2\lib\net45\RazorEngine.dll</HintPath>
+    <Reference Include="RazorEngine, Version=3.9.0.0, Culture=neutral, PublicKeyToken=9ee697374c7e744a, processorArchitecture=MSIL">
+      <HintPath>..\packages\RazorEngine.3.9.0\lib\net45\RazorEngine.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -940,8 +940,6 @@
     <Content Include="Views\Shared\Success.cshtml" />
     <Content Include="Views\Account\ActivateMail.cshtml" />
     <Content Include="Views\Account\ForgetPasswordMail.cshtml" />
-    <Content Include="Views\Account\ActivateMail2.cshtml" />
-    <Content Include="Views\Account\ForgetPasswordMail2.cshtml" />
     <Content Include="Views\Account\Activate.cshtml" />
     <Content Include="Views\User\Dashboard.cshtml" />
     <Content Include="Views\User\_UpdateProfileImage.cshtml" />
@@ -949,6 +947,8 @@
     <Content Include="Views\Image\_AlbumList.cshtml" />
     <None Include="Properties\PublishProfiles\HchWebPhrWebDeploy.pubxml" />
     <Content Include="Views\Image\Images.cshtml" />
+    <Content Include="Views\Account\ForgetUserNameMail.cshtml" />
+    <Content Include="Views\Account\ForgetUserName.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\HchWebPhr.Biz\HchWebPhr.Biz.csproj">

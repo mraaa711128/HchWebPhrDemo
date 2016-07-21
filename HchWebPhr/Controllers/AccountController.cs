@@ -1,6 +1,7 @@
 ﻿using HchWebPhr.Biz;
 using HchWebPhr.CaptchaLib;
 using HchWebPhr.Controllers.Base;
+using HchWebPhr.Data.Models;
 using HchWebPhr.Data.Repositories;
 using HchWebPhr.Models.FormModels;
 using HchWebPhr.Models.ViewModels;
@@ -15,6 +16,7 @@ using System.Drawing;
 using System.Net.Mail;
 using System.Web.Mvc;
 using System.Web.Security;
+using UtilitiesLib.Validators;
 
 namespace HchWebPhr.Controllers
 {
@@ -187,7 +189,7 @@ namespace HchWebPhr.Controllers
             };
             try
             {
-                var mailTemp = System.IO.File.ReadAllText(Server.MapPath("~/Views/Account/ActivateMail2.cshtml"));
+                var mailTemp = System.IO.File.ReadAllText(Server.MapPath("~/Views/Account/ActivateMail.cshtml"));
                 DynamicViewBag vbag = new DynamicViewBag(new Dictionary<string, object> {
                     { "ActiveBaseUrl", Url.Action("Activate", "Account", null, Request.Url.Scheme) },
                 });
@@ -379,7 +381,7 @@ namespace HchWebPhr.Controllers
             };
             try
             {
-                var mailTemp = System.IO.File.ReadAllText(Server.MapPath("~/Views/Account/ForgetPasswordMail2.cshtml"));
+                var mailTemp = System.IO.File.ReadAllText(Server.MapPath("~/Views/Account/ForgetPasswordMail.cshtml"));
                 DynamicViewBag vbag = new DynamicViewBag(new Dictionary<string, object> {
                     { "ResetPasswordBaseUrl", Url.Action("ResetPassword", "Account", null, Request.Url.Scheme) },
                 });
@@ -536,6 +538,100 @@ namespace HchWebPhr.Controllers
             return RedirectToAction("Logoff", "Account");
         }
 
+        [HttpGet]
+        [AllowAnonymous]
+        public ActionResult ForgetUserName()
+        {
+            var model = new ForgetUserNameModel();
+            return View(model);
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        public ActionResult ForgetUserName(ForgetUserNameModel FgtUserModel)
+        {
+            if (ModelState.IsValid == false) { return View(FgtUserModel); }
+            if (TaiwanIDValidator.validTaiwanId(FgtUserModel.IdNo) == false)
+            {
+                ModelState.AddModelError("IdNo", "身分證號不符合規則！");
+                return View(FgtUserModel);
+            }
+            var acc = new AccountBiz();
+            var user = acc.GetUser(x => x.Email.Equals(FgtUserModel.EMail) && x.UserInfo.BirthDate.Equals(FgtUserModel.BirthDate) && x.UserInfo.IdNo.Equals(FgtUserModel.IdNo));
+            if (user == null)
+            {
+                ViewBag.ErrorCode = "404";
+                ViewBag.ErrorMessage = "找不到符合的帳號資料！";
+                return View(FgtUserModel);
+            }
+            if (this.SendForgetUserNameMail(user) == false)
+            {
+                return View("Error", new ErrorContext
+                {
+                    ErrorCode = "900",
+                    ErrorMessage = "忘記帳號確認信寄送失敗，請聯絡系統管理員！"
+                });
+            }
+            return View("Success", new SuccessContext
+            {
+                SuccessCode = "200",
+                SuccessDescription = "忘記帳號確認信已寄至您的電子郵件信箱，請依照電子郵件完成後續步驟!"
+            });
+        }
+
+        private bool SendForgetUserNameMail(User FgtUser)
+        {
+            var mailbody = new ForgetUserNameMailContext
+            {
+                UserName = FgtUser.UserName,
+                PatientName = FgtUser.UserInfo.Name,
+                BirthDate = FgtUser.UserInfo.BirthDate,
+                IdNo = FgtUser.UserInfo.IdNo
+            };
+            try
+            {
+                var mailTemp = System.IO.File.ReadAllText(Server.MapPath("~/Views/Account/ForgetUserNameMail.cshtml"));
+                //DynamicViewBag vbag = new DynamicViewBag(new Dictionary<string, object> {
+                //    { "ActiveBaseUrl", Url.Action("Activate", "Account", null, Request.Url.Scheme) },
+                //});
+                var htmlMailBody = Razor.Parse<ForgetUserNameMailContext>(mailTemp, mailbody);
+                SmtpClient mailClient = new SmtpClient();
+                MailMessage mailmsg = new MailMessage
+                {
+                    Subject = "宏其婦幼醫院個人化電子病歷忘記帳號通知",
+                    Body = htmlMailBody,
+                    IsBodyHtml = true,
+                };
+                var BetaTest = ConfigHelper.GetBoolean("BETA_TEST");
+                if (BetaTest)
+                {
+                    var DebugMailList = ConfigHelper.Get("BETA_TEST_EMAIL_SENDTO_LIST");
+                    if (string.IsNullOrEmpty(DebugMailList) == false)
+                    {
+                        var DebugSendTos = DebugMailList.Split(';');
+                        foreach (var debugSendTo in DebugSendTos)
+                        {
+                            mailmsg.To.Add(debugSendTo);
+                        }
+                    }
+                    else
+                    {
+                        mailmsg.To.Add("93013@hch.org.tw");
+                        mailmsg.To.Add("mraaa711128@gmail.com");
+                    }
+                }
+                else
+                {
+                    mailmsg.To.Add(FgtUser.Email);
+                }
+                mailClient.Send(mailmsg);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
         //[HttpGet]
         //public ActionResult UpdateProfile()
         //{
@@ -548,7 +644,7 @@ namespace HchWebPhr.Controllers
         //    //UpdateProfileModel
         //}
 
-#region Private Function
+        #region Private Function
         private ActionResult RedirectToLocal(string returnUrl)
         {
             if (Url.IsLocalUrl(returnUrl))

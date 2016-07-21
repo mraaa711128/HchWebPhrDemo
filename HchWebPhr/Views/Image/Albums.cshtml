@@ -78,14 +78,16 @@
 
     <script type="text/javascript">
         function refreshSearchResults() {
-            var startDate = $("#@Html.IdFor(x => x.StartDate)").datetimepicker('getDateValue').toISOString();
-            var endDate = $("#@Html.IdFor(x => x.EndDate)").datetimepicker('getDateValue').toISOString();
+            var startDate = $("#@Html.IdFor(x => x.StartDate)").datetimepicker('getDate');
+            var endDate = $("#@Html.IdFor(x => x.EndDate)").datetimepicker('getDate');
+            var strStartDate = startDate.getFullYear() + '/' + (startDate.getMonth() + 1) + '/' + startDate.getDate();
+            var strEndDate = endDate.getFullYear() + '/' + (endDate.getMonth() + 1) + '/' + endDate.getDate();
 
             $("#div_albumlist").html("");
             isNoResult = true;
 
             showLoading('載入中...');
-            searchResult(startDate, endDate);
+            searchResult(strStartDate, strEndDate);
         }
 
         function searchResult(startDate, endDate) {

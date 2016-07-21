@@ -5,8 +5,8 @@
  */
 
 /*!
- * Generated using the Bootstrap Customizer (http://getbootstrap.com/customize/?id=0a2f0258fcd99c59aa2a534a87855f40)
- * Config saved to config.json and https://gist.github.com/0a2f0258fcd99c59aa2a534a87855f40
+ * Generated using the Bootstrap Customizer (http://getbootstrap.com/customize/?id=e51dfb4720d82cc6882bbd6185a4ac98)
+ * Config saved to config.json and https://gist.github.com/e51dfb4720d82cc6882bbd6185a4ac98
  */
 /*!
  * Bootstrap v3.3.6 (http://getbootstrap.com)
@@ -1091,7 +1091,7 @@ body {
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 14px;
   line-height: 1.42857143;
-  color: #ff99cc;
+  color: #333333;
   background-color: #ffffff;
 }
 input,
@@ -2552,7 +2552,7 @@ output {
   padding-top: 7px;
   font-size: 14px;
   line-height: 1.42857143;
-  color: #ffb3d9;
+  color: #555555;
 }
 .form-control {
   display: block;
@@ -2561,7 +2561,7 @@ output {
   padding: 6px 12px;
   font-size: 14px;
   line-height: 1.42857143;
-  color: #ffb3d9;
+  color: #555555;
   background-color: #ffffff;
   background-image: none;
   border: 1px solid #cccccc;
@@ -2579,14 +2579,14 @@ output {
   box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(255, 189, 222, 0.6);
 }
 .form-control::-moz-placeholder {
-  color: #ffcce6;
+  color: #777777;
   opacity: 1;
 }
 .form-control:-ms-input-placeholder {
-  color: #ffcce6;
+  color: #777777;
 }
 .form-control::-webkit-input-placeholder {
-  color: #ffcce6;
+  color: #777777;
 }
 .form-control::-ms-expand {
   border: 0;
@@ -2918,7 +2918,7 @@ select[multiple].input-lg {
   display: block;
   margin-top: 5px;
   margin-bottom: 10px;
-  color: #ffffff;
+  color: #737373;
 }
 @media (min-width: 768px) {
   .form-inline .form-group {
@@ -3072,7 +3072,7 @@ fieldset[disabled] a.btn {
 }
 .btn-default:focus,
 .btn-default.focus {
-  color: #ff80c0;
+  color: #ffffff;
   background-color: #ffcce6;
   border-color: #ff4ca6;
 }
@@ -3084,7 +3084,7 @@ fieldset[disabled] a.btn {
 .btn-default:active,
 .btn-default.active,
 .open > .dropdown-toggle.btn-default {
-  color: #ff80c0;
+  color: #ffffff;
   background-color: #ffcce6;
   border-color: #ff8fc7;
 }
@@ -3097,8 +3097,8 @@ fieldset[disabled] a.btn {
 .btn-default:active.focus,
 .btn-default.active.focus,
 .open > .dropdown-toggle.btn-default.focus {
-  color: #ff80c0;
-  background-color: #d4d4d4;
+  color: #ffffff;
+  background-color: #ff99cc;
   border-color: #ff4ca6;
 }
 .btn-default:active,
@@ -3909,7 +3909,7 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
   font-size: 14px;
   font-weight: normal;
   line-height: 1;
-  color: #ffb3d9;
+  color: #555555;
   text-align: center;
   background-color: #ffe5f2;
   border: 1px solid #cccccc;
@@ -5031,7 +5031,7 @@ a.thumbnail.active {
 }
 .thumbnail .caption {
   padding: 9px;
-  color: #ff99cc;
+  color: #333333;
 }
 .alert {
   padding: 15px;

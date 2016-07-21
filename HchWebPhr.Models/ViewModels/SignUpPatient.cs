@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace HchWebPhr.Models.ViewModels
 {
+    [Serializable]
     public class SignUpPatient
     {
         public string IdNo { get; set; }

@@ -1,4 +1,5 @@
-﻿/* =========================================================
+﻿/// <reference path="bootstrap-datetimepicker.js" />
+/* =========================================================
  * bootstrap-datetimepicker.js
  * =========================================================
  * Copyright 2012 Stefan Petre
@@ -121,6 +122,23 @@
     this.clickedOutside = function (e) {
         // Clicked outside the datetimepicker, hide it
         if ($(e.target).closest('.datetimepicker').length === 0) {
+            if (that.isVisible) {
+                if (that.getDate() != that.oldDate) {
+                    var element;
+                    if (that.isInput) {
+                        element = that.element;
+                    } else if (that.component) {
+                        element = that.element.find('input');
+                    }
+                    if (element) {
+                        element.change();
+                    }
+                    that.element.trigger({
+                        type: 'changeDate',
+                        date: that.getDate()
+                    });
+                }
+            }
             that.hide();
         }
     }
@@ -281,7 +299,7 @@
         this._events = [
           [this.element, {
             focus: $.proxy(this.show, this),
-            //focusout: $.proxy(this.hide, this),
+            //focusout: $.proxy(this.update, this),
             keyup:   $.proxy(this.update, this),
             keydown: $.proxy(this.keydown, this)
           }]
@@ -292,7 +310,7 @@
           // For components that are not readonly, allow keyboard nav
           [this.element.find('input'), {
             focus: $.proxy(this.show, this),
-            //focusout: $.proxy(this.hide, this),
+            //focusout: $.proxy(this.update, this),
             keyup:   $.proxy(this.update, this),
             keydown: $.proxy(this.keydown, this)
           }],
@@ -346,6 +364,7 @@
         e.preventDefault();
       }
       this.isVisible = true;
+      this.oldDate = this.getDate();
       this.element.trigger({
         type: 'show',
         date: this.date
@@ -617,16 +636,17 @@
           date = date.replace(/^\s+|\s+$/g,'');
         }
       }
-
+      //console.log(date);
       if (!date) {
         date = new Date();
         fromArgs = false;
+        //console.log("not date");
       }
-
+      //console.log(fromArgs);
       this.date = DPGlobal.parseDate(date, this.format, this.language, this.formatType);
-
+      //console.log(this.date);
       if (fromArgs) this.setValue();
-
+      //this.setValue();
       if (this.date < this.startDate) {
         this.viewDate = new Date(this.startDate);
       } else if (this.date > this.endDate) {
@@ -1622,7 +1642,7 @@
         return UTCDate(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), date.getUTCHours(), date.getUTCMinutes(), date.getUTCSeconds(), 0);
       }
       var parts = date && date.toString().match(this.nonpunctuation) || [],
-        date = new Date(0, 0, 0, 0, 0, 0, 0),
+        date = new Date(0, 0, 1, 0, 0, 0, 0),
         parsed = {},
         setters_order = ['hh', 'h', 'ii', 'i', 'ss', 's', 'yyyy', 'yyy', 'yy', 'M', 'MM', 'm', 'mm', 'D', 'DD', 'd', 'dd', 'H', 'HH', 'p', 'P'],
         setters_map = {
@@ -1663,7 +1683,7 @@
             v -= 1;
             while (v < 0) v += 12;
             v %= 12;
-            d.setUTCMonth(v);
+            d.setUTCMonth(v, 1);
             while (d.getUTCMonth() != v)
               if (isNaN(d.getUTCMonth()))
                 return d;
