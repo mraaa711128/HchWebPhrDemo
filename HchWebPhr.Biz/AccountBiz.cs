@@ -110,7 +110,8 @@ namespace HchWebPhr.Biz
             var exist_user = usr.Get(x => x.UserInfo.IdNo.Equals(patientUser.IdNo) && x.UserInfo.BirthDate == patientUser.BirthDate);
             if (exist_user != null)
             {
-                if (exist_user.IsActive == false) { 
+                if (exist_user.IsActive == false) {
+                    exist_user.Email = patientUser.EMail;
                     exist_user.ActiveToken = ActivateToken;
                     exist_user.ActivateDateTime = DateTime.Now;
                     exist_user.LastLoginTime = DateTime.Now;
