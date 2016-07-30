@@ -26,7 +26,7 @@ namespace HchWebPhr.Utilities.Helper
             string encryptTicket = FormsAuthentication.Encrypt(ticket);
             var cookie = new HttpCookie(FormsAuthentication.FormsCookieName, encryptTicket);
             cookie.HttpOnly = true;
-
+            
             var formCookie = HttpContext.Current.Response.Cookies.Get(FormsAuthentication.FormsCookieName);
             if (formCookie == null)
             {

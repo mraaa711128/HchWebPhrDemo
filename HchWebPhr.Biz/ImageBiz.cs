@@ -22,7 +22,7 @@ namespace HchWebPhr.Biz
             IDictionary<string, PhotoAlbumInfo> DictAlbums = CacheHelper.GetCache("ALBUMS_" + ChartNo) as IDictionary<string, PhotoAlbumInfo>;
 #endif
             if (DictAlbums == null) { DictAlbums = new Dictionary<string, PhotoAlbumInfo>(); }
-            Albums = null;
+            Albums = new List<PhotoAlbumInfo>();
             HchService svc = new HchService();
             var albumList = svc.GetAlbumListByChartNoAndDateRange(ChartNo, StartDate, EndDate);
             if (albumList != null && albumList.Count > 0)
@@ -68,10 +68,12 @@ namespace HchWebPhr.Biz
                             }
                         }
                     }
+                    Albums.Add(newAlbum);
                     DictAlbums[album.ApplyNo] = newAlbum;
                 }
                 if (updDictionary) { CacheHelper.SetCache("ALBUMS_" + ChartNo, DictAlbums); }
-                Albums = DictAlbums.Values.OrderByDescending(x => x.ExamDate).ToList();
+                //Albums = DictAlbums.Values.OrderByDescending(x => x.ExamDate).ToList();
+                Albums = Albums.OrderByDescending(x => x.ExamDate).ToList();
                 return true;
             }
             else

@@ -1,0 +1,75 @@
+﻿@using HchWebPhr.Models.FormModels
+@using Newtonsoft.Json
+
+@model IList<FeatureModel>
+
+@{ 
+    Layout = "~/Views/Shared/_AuthSideNavLayout.cshtml";
+    ViewBag.Title = "功能管理";
+    ViewBag.actionName = "Features";
+}
+
+<h3 class="page-header">功能管理</h3>
+<div class="row">
+    <div class="col-xxxs-push-0 col-xxxs-12 col-xs-push-1 col-xs-10">
+        <p class="lead"><span class="fa fa-caret-down"></span> 清單：</p>
+        <div class="row">
+            <div class="col-xxxs-12">
+                <table id="features_table"></table>
+            </div>
+        </div>
+        <div class="row">
+            @*<div class="col-xxs-12 col-md-4"></div>*@
+            <div class="col-xxxs-12 col-xxxs-push-0 col-md-10 col-md-push-1" style="padding: 0px;">
+                <div class="col-xxxs-6">
+                    @Html.ActionLink("新增公告", "Feature", "Auth", null, new { @class = "btn btn-default btn-block" })
+                </div>
+                <div class="col-xxxs-6">
+                    @Html.ActionLink("回到首頁", "", "", null, new { @class = "btn btn-primary btn-block" })
+                    @*<button id="go_home" type="button" class="btn btn-primary btn-block">回到首頁</button>*@
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script type="text/javascript">
+        $(function () {
+            $("#features_table").bootstrapTable({
+                pagination: true,
+                pageSize: 5,
+                checkboxHeader: false,
+                columns: [{
+                    field: "FeatureId",
+                    title: "功能代碼",
+                    align: 'left',
+                    visible: false
+                },{
+                    field: "FeatureName",
+                    title: "功能名稱",
+                    align: 'left'
+                },{
+                    field: "Remark",
+                    title: "功能備註",
+                    align: 'left',
+                    formatter: function(value,row,index) {
+                        return htmlDecode(value);
+                    }
+                },{
+                    //field: "EMail",
+                    title: "執行",
+                    align: 'left',
+                    formatter: function(value,row,index) {
+                        return '<div class="row">' +
+                               '<div class="col-xxxs-6"><a href="@Url.Action("Feature","Auth")?FeatureId=' + row.FeatureId + '" class="btn btn-default btn-block">編輯 <span class="fa fa-pencil"></span></a></div>' +
+                               '<div class="col-xxxs-6"><a href="@Url.Action("DeleteFeature","Auth")?DoctorNo=' + row.DoctorNo + '" class="btn btn-default btn-block">刪除 <span class="fa fa-trash"></span></a></div>' +
+                               '</div>';
+                    }
+                }],
+                data: @Html.Raw(JsonConvert.SerializeObject(Model)),
+                mobileResponsive: true,
+                minWidth: 480
+            });
+        });
+    </script>
+}

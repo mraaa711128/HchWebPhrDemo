@@ -1,0 +1,66 @@
+﻿@{
+    Layout = "~/Views/Shared/_BaseLayout.cshtml";
+    var actionName = ViewBag.actionName;
+    var routeObject = ViewBag.routeObject;
+}
+
+@section Styles {
+    @RenderSection("Styles", false)
+}
+
+@* Side Bar Goes Here *@
+<div class="wrapper">
+    <div class="sidebar-wrapper sidebar-fixed-top">
+        <ul class="sidebar-nav">
+            @*<li class="@(string.Equals(actionName,"Dashboard")?"active":"")">
+                <a href="@Url.Action("Dashboard","Auth")">
+                    <span class="fa-stack fa-lg pull-left"><i class="fa fa-dashboard fa-stack-1x"></i></span> DashBoard
+                </a>
+            </li>
+            <li class="@(string.Equals(actionName,"Users")?"active":"")">
+                <a href="@Url.Action("Users","Auth")" class="collapsed" data-toggle="collapse" data-target=".sidebar-subitems">
+                    <span class="fa-stack fa-lg pull-left"><i class="fa fa-image fa-stack-1x"></i></span> 使用者
+                </a>
+            </li>*@
+            <li class="@(string.Equals(actionName,"Features")?"active":"")">
+                <a href="@Url.Action("Features","Auth")" class="collapsed" data-toggle="collapse" data-target=".sidebar-subitems">
+                    <span class="fa-stack fa-lg pull-left"><i class="fa fa-flask fa-stack-1x"></i></span> 功能表
+                </a>
+            </li>
+            @*<li>
+                <a href="#" class="collapsed" data-toggle="collapse" data-target=".sidebar-subitems">
+                    <span class="fa-stack fa-lg pull-left"><i class="fa fa-medkit fa-stack-1x"></i></span> 用藥記錄(建構中)
+                </a>
+            </li>
+            <li>
+                <a href="#" class="collapsed" data-toggle="collapse" data-target=".sidebar-subitems">
+                    <span class="fa-stack fa-lg pull-left"><i class="fa fa-heartbeat fa-stack-1x"></i></span> 產檢紀錄(建構中)
+                </a>
+            </li>
+            <li>
+                <a href="#" class="collapsed" data-toggle="collapse" data-target=".sidebar-subitems">
+                    <span class="fa-stack fa-lg pull-left"><i class="fa fa-stethoscope fa-stack-1x"></i></span> 寶寶疫苗紀錄(建構中)
+                </a>
+            </li>*@
+            @*<ul class="sidebar-subitems collapse">
+                    <li><a href="#"><span class="fa-stack fa-lg pull-left"><i class="fa fa-caret-right fa-stack-1x"></i></span> Category I</a></li>
+                    <li><a href="#"><span class="fa-stack fa-lg pull-left"><i class="fa fa-caret-right fa-stack-1x"></i></span> Category II</a></li>
+                </ul>*@
+        </ul>
+    </div>
+    <div class="page-content-wrapper">
+        @*<div class="container body-content">*@
+        @*<div class="row">*@
+        @RenderBody()
+        @*</div>*@
+        <hr />
+        <footer>
+            <p>&copy; @DateTime.Now.Year</p>
+        </footer>
+        @*</div>*@
+    </div>
+</div>
+
+@section Scripts {
+    @RenderSection("Scripts", false)
+}

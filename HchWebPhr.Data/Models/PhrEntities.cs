@@ -23,6 +23,8 @@
         // public virtual DbSet<MyEntity> MyEntities { get; set; }
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<UserInfo> UserInfos { get; set; }
+        public virtual DbSet<Feature> Features { get; set; }
+        public virtual DbSet<AccountLog> AccountLogs { get; set; }
     }
 
     //public class MyEntity

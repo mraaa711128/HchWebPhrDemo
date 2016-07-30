@@ -45,7 +45,7 @@
     <div class="col-xxxs-12 col-xs-6 col-lg-4">
         @*<p id="id_userinfo" class="lead"><span class="fa fa-caret-down"></span> 個人資料</p>*@
         <div id="id_userinfo_div" class="collapse in">
-            <div class="panel panel-hotpink">
+            <div class="panel panel-hotpink" style="margin-bottom: 0px;">
                 <div class="panel-heading" id="id_userinfo_panelhead">
                     <h2 class="panel-title">
                         <a data-toggle="collapse" data-parent="id_userinfo_div" href="#id_userinfo_panel" aria-expanded="true" aria-controls="id_userinfo_panel">
@@ -53,7 +53,7 @@
                         </a>
                     </h2>
                 </div>
-                <div id="id_userinfo_panel" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="id_userinfo_panelhead">
+                <div id="id_userinfo_panel" class="panel-collapse collapse" role="tabpanel" aria-labelledby="id_userinfo_panelhead">
                     <div class="panel-body" style="color: #000;">
                         <div class="col-xxxs-12">
                             <a href="#" id="btn-image">
@@ -80,21 +80,21 @@
                                             @switch (@Model.Sex)
                                             {
                                                 case "M":
-                                                    Html.Raw("<span style=\"color: blue\">男</span>");
+                                                    @Html.Raw("<span style=\"color: blue\">男</span>");
                                                     break;
                                                 case "F":
-                                                    Html.Raw("<span style=\"color: hotpink\">女</span>");
+                                                    @Html.Raw("<span style=\"color: hotpink\">女</span>");
                                                     break;
                                                 default:
-                                                    Html.Raw("其他");
+                                                    @Html.Raw("其他");
                                                     break;
                                             }
                                         </td>
                                     </tr>
-                                    <tr>
+                                    @*<tr>
                                         <th>血型:</th>
                                         <td>@Model.BloodType</td>
-                                    </tr>
+                                    </tr>*@
                                     <tr>
                                         <th>出生日期:</th>
                                         <td>
@@ -120,12 +120,49 @@
             </div>
         </div>
     </div>
+    <div class="col-xxxs-12 col-xs-6 col-lg-8">
+    </div>
+</div>
+<div class="row">
+    <div class="col-xxxs-12">
+        <div class="row">
+            <div class="col-xxxs-6 col-xs-3 col-lg-2 div-feature">
+                <button class="btn btn-default btn-block" onclick="redirectTo('@Url.Action("Albums","Image")');">
+                    <img src="~/Content/img/features/Albums.jpg" class="img-responsive" />
+                </button>
+            </div>
+            <div class="col-xxxs-6 col-xs-3 col-lg-2 div-feature">
+                <button class="btn btn-default btn-block" onclick="redirectTo('@Url.Action("","")');" disabled>
+                    <img src="~/Content/img/features/Labtories.jpg" class="img-responsive" />
+                </button>
+            </div>
+            <div class="col-xxxs-6 col-xs-3 col-lg-2 div-feature">
+                <button class="btn btn-default btn-block" onclick="redirectTo('@Url.Action("","")');" disabled>
+                    <img src="~/Content/img/features/Medicine.jpg" class="img-responsive" />
+                </button>
+            </div>
+            <div class="col-xxxs-6 col-xs-3 col-lg-2 div-feature">
+                <button class="btn btn-default btn-block" onclick="redirectTo('@Url.Action("","")');" disabled>
+                    <img src="~/Content/img/features/Diagnosis.jpg" class="img-responsive" />
+                </button>
+            </div>
+            <div class="col-xxxs-6 col-xs-3 col-lg-2 div-feature">
+                <button class="btn btn-default btn-block" onclick="redirectTo('@Url.Action("","")');" disabled>
+                    <img src="~/Content/img/features/Shots.jpg" class="img-responsive" />
+                </button>
+            </div>
+        </div>
+    </div>
 </div>
 
 @section Scripts {
     @Scripts.Render("~/Content/js/cropper")
 
     <script type="text/javascript">
+        function redirectTo(url) {
+            window.location.href = url;
+        }
+
         $(function () {
             $("#model-notice").modal({
                 backdrop: true,
@@ -185,8 +222,12 @@
                 //});
 
             });
-
-
+                        
+            if (window.innerWidth >= 768) {
+                if ($("#id_userinfo_panel").hasClass("in") == false) {
+                    $("#id_userinfo_panel").toggleClass("in");
+                }
+            }
         });
     </script>    
 }

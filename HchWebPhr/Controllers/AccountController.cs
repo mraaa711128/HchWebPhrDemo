@@ -197,7 +197,7 @@ namespace HchWebPhr.Controllers
                 SmtpClient mailClient = new SmtpClient();
                 MailMessage mailmsg = new MailMessage
                 {
-                    Subject = "宏其婦幼醫院個人化電子病歷註冊通知",
+                    Subject = "宏其婦幼醫院宏其i-Care系統註冊通知",
                     Body = htmlMailBody,
                     IsBodyHtml = true,
                 };
@@ -237,8 +237,8 @@ namespace HchWebPhr.Controllers
         public ActionResult Activate(string Token)
         {
             var decryptToken = Encrypt.desDecryptUrlSafeBase64(Token);
-            var EMail = decryptToken.Split('+')[0];
-            var strSignUpDateTime = decryptToken.Split('+')[1];
+            var EMail = decryptToken.Split('|')[0];
+            var strSignUpDateTime = decryptToken.Split('|')[1];
             DateTime SignUpDateTime;
             if (DateTime.TryParse(strSignUpDateTime,out SignUpDateTime) == false)
             {
@@ -389,7 +389,7 @@ namespace HchWebPhr.Controllers
                 SmtpClient mailClient = new SmtpClient();
                 MailMessage mailmsg = new MailMessage
                 {
-                    Subject = "宏其婦幼醫院個人化電子病歷忘記密碼通知",
+                    Subject = "宏其婦幼醫院宏其i-Care系統忘記密碼通知",
                     Body = htmlMailBody,
                     IsBodyHtml = true,
                 };
@@ -429,7 +429,7 @@ namespace HchWebPhr.Controllers
         public ActionResult ResetPassword(string Token)
         {
             var tokenString = Encrypt.desDecryptUrlSafeBase64(Token);
-            var TokenArray = tokenString.Split('+');
+            var TokenArray = tokenString.Split('|');
             var UserName = TokenArray[0];
             var Password = TokenArray[1];
             var stringResetDateTime = TokenArray[2];
@@ -475,7 +475,7 @@ namespace HchWebPhr.Controllers
             if (ModelState.IsValid == false) {
                 ViewBag.IsResetPassword = true;
                 ViewBag.UserName = UserName;
-                return View(ResetPassword);
+                return View("UpdatePassword", ResetPassword);
             }
             var acc = new AccountBiz();
             if (acc.CheckAuthentication(UserName,ResetPassword.Password) == false)
@@ -542,7 +542,9 @@ namespace HchWebPhr.Controllers
         [AllowAnonymous]
         public ActionResult ForgetUserName()
         {
-            var model = new ForgetUserNameModel();
+            var model = new ForgetUserNameModel {
+                BirthDate = DateTime.Now
+            };
             return View(model);
         }
 
@@ -598,7 +600,7 @@ namespace HchWebPhr.Controllers
                 SmtpClient mailClient = new SmtpClient();
                 MailMessage mailmsg = new MailMessage
                 {
-                    Subject = "宏其婦幼醫院個人化電子病歷忘記帳號通知",
+                    Subject = "宏其婦幼醫院宏其i-Care系統忘記帳號通知",
                     Body = htmlMailBody,
                     IsBodyHtml = true,
                 };
@@ -631,6 +633,158 @@ namespace HchWebPhr.Controllers
             {
                 return false;
             }
+        }
+
+        [HttpGet]
+        public ActionResult UpdateEmail()
+        {
+            var UpdEmail = new UpdateEmailModel();
+            return View(UpdEmail);
+        }
+
+        [HttpPost]
+        public ActionResult UpdateEmail(UpdateEmailModel updEmail)
+        {
+            if (ModelState.IsValid == false) { return View(updEmail); }
+            string EmailVerifyToken = "";
+            var acc = new AccountBiz();
+            var user = acc.GetUser(x => x.UserName.Equals(User.Identity.Name) && x.Email.Equals(updEmail.OriginalEmail));
+            if (user == null)
+            {
+                ViewBag.ErrorCode = "404";
+                ViewBag.ErrorMessage = "找不到符合的帳號資料！";
+                return View(updEmail);
+            }
+            if (acc.SetUserNeedEmailVerify(user, updEmail.NewEmail, out EmailVerifyToken) == false)
+            {
+                return View("Error", new ErrorContext
+                {
+                    ErrorCode = acc.ErrorCode,
+                    ErrorMessage = acc.ErrorMessage
+                });
+            }
+            if (this.SendEmailVerifyMail(user, updEmail.NewEmail, EmailVerifyToken) == false)
+            {
+                return View("Error", new ErrorContext
+                {
+                    ErrorCode = "900",
+                    ErrorMessage = "驗證電子郵件確認信寄送失敗，請聯絡系統管理員！"
+                });
+            }
+            return View("Success", new SuccessContext
+            {
+                SuccessCode = "200",
+                SuccessDescription = "驗證電子郵件確認信已寄至您新的電子郵件信箱，請依照電子郵件完成後續步驟!"
+            });
+        }
+
+        private bool SendEmailVerifyMail(User UpdEmailUser, string NewEmail, string VerifyToken)
+        {
+            var mailbody = new EmailVerifyMailContext
+            {
+                UserName = UpdEmailUser.UserName,
+                PatientName = UpdEmailUser.UserInfo.Name,
+                NewEmail = NewEmail,
+                VerifyToken = VerifyToken
+            };
+            try
+            {
+                var mailTemp = System.IO.File.ReadAllText(Server.MapPath("~/Views/Account/EmailVerifyMail.cshtml"));
+                DynamicViewBag vbag = new DynamicViewBag(new Dictionary<string, object> {
+                    { "ActiveBaseUrl", Url.Action("VerifyEmail", "Account", null, Request.Url.Scheme) },
+                });
+                var htmlMailBody = Razor.Parse<EmailVerifyMailContext>(mailTemp, mailbody, vbag, "");
+                SmtpClient mailClient = new SmtpClient();
+                MailMessage mailmsg = new MailMessage
+                {
+                    Subject = "宏其婦幼醫院宏其i-Care系統電子郵件認證通知",
+                    Body = htmlMailBody,
+                    IsBodyHtml = true,
+                };
+                var BetaTest = ConfigHelper.GetBoolean("BETA_TEST");
+                if (BetaTest)
+                {
+                    var DebugMailList = ConfigHelper.Get("BETA_TEST_EMAIL_SENDTO_LIST");
+                    if (string.IsNullOrEmpty(DebugMailList) == false)
+                    {
+                        var DebugSendTos = DebugMailList.Split(';');
+                        foreach (var debugSendTo in DebugSendTos)
+                        {
+                            mailmsg.To.Add(debugSendTo);
+                        }
+                    }
+                    else
+                    {
+                        mailmsg.To.Add("93013@hch.org.tw");
+                        mailmsg.To.Add("mraaa711128@gmail.com");
+                    }
+                }
+                else
+                {
+                    mailmsg.To.Add(UpdEmailUser.Email);
+                    mailmsg.To.Add(NewEmail);
+                }
+                mailClient.Send(mailmsg);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public ActionResult VerifyEmail(string Token)
+        {
+            var decryptToken = Encrypt.desDecryptUrlSafeBase64(Token);
+            var UserName = decryptToken.Split('|')[0];
+            var NewEmail = decryptToken.Split('|')[1];
+            var strVerifyDateTime = decryptToken.Split('|')[2];
+            DateTime VerifyDateTime;
+            if (DateTime.TryParse(strVerifyDateTime, out VerifyDateTime) == false)
+            {
+                var error = new ErrorContext
+                {
+                    ErrorCode = "500",
+                    ErrorMessage = "驗證連結錯誤，請聯絡系統管理員。"
+                };
+                return View("Error", error);
+            }
+            if (DateTime.Now - VerifyDateTime > new TimeSpan(3, 0, 0, 0))
+            {
+                var error = new ErrorContext
+                {
+                    ErrorCode = "501",
+                    ErrorMessage = "驗證連結已經失效，請重新註冊！"
+                };
+                return View("Error", error);
+            }
+            var resUser = new UserRepository();
+            var user = resUser.Get(x => x.UserName.Equals(UserName) && x.ActiveToken.Equals(Token));
+            if (user == null)
+            {
+                var error = new ErrorContext
+                {
+                    ErrorCode = "501",
+                    ErrorMessage = "驗證連結錯誤，請重新註冊！"
+                };
+                return View("Error", error);
+            }
+            user.Email = NewEmail;
+            if (resUser.Update(user) <= 0)
+            {
+                return View("Error", new ErrorContext
+                {
+                    ErrorCode = "500",
+                    ErrorMessage = "無法更新電子郵件，請聯絡系統管理員！"
+                });
+            }
+            return View("Success", new SuccessContext
+            {
+                SuccessCode = "200",
+                SuccessDescription = "已成功更新電子郵件！"
+            });
         }
         //[HttpGet]
         //public ActionResult UpdateProfile()

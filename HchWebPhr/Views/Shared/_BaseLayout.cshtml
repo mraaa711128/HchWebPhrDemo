@@ -60,7 +60,13 @@
                                     <li>@Html.ActionLink("基本資料","Dashboard","User")</li>
                                     <li class="divider"></li>
                                     <li>@Html.ActionLink("更新密碼","UpdatePassword","Account")</li>
+                                    <li>@Html.ActionLink("更新電子郵件", "UpdateEmail", "Account")</li>
                                     @*<li><a href="#">更新基本資料</a></li>*@
+                                    @if (loginUser.IsAdmin)
+                                    {
+                                        <li class="divider"></li>
+                                        <li>@Html.ActionLink("管理者介面", "Dashboard", "Auth")</li>
+                                    }
                                     <li class="divider"></li>
                                     <li>@Html.ActionLink("登出","Logoff","Account")</li>
                                 </ul>
@@ -92,6 +98,8 @@
     @RenderSection("Scripts", required: false)
 
     <script type="text/javascript">
+        var CKEDITOR_BASEPATH = '@Url.Content("~/Content/component/ckeditor/")';
+
         $(function () {
             $("#btn-sidebar").click(function () {
                 $(".sidebar-wrapper").parent().toggleClass("toggled");

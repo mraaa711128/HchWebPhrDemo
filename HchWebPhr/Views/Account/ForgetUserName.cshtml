@@ -147,7 +147,7 @@
                                 @*<button type="button" class="btn btn-default btn-block">重來</button>*@
                             </div>
                             <div class="col-xxxs-6">
-                                <button type="submit" class="btn btn-primary btn-block">註冊</button>
+                                <button type="submit" class="btn btn-primary btn-block">寄送查詢結果</button>
                             </div>
                         </div>
                     </div>
@@ -208,6 +208,26 @@
                         </text>
                     }
                 });
+
+                @foreach(KeyValuePair<String, ModelState> field in ViewData.ModelState)
+                {
+                    var field_id = field.Key;
+                    var field_obj = field.Value;
+                    var field_err = "";
+                    foreach (ModelError Err in field_obj.Errors)
+                    {
+                        field_err = field_err + Err.ErrorMessage + "\\n";
+                    }
+                    <text>
+                        $("#@field_id").popover({
+                            animation: true,
+                            content: '@field_err',
+                            placement: 'top',
+                            trigger: 'hover',
+                            container: 'body'
+                        });
+                    </text>
+                }
             });
     </script>
 }

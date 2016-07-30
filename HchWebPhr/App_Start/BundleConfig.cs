@@ -50,6 +50,10 @@ namespace HchWebPhr
             bundles.Add(new ScriptBundle("~/Content/js/cropper")
                 .Include("~/Content/bower/cropper/dist/cropper.js"));
 
+            bundles.Add(new ScriptBundle("~/Content/js/ckeditor")
+                .Include("~/Content/component/ckeditor/ckeditor.js")
+                .Include("~/Content/component/ckeditor/adapters/jquery.js"));
+
             bundles.Add(new ScriptBundle("~/Content/js/scripts")
                 .Include("~/Content/js/captcha.js"));
 
@@ -86,7 +90,8 @@ namespace HchWebPhr
                 .Include("~/Content/bower/cropper/dist/cropper.css"));
 
             bundles.Add(new StyleBundle("~/Content/css/styles")
-                .Include("~/Content/css/style.css"));
+                .Include("~/Content/css/style.css")
+                .Include("~/Content/css/dashboard.css"));
 
             #endregion
 

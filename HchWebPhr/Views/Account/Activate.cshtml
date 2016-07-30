@@ -21,7 +21,7 @@
                     <div class="form-group">
                         @Html.LabelFor(x => x.Name,
                                            new { @class = "col-xxxs-12 col-sm-5 col-md-4 control-label" })
-                        @if (ViewData.ModelState["Name"] != null && ViewData.ModelState["Name"].Errors.Count > 0)
+                        @*@if (ViewData.ModelState["Name"] != null && ViewData.ModelState["Name"].Errors.Count > 0)
                         {
                             <div class="col-xxxs-12 col-sm-7 col-md-8 has-error has-feedback">
                                 @Html.TextBoxFor(x => x.Name,
@@ -31,17 +31,17 @@
                             </div>
                         }
                         else
-                        {
+                        {*@
                             <div class="col-xxxs-12 col-sm-7 col-md-8">
                                 @Html.TextBoxFor(x => x.Name,
-                                                 new { @id = Html.IdFor(x => x.Name), @class = "form-control" })
+                                                 new { @id = Html.IdFor(x => x.Name), @class = "form-control", @disabled = "true" })
                             </div>
-                        }
+@*                        }*@
                     </div>
                     <div class="form-group">
                         @Html.LabelFor(x => x.Email,
                                            new { @class = "col-xxxs-12 col-sm-5 col-md-4 control-label" })
-                        @if (ViewData.ModelState["Email"] != null && ViewData.ModelState["Email"].Errors.Count > 0)
+                        @*@if (ViewData.ModelState["Email"] != null && ViewData.ModelState["Email"].Errors.Count > 0)
                         {
                             <div class="col-xxxs-12 col-sm-7 col-md-8 has-error has-feedback">
                                 @Html.TextBoxFor(x => x.Email,
@@ -51,12 +51,12 @@
                             </div>
                         }
                         else
-                        {
+                        {*@
                             <div class="col-xxxs-12 col-sm-7 col-md-8">
                                 @Html.TextBoxFor(x => x.Email,
-                                                 new { @id = Html.IdFor(x => x.Email), @class = "form-control" })
+                                                 new { @id = Html.IdFor(x => x.Email), @class = "form-control", @disabled = "true" })
                             </div>
-                        }
+@*                        }*@
                     </div>
                     <div class="form-group">
                         @Html.LabelFor(x => x.UserName,
@@ -143,7 +143,7 @@
         </div>
     </div>
 </div>
-@section scripts {
+@section Scripts {
     <script type="text/javascript">
         $(function () {
             @foreach(KeyValuePair<String, ModelState> field in ViewData.ModelState)

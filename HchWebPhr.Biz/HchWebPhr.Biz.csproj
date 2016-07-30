@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AuthBiz.cs" />
     <Compile Include="Base\BaseBiz.cs" />
     <Compile Include="AccountBiz.cs" />
     <Compile Include="ImageBiz.cs" />

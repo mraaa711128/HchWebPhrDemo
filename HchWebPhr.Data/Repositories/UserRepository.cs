@@ -10,5 +10,14 @@ namespace HchWebPhr.Data.Repositories
 {
     public class UserRepository : GenericRepository<User>
     {
+        static UserRepository repository;
+        public static UserRepository GetRepository()
+        {
+            if (repository == null)
+            {
+                repository = new UserRepository();
+            }
+            return repository;
+        }
     }
 }

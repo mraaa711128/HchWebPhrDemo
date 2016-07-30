@@ -4,7 +4,7 @@
 
 @{
     Layout = "~/Views/Shared/_SideNavLayout.cshtml";
-    ViewBag.Title = "胎兒印象";
+    ViewBag.Title = "胎兒映像";
     ViewBag.actionName = "Albums";
 }
 
@@ -15,7 +15,7 @@
 
 <ol class="breadcrumb">
     @*<li>@Html.ActionLink("首頁","Index","Home")</li>*@
-    <li class="active">胎兒印象</li>
+    <li class="active">@ViewBag.Title</li>
 </ol>
 <div class="row">
     @using (Html.BeginForm("Albums", "Image", FormMethod.Post, new { @role = "form" }))
@@ -23,11 +23,11 @@
         <div class="col-xxxs-12 col-sm-3">
             <div class="form-group">
                 @Html.LabelFor(x => x.StartDate)
-                <div class="input-group date datetime-picker">
+                <div class="input-group date datetime-picker" id="div_startdate">
                     @if (ConfigHelper.GetBoolean("USE_TAIWAN_YEAR"))
                 {
                         @Html.TextBoxFor(x => x.TwStartDate,
-                                 new { @id = Html.IdFor(x => x.StartDate), @class = "form-control date-input" })
+                                 new { @id = Html.IdFor(x => x.TwStartDate), @class = "form-control date-input" })
                     }
                     else
                     {
@@ -38,16 +38,21 @@
                         <i class="fa fa-calendar"></i>
                     </span>
                 </div>
+                @if (ConfigHelper.GetBoolean("USE_TAIWAN_YEAR"))
+                {
+                    @Html.HiddenFor(x => x.StartDate,
+                                                new { @id = Html.IdFor(x => x.StartDate), @class = "form-control" })
+                }
             </div>
         </div>
         <div class="col-xxxs-12 col-sm-3">
             <div class="form-group">
                 @Html.LabelFor(x => x.EndDate)
-                <div class="input-group date datetime-picker">
+                <div class="input-group date datetime-picker" id="div_enddate">
                     @if (ConfigHelper.GetBoolean("USE_TAIWAN_YEAR"))
                 {
                         @Html.TextBoxFor(x => x.TwEndDate,
-                                 new { @id = Html.IdFor(x => x.EndDate), @class = "form-control date-input" })
+                                 new { @id = Html.IdFor(x => x.TwEndDate), @class = "form-control date-input" })
                     }
                     else
                     {
@@ -58,6 +63,11 @@
                         <i class="fa fa-calendar"></i>
                     </span>
                 </div>
+                @if (ConfigHelper.GetBoolean("USE_TAIWAN_YEAR"))
+                {
+                    @Html.HiddenFor(x => x.EndDate,
+                                                new { @id = Html.IdFor(x => x.EndDate), @class = "form-control" })
+                }
             </div>
         </div>
         <div class="col-xxxs-12 col-sm-3">
@@ -69,6 +79,13 @@
     }
 </div>
 <div class="row">
+    <div class="col-xxxs-12">
+        @*@Html.Raw(HttpUtility.HtmlDecode(ViewBag.Remark))*@
+        <h5>備註：</h5>
+        <p>胎兒映像僅提供105年8月1日起所拍攝的【4D立體彩色超音波】、【高層次超音波】、【NT早期頸部透明帶超音波檢查】。</p>
+    </div>
+</div>
+<div class="row">
     <div id="div_albumlist"></div>
 </div>
 
@@ -78,11 +95,18 @@
 
     <script type="text/javascript">
         function refreshSearchResults() {
-            var startDate = $("#@Html.IdFor(x => x.StartDate)").datetimepicker('getDate');
-            var endDate = $("#@Html.IdFor(x => x.EndDate)").datetimepicker('getDate');
+            @*var startDate = $("#@Html.IdFor(x => x.StartDate)").datetimepicker('getDate');
+            var endDate = $("#@Html.IdFor(x => x.EndDate)").datetimepicker('getDate');*@
+            var sdpicker = $(".datetime-picker")[0];
+            var edpicker = $(".datetime-picker")[1];
+
+            var startDate = $(sdpicker).datetimepicker('getDate');
+            var endDate = $(edpicker).datetimepicker('getDate');
+
             var strStartDate = startDate.getFullYear() + '/' + (startDate.getMonth() + 1) + '/' + startDate.getDate();
             var strEndDate = endDate.getFullYear() + '/' + (endDate.getMonth() + 1) + '/' + endDate.getDate();
-
+            @*var strStartDate = $("#@Html.IdFor(x => x.StartDate)").val();
+            var strEndDate = $("#@Html.IdFor(x => x.EndDate)").val();*@
             $("#div_albumlist").html("");
             isNoResult = true;
 
@@ -121,13 +145,13 @@
 
         $(function () {
             var today = new Date();
-            var minDate = new Date('2011-01-01')
-            
-            $("#@Html.IdFor(x => x.StartDate)").datetimepicker({
+            var minDate = new Date('2000-01-01')
+
+            $(".datetime-picker").datetimepicker({
                 @if (ConfigHelper.GetBoolean("USE_TAIWAN_YEAR"))
-                {
-                    <text>format: "yyy/mm/dd",</text>
-                }
+                    {
+                        <text>format: "yyy/mm/dd",</text>
+                    }
                 else
                 {
                     <text>format: "yyyy/mm/dd",</text>
@@ -144,10 +168,26 @@
                 keyboardNavigation: false,
                 language: 'zh-TW'
             }).on('changeDate', function (ev) {
+                @if (ConfigHelper.GetBoolean("USE_TAIWAN_YEAR"))
+                {
+                    <text>
+                var date = ev.date.getFullYear() + '/' + (ev.date.getMonth() + 1) + '/' + ev.date.getDate();
+                var inputId = $(ev.currentTarget).attr('id');
+                switch (inputId) {
+                    case "div_startdate":
+                        $("#@Html.IdFor(x => x.StartDate)").val(date);
+                        break;
+                    case "div_enddate":
+                        $("#@Html.IdFor(x => x.EndDate)").val(date);
+                        break;
+                }
+                </text>
+                }
                 refreshSearchResults();
             });
 
-            $("#@Html.IdFor(x => x.EndDate)").datetimepicker({
+
+            @*$("#@Html.IdFor(x => x.StartDate)").datetimepicker({
                 @if (ConfigHelper.GetBoolean("USE_TAIWAN_YEAR"))
                 {
                     <text>format: "yyy/mm/dd",</text>
@@ -169,11 +209,74 @@
                 language: 'zh-TW'
             }).on('changeDate', function (ev) {
                 refreshSearchResults();
-            });
+            });*@
+
+            @*$("#@Html.IdFor(x => x.EndDate)").datetimepicker({
+                @if (ConfigHelper.GetBoolean("USE_TAIWAN_YEAR"))
+                {
+                    <text>format: "yyy/mm/dd",</text>
+                }
+                else
+                {
+                    <text>format: "yyyy/mm/dd",</text>
+                }
+                startView: 2,
+                minView: 2,
+                startDate: minDate,
+                endDate: today,
+                todayBtn: true,
+                todayHighlight: true,
+                forceParse: true,
+                autoclose: true,
+                pickerPosition: 'bottom-left',
+                keyboardNavigation: false,
+                language: 'zh-TW'
+            }).on('changeDate', function (ev) {
+                refreshSearchResults();
+            });*@
 
             $(".date-input").change(function () {
-                $("#@Html.IdFor(x => x.StartDate)").datetimepicker("update");
-                $("#@Html.IdFor(x => x.EndDate)").datetimepicker("update");
+                var inputId = $(this).attr('id');
+                var dtpicker = null;
+                var hiddenId = "";
+                @if (ConfigHelper.GetBoolean("USE_TAIWAN_YEAR"))
+                {
+                    <text>
+                switch (inputId) {
+                    case "@Html.IdFor(x => x.TwStartDate)":
+                        dtpicker = $('.datetime-picker')[0];
+                        hiddenId = '@Html.IdFor(x => x.StartDate)';
+                        break;
+                    case "@Html.IdFor(x => x.TwEndDate)":
+                        dtpicker = $('.datetime-picker')[1];
+                        hiddenId = '@Html.IdFor(x => x.EndDate)';
+                        break;
+                }
+                </text>
+                } else
+                {
+                    <text>
+                switch (inputId) {
+                    case "@Html.IdFor(x => x.StartDate)":
+                        dtpicker = $('.datetime-picker')[0];
+                        break;
+                    case "@Html.IdFor(x => x.EndDate)":
+                        dtpicker = $('.datetime-picker')[1];
+                        break;
+                }
+                </text>
+                }
+                $(dtpicker).datetimepicker('update');
+                @if (ConfigHelper.GetBoolean("USE_TAIWAN_YEAR"))
+                {
+                    <text>
+                var date = $(dtpicker).datetimepicker('getDate');
+                var strDate = date.getFullYear() + "/" + (date.getMonth() + 1) + "/" + date.getDate();
+                $('#' + hiddenId).val(strDate);
+                </text>
+                }
+                @*$("#@Html.IdFor(x => x.StartDate)").datetimepicker("update");
+                $("#@Html.IdFor(x => x.EndDate)").datetimepicker("update");*@
                 refreshSearchResults();
             });
 

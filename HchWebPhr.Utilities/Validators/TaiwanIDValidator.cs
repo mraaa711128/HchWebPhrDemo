@@ -40,17 +40,32 @@ namespace UtilitiesLib.Validators
                 { "Z", 33 },
             };
             int[] multiplier = new int[] {1,9,8,7,6,5,4,3,2,1 };
-            Regex regexp = new Regex("^[A-Z](1|2)[0-9]{8}");
-            if (regexp.IsMatch(ID) == false)
+            Regex regexpLocal = new Regex("^[A-Z](1|2)[0-9]{8}");
+            Regex regexpForiegn = new Regex("^[A-Z](A|B|C|D)[0-9]{8}");
+            int[] idNums = new int[10];
+            if (regexpLocal.IsMatch(ID) == true)
+            {
+                var firstCharNum = map.FirstOrDefault(x => x.Key.Equals(ID.Substring(0, 1))).Value;
+                idNums[0] = firstCharNum / 10;
+                idNums[1] = firstCharNum % 10;
+                for (var i = 1; i < ID.Length - 1; i++) {
+                    idNums[i+1] = int.Parse(ID.Substring(i,1));
+                }
+            } else if (regexpForiegn.IsMatch(ID) == true)
+            {
+                var firstCharNum = map.FirstOrDefault(x => x.Key.Equals(ID.Substring(0, 1))).Value;
+                var secondCharNum = map.FirstOrDefault(x => x.Key.Equals(ID.Substring(1, 1))).Value;
+                idNums[0] = firstCharNum / 10;
+                idNums[1] = firstCharNum % 10;
+                idNums[2] = secondCharNum % 10;
+                for (var i = 2; i < ID.Length - 1; i++)
+                {
+                    idNums[i + 1] = int.Parse(ID.Substring(i, 1));
+                }
+            }
+            else
             {
                 return false;
-            }
-            var firstCharNum = map.FirstOrDefault(x => x.Key.Equals(ID.Substring(0, 1))).Value;
-            int[] idNums = new int[10];
-            idNums[0] = firstCharNum / 10;
-            idNums[1] = firstCharNum % 10;
-            for (var i = 1; i < ID.Length - 1; i++) {
-                idNums[i+1] = int.Parse(ID.Substring(i,1));
             }
             var totlaNum = 0;
             for (var i = 0; i < idNums.Length; i++)

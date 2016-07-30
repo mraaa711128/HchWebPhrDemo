@@ -25,7 +25,7 @@ namespace HchWebPhr.Models.FormModels
         {
             get
             {
-                return string.Format("{0:000}/{1: MM/dd}", BirthDate.Year - 1911, BirthDate);
+                return string.Format("{0:000}/{1:MM/dd}", BirthDate.Year - 1911, BirthDate);
             }
         }
 

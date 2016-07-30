@@ -42,13 +42,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FormModels\ActivateModel.cs" />
+    <Compile Include="FormModels\FeatureModel.cs" />
     <Compile Include="FormModels\ForgetPasswordModel.cs" />
     <Compile Include="FormModels\ForgetUserNameModel.cs" />
     <Compile Include="FormModels\LoginModel.cs" />
     <Compile Include="FormModels\SearchAlbumModel.cs" />
     <Compile Include="FormModels\SignUpModel.cs" />
+    <Compile Include="FormModels\UpdateEmailModel.cs" />
     <Compile Include="FormModels\UpdatePasswordModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ViewModels\EmailVerifyMailContext.cs" />
     <Compile Include="ViewModels\ErrorContext.cs" />
     <Compile Include="ViewModels\ForgetPasswordMailContext.cs" />
     <Compile Include="ViewModels\ForgetUserNameMailContext.cs" />

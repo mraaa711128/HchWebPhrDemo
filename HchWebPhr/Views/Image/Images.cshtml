@@ -6,7 +6,7 @@
 
 @{
     Layout = "~/Views/Shared/_SideNavLayout.cshtml";
-    ViewBag.Title = "胎兒印象";
+    ViewBag.Title = "胎兒映像";
     ViewBag.actionName = "Albums";
 }
 
@@ -16,7 +16,7 @@
 
 <ol class="breadcrumb">
     @*<li>@Html.ActionLink("首頁", "Index", "Home")</li>*@
-    <li>@Html.ActionLink("胎兒印象", "Albums", "Image")</li>
+    <li>@Html.ActionLink((string)ViewBag.Title, "Albums", "Image")</li>
     @if (Model == null || Model.ExamDate == null)
     {
         <li class="active">None</li>

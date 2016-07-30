@@ -41,12 +41,22 @@ namespace HchWebPhr.Controllers
         //    return View(albums);
         //}
         [HttpGet]
-        public ActionResult Albums()
+        public ActionResult Albums(string StartDate = "", string EndDate = "")
         {
+            DateTime startDate, endDate;
+
+            var sDate = DateTime.TryParse(StartDate, out startDate);
+            var eDate = DateTime.TryParse(EndDate, out endDate);
+
             var searchModel = new SearchAlbumModel {
-                StartDate = new DateTime(2011, 1, 1),
+                StartDate = new DateTime(2016, 8, 1),
                 EndDate = DateTime.Today
             };
+
+            if (sDate) { searchModel.StartDate = startDate; }
+            if (eDate) { searchModel.EndDate = endDate; }
+
+            ViewBag.Remark = "";
             return View(searchModel);
         }
 

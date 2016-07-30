@@ -64,10 +64,26 @@
     <Compile Include="Migrations\201607030928353_AddProfileImage.Designer.cs">
       <DependentUpon>201607030928353_AddProfileImage.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201607251044311_AddFeatureModel.cs" />
+    <Compile Include="Migrations\201607251044311_AddFeatureModel.Designer.cs">
+      <DependentUpon>201607251044311_AddFeatureModel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201607280812118_AddAccountLog.cs" />
+    <Compile Include="Migrations\201607280812118_AddAccountLog.Designer.cs">
+      <DependentUpon>201607280812118_AddAccountLog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201607280902230_AddActivateDateTime.cs" />
+    <Compile Include="Migrations\201607280902230_AddActivateDateTime.Designer.cs">
+      <DependentUpon>201607280902230_AddActivateDateTime.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\AccountLog.cs" />
+    <Compile Include="Models\Feature.cs" />
     <Compile Include="Models\PhrEntities.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repositories\AccountLogRepository.cs" />
+    <Compile Include="Repositories\FeatureRepository.cs" />
     <Compile Include="Repositories\GenericRepository.cs" />
     <Compile Include="Repositories\Interface\IRepository.cs" />
     <Compile Include="Repositories\Interface\IResult.cs" />
@@ -94,6 +110,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201607030928353_AddProfileImage.resx">
       <DependentUpon>201607030928353_AddProfileImage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201607251044311_AddFeatureModel.resx">
+      <DependentUpon>201607251044311_AddFeatureModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201607280812118_AddAccountLog.resx">
+      <DependentUpon>201607280812118_AddAccountLog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201607280902230_AddActivateDateTime.resx">
+      <DependentUpon>201607280902230_AddActivateDateTime.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

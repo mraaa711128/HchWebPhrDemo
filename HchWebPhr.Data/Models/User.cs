@@ -17,7 +17,7 @@ namespace HchWebPhr.Data.Models
         public string ForgetPasswordToken { get; set; }
         public DateTime LastLoginTime { get; set; }
         public string LastLoginIp { get; set; }
-        
+        public DateTime ActivateDateTime { get; set; }
         public virtual UserInfo UserInfo { get; set; }
     }
 

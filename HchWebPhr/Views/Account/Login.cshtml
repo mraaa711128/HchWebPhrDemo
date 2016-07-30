@@ -127,13 +127,13 @@
     <script type="text/javascript">
         $(function () {
             @foreach(KeyValuePair<String, ModelState> field in ViewData.ModelState)
+            {
+                var field_id = field.Key;
+                var field_obj = field.Value;
+                var field_err = "";
+                foreach (ModelError Err in field_obj.Errors)
                 {
-                    var field_id = field.Key;
-                    var field_obj = field.Value;
-                    var field_err = "";
-                    foreach (ModelError Err in field_obj.Errors)
-                    {
-                        field_err = field_err + Err.ErrorMessage + "\\n";
+                    field_err = field_err + Err.ErrorMessage + "\\n";
                 }
                 <text>
                     $("#@field_id").popover({
@@ -143,7 +143,7 @@
                         trigger: 'hover',
                         container: 'body'
                     });
-            </text>
+                </text>
             }
 
             $('form').submit(function () {

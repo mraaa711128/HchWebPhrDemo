@@ -1,0 +1,129 @@
+﻿@using HchWebPhr.Models.FormModels
+
+@model FeatureModel
+
+@{
+    Layout = "~/Views/Shared/_AuthSideNavLayout.cshtml";
+    ViewBag.Title = "編輯功能";
+    ViewBag.actionName = "Feature";
+}
+
+<h3 class="page-header">編輯功能</h3>
+<div class="row">
+    <div class="col-xxxs-push-0 col-xxxs-12 col-xs-push-1 col-xs-10">
+        <p class="lead"><span class="fa fa-caret-down"></span> 請輸入資料：</p>
+        <div class="row">
+            <div class="col-xxxs-12">
+                @using (Html.BeginForm("Feature",
+                                       "Auth",
+                                       FormMethod.Post,
+                                       new { @role = "form", @class = "form-horizontal" }))
+                {
+                    @Html.AntiForgeryToken()
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.FeatureName,
+                        new { @class = "col-xxxs-12 col-sm-3 col-md-2 control-label" })
+                        @if (ViewData.ModelState["FeatureId"] != null && ViewData.ModelState["FeatureId"].Errors.Count > 0)
+                        {
+                            <div class="col-xxxs-12 col-sm-4 col-md-4 has-error has-feedback">
+                                @Html.DropDownListFor(x => x.FeatureId, (IList<SelectListItem>)ViewBag.FeatureList,
+                                                      new { @id = Html.IdFor(x => x.FeatureId), @class = "form-control" })
+                                <span class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true"></span>
+                                <span id="inputError2Status" class="sr-only">(error)</span>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="col-xxxs-12 col-sm-4 col-md-4">
+                                @Html.DropDownListFor(x => x.FeatureId, (IList<SelectListItem>)ViewBag.FeatureList,
+                                                      new { @id = Html.IdFor(x => x.FeatureId), @class = "form-control" })
+                            </div>
+                        }
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.Remark,
+                        new { @class = "col-xxxs-12 col-sm-3 col-md-2 control-label" })
+                        @if (ViewData.ModelState["Remark"] != null && ViewData.ModelState["Remark"].Errors.Count > 0)
+                        {
+                            <div class="col-xxxs-12 col-sm-9 col-md-10 has-error has-feedback">
+                                @Html.TextAreaFor(x => x.Remark,
+                             new { @id = Html.IdFor(x => x.Remark), @class = "form-control" })
+                                <span class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true"></span>
+                                <span id="inputError2Status" class="sr-only">(error)</span>
+                            </div>
+
+                        }
+                        else
+                        {
+                            <div class="col-xxxs-12 col-sm-9 col-md-10">
+                                @Html.TextAreaFor(x => x.Remark,
+                             new { @id = Html.IdFor(x => x.Remark), @class = "form-control" })
+                            </div>
+                        }
+                    </div>
+                    if (ViewBag.ErrorCode != null)
+                    {
+                        <div class="form-group">
+                            <div class="col-xxxs-12 col-sm-3 col-md-2"></div>
+                            <div class="col-xxxs-12 col-sm-9 col-md-10">
+                                <div class="alert alert-danger">
+                                    <strong>錯誤:</strong>
+                                    @(ViewBag.ErrorCode + " - " + ViewBag.ErrorMessage)
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    <div class="form-group">
+                        <div class="col-xxxs-12 col-sm-3 col-md-2"></div>
+                        <div class="col-xxxs-12 col-sm-9 col-md-10" style="padding: 0px;">
+                            <div class="col-xxxs-6">
+                                @{
+                                    var FtId = "";
+                                    if (Model != null)
+                                    {
+                                        FtId = Model.FeatureId.ToString();
+                                    }
+                                }
+                                @Html.ActionLink("重來",
+                                                 "Feature",
+                                                 "Auth",
+                                                 new { FeatureId = FtId },
+                                                 new { @class = "btn btn-default btn-block" })
+                            </div>
+                            <div class="col-xxxs-6">
+                                <button type="submit" class="btn btn-primary btn-block">儲存</button>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script type="text/javascript">
+        $(function () {
+            CKEDITOR.replace('@Html.IdFor(x => x.Remark)');
+
+            @foreach(KeyValuePair<String, ModelState> field in ViewData.ModelState)
+                {
+                    var field_id = field.Key;
+                    var field_obj = field.Value;
+                    var field_err = "";
+                    foreach (ModelError Err in field_obj.Errors)
+                    {
+                        field_err = field_err + Err.ErrorMessage + "\\n";
+                }
+                <text>
+                    $("#@field_id").popover({
+                        animation: true,
+                        content: '@field_err',
+                        placement: 'top',
+                        trigger: 'hover',
+                        container: 'body'
+                    });
+                </text>
+            }
+        });
+    </script>
+}

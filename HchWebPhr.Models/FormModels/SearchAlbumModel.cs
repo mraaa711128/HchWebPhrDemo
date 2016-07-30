@@ -15,7 +15,7 @@ namespace HchWebPhr.Models.FormModels
         {
             get
             {
-                return string.Format("{0:000}/{1:MM/dd}",StartDate.Year,StartDate);
+                return string.Format("{0:000}/{1:MM/dd}",StartDate.Year - 1911,StartDate);
             }
         }
         [Display(Name = "結束日期")]
@@ -24,7 +24,7 @@ namespace HchWebPhr.Models.FormModels
         {
             get
             {
-                return string.Format("{0:000}/{1:MM/dd}", EndDate.Year, EndDate);
+                return string.Format("{0:000}/{1:MM/dd}", EndDate.Year - 1911, EndDate);
             }
         }
         [Display(Name = "檢驗項目")]
