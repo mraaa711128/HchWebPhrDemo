@@ -29,7 +29,20 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Staging|AnyCPU'">
+    <OutputPath>bin\Staging\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
@@ -42,26 +55,36 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FormModels\ActivateModel.cs" />
+    <Compile Include="FormModels\AgreeTermModel.cs" />
     <Compile Include="FormModels\FeatureModel.cs" />
     <Compile Include="FormModels\ForgetPasswordModel.cs" />
     <Compile Include="FormModels\ForgetUserNameModel.cs" />
     <Compile Include="FormModels\LoginModel.cs" />
+    <Compile Include="FormModels\NewEditTermModel.cs" />
     <Compile Include="FormModels\SearchAlbumModel.cs" />
+    <Compile Include="FormModels\SearchLabModel.cs" />
     <Compile Include="FormModels\SignUpModel.cs" />
     <Compile Include="FormModels\UpdateEmailModel.cs" />
     <Compile Include="FormModels\UpdatePasswordModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ViewModels\ConditionTermInfo.cs" />
     <Compile Include="ViewModels\EmailVerifyMailContext.cs" />
     <Compile Include="ViewModels\ErrorContext.cs" />
     <Compile Include="ViewModels\ForgetPasswordMailContext.cs" />
     <Compile Include="ViewModels\ForgetUserNameMailContext.cs" />
+    <Compile Include="ViewModels\LabItemGInfo.cs" />
+    <Compile Include="ViewModels\LabItemNInfo.cs" />
+    <Compile Include="ViewModels\LabItemXInfo.cs" />
+    <Compile Include="ViewModels\LabListInfo.cs" />
     <Compile Include="ViewModels\PhotoAlbumInfo.cs" />
     <Compile Include="ViewModels\PhotoInfo.cs" />
     <Compile Include="ViewModels\SignUpMailContext.cs" />
     <Compile Include="ViewModels\SignUpPatient.cs" />
     <Compile Include="ViewModels\SuccessContext.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\HchWebPhr.CaptchaLib\HchWebPhr.CaptchaLib.csproj">
       <Project>{39623763-46e4-4a08-93e7-a94bdbacf077}</Project>

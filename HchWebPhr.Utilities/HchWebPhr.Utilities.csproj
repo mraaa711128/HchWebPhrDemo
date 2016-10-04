@@ -29,9 +29,18 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Staging|AnyCPU'">
+    <OutputPath>bin\Staging\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
   <ItemGroup>
-    <Reference Include="IPAddressRange, Version=1.6.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\IPAddressRange.1.6.0.0\lib\net40\IPAddressRange.dll</HintPath>
+    <Reference Include="IPAddressRange, Version=1.6.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\IPAddressRange.1.6.1.0\lib\net40\IPAddressRange.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -79,6 +88,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Extensions\DateTimeExtensions.cs" />
+    <Compile Include="Extensions\EnumerableExtension.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Filters\ActionSessionStateAttribute.cs" />
     <Compile Include="Filters\AdminOnlyAttribute.cs" />
@@ -89,6 +99,7 @@
     <Compile Include="Helpers\ConfigHelper.cs" />
     <Compile Include="Helpers\FormAuthHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Types\LabType.cs" />
     <Compile Include="Utilities\Encrypt.cs" />
     <Compile Include="Utilities\IP.cs" />
     <Compile Include="Validators\TaiwanIDValidator.cs" />

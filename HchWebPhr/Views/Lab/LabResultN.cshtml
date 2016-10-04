@@ -1,0 +1,56 @@
+﻿@using HchWebPhr.Models.ViewModels
+
+@model LabItemNInfo
+
+@{
+    Layout = "~/Views/Shared/_SideNavLayout.cshtml";
+    ViewBag.Title = "檢驗結果";
+    ViewBag.actionName = "LabList";
+}
+@{ 
+    string pdfContentPath = "~/Content/pdf";
+    string pdfNoFile = "/nofile.pdf";
+    string finalNoFilePath = pdfContentPath + pdfNoFile;
+    string finalPdfFilePath = "";
+    if(string.IsNullOrEmpty(Model.PdfFilePath))
+    {
+        finalPdfFilePath = finalNoFilePath;
+    } else
+    {
+        finalPdfFilePath = pdfContentPath + "/labpdf/" + Model.PdfFilePath;
+    }
+}
+<ol class="breadcrumb">
+    <li>@Html.ActionLink("檢驗報告", "LabList", "Lab")</li>
+    <li class="active">@ViewBag.Title</li>
+</ol>
+
+<div class="row">
+    <div class="col-xxxs-12">
+        <div class="embed-responsive" style="padding-bottom: 150%;">
+            @*<object data="@Url.Content(finalPdfFilePath)" type="application/pdf">
+                <p>您的瀏覽器不支援使用Pdf Reader，請按<a href="@Url.Content(finalPdfFilePath)">下載檔案</a></p>
+            </object>*@
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script type="text/javascript">
+        $(function () {
+            $.get('@Url.Content(finalPdfFilePath)').
+                done(function (data) {
+                    var htmlObj = '<object data="@Url.Content(finalPdfFilePath)" type="application/pdf">' +
+                                    '<p>您的瀏覽器不支援使用Pdf Reader，請按<a href="@Url.Content(finalPdfFilePath)">下載檔案</a></p>' +
+                                  '</object>';
+                    $(".embed-responsive").html(htmlObj);
+                }).
+                fail(function () {
+                    var htmlObj = '<object data="@Url.Content(finalNoFilePath)" type="application/pdf">' +
+                                    '<p>找不到對應的檔案</p>' +
+                                  '</object>';
+                    $(".embed-responsive").html(htmlObj);
+                });
+        });
+    </script>    
+}

@@ -1,0 +1,201 @@
+﻿@using HchWebPhr.Models.FormModels
+@using HchWebPhr.Models.ViewModels
+@using Newtonsoft.Json
+
+@model IList<LabItemXInfo>
+
+@{
+    Layout = "~/Views/Shared/_SideNavLayout.cshtml";
+    ViewBag.Title = "檢驗結果";
+    ViewBag.actionName = "LabList";
+}
+
+@section Styles {
+    @Styles.Render("~/Content/css/bootstrap-table")    
+}
+
+<ol class="breadcrumb">
+    <li>@Html.ActionLink("檢驗報告", "LabList","Lab")</li>
+    <li class="active">@ViewBag.Title</li>
+</ol>
+
+<div class="row">
+    <div class="col-xxxs-12">
+        <table id="table-labpackage"></table>
+        <p></p>
+        <table id="table-labdetail"></table>
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/Content/js/bootstrap-table")
+
+    <script type="text/javascript">
+        function hasSubItem(data) {
+            var result = false;
+            if ($.isArray(data) && data.length > 0) {
+                $.each(data, function (index, row) {
+                    if ($.isArray(row.LabSubItems) && row.LabSubItems.length > 0) { result = true; }
+                });
+            }
+            return result;
+        }
+
+        function expandDetailTable($detail, parentdata, detaildata) {
+            $detail.css('padding', '0');
+            var $table = $detail.html('<table id="table-labresultx-' + parentdata.LabCode + '"></table>').find("table");
+            buildDetailTable($table, detaildata);
+        }
+
+        function buildPackageTable($element, data) {
+            $element.bootstrapTable({
+                idField: 'LabCode',
+                detailView: true,
+                pageSize: 20,
+                showHeader: false,
+                columns: [{
+                    field: 'LabCode',
+                    title: '項目代碼',
+                    align: 'left',
+                    visible: false
+                }, {
+                    field: 'LabName',
+                    title: '項目名稱',
+                    align: 'left',
+                    width: '100%',
+                    formatter: function(value, row, index) {
+                        return value + ' (組套項目)';
+                    }
+                }],
+                data: data,
+                detailFormatter: function(index, row, $element) {
+                    if (typeof row.LabSubItems !== 'undefined' && row.LabSubItems.length > 0) {
+                        expandDetailTable($element, row, row.LabSubItems);
+                    }
+                },
+                //mobileResponsive: true,
+                minWidth: 480
+            });
+            $element.bootstrapTable('expandAllRows', false);
+        }
+
+        function buildDetailTable($element, data) {
+            //var hasSubItems = hasSubItem(data);
+            $element.bootstrapTable({
+                idField: 'LabCode',
+                //classes: 'table table-hover table-no-bordered',
+                detailView: false,
+                pageSize: 20,
+                columns: [{
+                    field: 'LabCode',
+                    title: '項目代碼',
+                    align: 'left',
+                    visible: false
+                }, {
+                    field: 'LabName',
+                    title: '項目名稱',
+                    align: 'left',
+                    width: '30%'
+                }, {
+                    field: 'Result',
+                    title: '結果值',
+                    align: 'left',
+                    width: '10%',
+                    formatter: function (value, row, index) {
+                        return $.trim(value);
+                    },
+                    cellStyle: function (value, row, index, field) {
+                        if (row.NeedCompare) {
+                            var val = parseFloat(value);
+                            var lowLimit = parseFloat(row.LowerLimit);
+                            var upLimit = parseFloat(row.UpperLimit);
+                            var riskLowLimit = parseFloat(row.RiskLowerLimit);
+                            var riskUpLimit = parseFloat(row.RiskUpperLimit);
+                            if (riskLowLimit !== 0 || riskUpLimit !== 0) {
+                                if (val < riskLowLimit) {
+                                    return { css: { "background-color": "red" }, classes: {} };
+                                }
+                                if (val > riskUpLimit) {
+                                    return { css: { "background-color": "red" }, classes: {} };
+                                }
+                            }
+                            if (lowLimit !== 0 || upLimit !== 0) {
+                                if (val < lowLimit) {
+                                    return { css: { "background-color": "yellow" }, classes: {} };
+                                }
+                                if (val > upLimit) {
+                                    return { css: { "background-color": "yellow" }, classes: {} };
+                                }
+                            }
+                        }
+                        return { css: {}, classes: {} };
+                    }
+                }, {
+                    field: 'Limit',
+                    title: '參考值',
+                    align: 'left',
+                    width: '15%',
+                    formatter: function (value, row, index) {
+                        if (row.NeedCompare) {
+                            var lowLimit = parseFloat(row.LowerLimit);
+                            var upLimit = parseFloat(row.UpperLimit);
+                            if (lowLimit !== 0 || upLimit !== 0) {
+                                return $.trim(row.LowerLimit) + ' ~ ' + $.trim(row.UpperLimit);
+                            }                            
+                        }
+                        return '';
+                    }
+                }, {
+                    field: 'RiskLimit',
+                    title: '危險值',
+                    align: 'left',
+                    width: '15%',
+                    formatter: function (value, row, index) {
+                        if (row.NeedCompare) {
+                            var riskLowLimit = parseFloat(row.RiskLowerLimit);
+                            var riskUpLimit = parseFloat(row.RiskUpperLimit);
+                            if (riskLowLimit !== 0 || riskUpLimit !== 0) {
+                                return $.trim(row.RiskLowerLimit) + ' ~ ' + $.trim(row.RiskUpperLimit);
+                            }
+                        }
+                        return '';
+                    }
+                },{
+                    field: 'Unit',
+                    title: '單位',
+                    align: 'left',
+                    width: '10%'
+                }, {
+                    field: 'Reference',
+                    title: '備註',
+                    align: 'left',
+                    width: '20%'
+                }],
+                data: data,
+                mobileResponsive: true,
+                minWidth: 480
+            });
+        }
+
+        $(function () {
+            var labdata = @Html.Raw(JsonConvert.SerializeObject(Model));
+            var $pkgtable = $("#table-labpackage");
+            var $dtltable = $("#table-labdetail");
+            var pkgdata = [];
+            var dtldata = [];
+            $.each(labdata, function(index, row){
+                if (row.IsParent === true) {
+                    pkgdata.push(row);
+                } else {
+                    dtldata.push(row);
+                }
+            });
+            if (pkgdata.length > 0) {
+                buildPackageTable($pkgtable, pkgdata);
+            }
+            if (dtldata.length > 0) {
+                buildDetailTable($dtltable, dtldata);
+            }
+        });
+    </script>
+}

@@ -22,11 +22,16 @@
                     <span class="fa-stack fa-lg pull-left"><i class="fa fa-image fa-stack-1x"></i></span> 胎兒映像
                 </a>
             </li>
-            <li>
+            <li class="@(string.Equals(actionName,"LabList")?"active":"")">
+                <a href="@Url.Action("LabList", "Lab")" class="collapsed" data-toggle="collapse" data-target=".sidebar-subitems">
+                    <span class="fa-stack fa-lg pull-left"><i class="fa fa-flask fa-stack-1x"></i></span> 檢驗報告
+                </a>
+            </li>
+            @*<li>
                 <a href="#" class="collapsed" data-toggle="collapse" data-target=".sidebar-subitems">
                     <span class="fa-stack fa-lg pull-left"><i class="fa fa-flask fa-stack-1x"></i></span> 檢驗報告(建構中)
                 </a>
-            </li>
+            </li>*@
             <li>
                 <a href="#" class="collapsed" data-toggle="collapse" data-target=".sidebar-subitems">
                     <span class="fa-stack fa-lg pull-left"><i class="fa fa-medkit fa-stack-1x"></i></span> 用藥記錄(建構中)
@@ -55,7 +60,7 @@
         @*</div>*@
         <hr />
         <footer>
-            <p>&copy; @DateTime.Now.Year - 宏其婦幼醫院宏其i-Care系統</p>
+            <p>&copy; @DateTime.Now.Year - 宏其醫療社團法人宏其婦幼醫院&nbsp;&nbsp;宏其i-care系統</p>
         </footer>
         @*</div>*@
     </div>

@@ -34,6 +34,144 @@ namespace HchWebPhr.Controllers
 
         [HttpGet]
         [AdminOnly]
+        public ActionResult Terms()
+        {
+            var termBiz = new ConditionTermBiz();
+            var termList = termBiz.GetAllTerms();
+            return View(termList);
+        }
+
+        [HttpGet]
+        [AdminOnly]
+        public ActionResult NewTerm(string termId)
+        {
+            var termModel = new NewEditTermModel {
+                EffectiveDateTime = DateTime.Today
+            };
+            if (string.IsNullOrEmpty(termId) == false)
+            {
+                int tId = 0;
+                if (int.TryParse(termId,out tId))
+                {
+                    var termBiz = new ConditionTermBiz();
+                    var term = termBiz.GetTerm(tId);
+                    if (term != null)
+                    {
+                        //termModel.TermId = term.ConditionTermId;
+                        termModel.EffectiveDateTime = term.EffectiveDateTime;
+                        termModel.ConditionTerm = HttpUtility.HtmlDecode(term.TermContent);
+                    }
+                }
+            }
+            return View("Term", termModel);
+        }
+
+        [HttpGet]
+        [AdminOnly]
+        public ActionResult EditTerm(string termId)
+        {
+            if (string.IsNullOrEmpty(termId) == false)
+            {
+                int tId = 0;
+                if (int.TryParse(termId, out tId))
+                {
+                    var termBiz = new ConditionTermBiz();
+                    var term = termBiz.GetTerm(tId);
+                    if (term != null)
+                    {
+                        var termModel = new NewEditTermModel
+                        {
+                            Id = term.ConditionTermId,
+                            EffectiveDateTime = term.EffectiveDateTime,
+                            ConditionTerm = HttpUtility.HtmlDecode(term.TermContent)
+                        };
+                        return View("Term", termModel);
+                    }
+                }
+            }
+            var err = new ErrorContext
+            {
+                ErrorCode = "404",
+                ErrorMessage = "找不到此使用紙授權條款，請聯絡系統管理員！"
+            };
+            ViewBag.actionUrl = Url.Action("Terms", "Auth");
+            ViewBag.actionDesc = "回到上頁";
+            return View("Error", err);
+        }
+
+        [HttpPost]
+        [AdminOnly]
+        public ActionResult SaveTerm(NewEditTermModel termModel)
+        {
+            var ViewName = termModel.Id <= 0 ? "NewTerm" : "EditTerm";
+            if (ModelState.IsValid == false)
+            {
+                termModel.ConditionTerm = HttpUtility.HtmlDecode(termModel.ConditionTerm);
+                return View(ViewName, termModel);
+            }
+            var termBiz = new ConditionTermBiz();
+            if (termBiz.SaveTerm(termModel) == false)
+            {
+                var err = new ErrorContext
+                {
+                    ErrorCode = termBiz.ErrorCode,
+                    ErrorMessage = termBiz.ErrorMessage
+                };
+                ViewBag.actionUrl = Url.Action("Terms", "Auth");
+                ViewBag.actionDesc = "回到上頁";
+                return View("Error", err);
+            }
+            return RedirectToAction("Terms", "Auth");
+        }
+
+        [HttpDelete]
+        [AdminOnly]
+        [AjaxOnly]
+        public JsonNetResult DeleteTerm(string termId)
+        {
+            int tId = 0;
+            if (int.TryParse(termId, out tId))
+            {
+                var termBiz = new ConditionTermBiz();
+                var term = termBiz.GetTerm(tId);
+                if (term != null)
+                {
+                    if (termBiz.DeleteTerm(tId) == false)
+                    {
+                        return new JsonNetResult
+                        {
+                            ContentType = "application/json",
+                            Data = new
+                            {
+                                status = "fail",
+                                message = termBiz.ErrorCode + " - " + termBiz.ErrorMessage
+                            }
+                        };
+                    }
+                    return new JsonNetResult
+                    {
+                        ContentType = "application/json",
+                        Data = new
+                        {
+                            status = "success",
+                            message = "刪除成功！"
+                        }
+                    };
+                }
+            }
+            return new JsonNetResult
+            {
+                ContentType = "application/json",
+                Data = new
+                {
+                    status = "fail",
+                    message = "找不到此使用者同意條款！"
+                }
+            };
+        }
+
+        [HttpGet]
+        [AdminOnly]
         public ActionResult Features()
         {
             var ft = FeatureRepository.GetRepository();

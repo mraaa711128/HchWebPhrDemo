@@ -7,13 +7,14 @@ using HchWebPhr.Models.FormModels;
 using HchWebPhr.Models.ViewModels;
 using HchWebPhr.Utilities;
 using HchWebPhr.Utilities.Filters;
-using HchWebPhr.Utilities.Helper;
+using HchWebPhr.Utilities.Helpers;
 using RazorEngine;
 using RazorEngine.Templating;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Net.Mail;
+using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
 using UtilitiesLib.Validators;
@@ -79,14 +80,15 @@ namespace HchWebPhr.Controllers
                     var loginUser = acc.GetUser(x => x.UserName.Equals(login.UserName));
                     FormAuthHelper.SetLoginUser(loginUser);
                 }
-                if (String.IsNullOrEmpty(returnUrl) == false)
-                {
-                    return RedirectToLocal(returnUrl);
-                }
-                else
-                {
-                    return RedirectToAction("Dashboard", "User");
-                }
+                return RedirectToAction("AgreeTerm", "Account", new { returnUrl = returnUrl });
+                //if (String.IsNullOrEmpty(returnUrl) == false)
+                //{
+                //    return RedirectToLocal(returnUrl);
+                //}
+                //else
+                //{
+                //    return RedirectToAction("Dashboard", "User");
+                //}
             }
         }
 
@@ -113,13 +115,17 @@ namespace HchWebPhr.Controllers
         public ActionResult SignUp(SignUpModel mSignUp)
         {
             //SignupModel
+            if (TaiwanIDValidator.validTaiwanId(mSignUp.IdNo) == false)
+            {
+                ModelState.AddModelError("IdNo", "身分證字號驗證錯誤!");
+            }
             if (ModelState.IsValid == false) { return View(mSignUp); }
             var acc = new AccountBiz();
             IList<SignUpPatient> PtList = null;
-            if (acc.CheckPatientIdentity(mSignUp.EMail,mSignUp.BirthDate,out PtList))
+            if (acc.CheckPatientIdentity2(mSignUp.IdNo,mSignUp.BirthDate,out PtList))
             {
                 Session.Add("SIGNUP_PATIENT_LIST", PtList);
-                return RedirectToAction("SignUpConfirm");
+                return RedirectToAction("SignUpConfirm", "Account", new { email = mSignUp.EMail });
             }
             ViewBag.ErrorCode = acc.ErrorCode;
             ViewBag.ErrorMessage = acc.ErrorMessage;
@@ -128,7 +134,7 @@ namespace HchWebPhr.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        public ActionResult SignUpConfirm()
+        public ActionResult SignUpConfirm(string Email = "")
         {
             var PtList = Session["SIGNUP_PATIENT_LIST"];
             if (PtList == null)
@@ -141,16 +147,27 @@ namespace HchWebPhr.Controllers
                 };
                 return View("Error",error);
             }
+            ViewBag.ConfirmEmail = Email;
             return View(PtList);
         }
 
         [HttpPost]
         [AjaxOnly]
         [AllowAnonymous]
-        public ActionResult SignUpConfirm(SignUpPatient ConfirmPatient)
+        public ActionResult SignUpConfirm(string Email, SignUpPatient ConfirmPatient)
         {
+            if (string.IsNullOrEmpty(Email))
+            {
+                var error = new ErrorContext
+                {
+                    ErrorCode = "900",
+                    ErrorMessage = "無法正確寄出確認信，請聯絡系統管理員！"
+                };
+                return View("Error", error);
+            }
             string ActivateToken = "";
             var acc = new AccountBiz();
+            ConfirmPatient.EMail = Email;
             if (acc.SignUpUser(ConfirmPatient, out ActivateToken) == false)
             {
                 var error = new ErrorContext
@@ -785,6 +802,68 @@ namespace HchWebPhr.Controllers
                 SuccessCode = "200",
                 SuccessDescription = "已成功更新電子郵件！"
             });
+        }
+
+        [HttpGet]
+        public ActionResult AgreeTerm(string returnUrl)
+        {
+            var user = FormAuthHelper.GetLoginUser();
+            var agreeDateTime = user.AgreeDateTime;
+            if (agreeDateTime == null) { agreeDateTime = new DateTime(2016,9,1); }
+            var termBiz = new ConditionTermBiz();
+            var term = termBiz.GetEffectiveTerm(agreeDateTime);
+            if (term == null)
+            {
+                if (string.IsNullOrEmpty(returnUrl))
+                {
+                    return RedirectToAction("Dashboard", "User");
+                }
+                else
+                {
+                    return RedirectToLocal(returnUrl);
+                }
+            } else
+            {
+                var termModel = new AgreeTermModel
+                {
+                    ConditionTerm = term.TermContent,
+                    Agree = false
+                };
+                ViewBag.returnUrl = returnUrl;
+                return View(termModel);
+            }
+        }
+
+        [HttpPost]
+        public ActionResult AgreeTerm(string returnUrl, AgreeTermModel agreeModel)
+        {
+            if (agreeModel.Agree == false) { ModelState.AddModelError("Agree", "您必須同意使用者授權條款才可繼續使用！"); }
+            if (ModelState.IsValid == false)
+            {
+                ViewBag.returnUrl = returnUrl;
+                return View(agreeModel);
+            }
+            var acc = new AccountBiz();
+            if (acc.AgreeTerm(User.Identity.Name) == false)
+            {
+                FormsAuthentication.SignOut();
+                Session.RemoveAll();
+                var err = new ErrorContext
+                {
+                    ErrorCode = acc.ErrorCode,
+                    ErrorMessage = acc.ErrorMessage
+                };
+                return View("Error", err);
+            }
+            var loginUser = acc.GetUser(x => x.UserName.Equals(User.Identity.Name));
+            FormAuthHelper.SetLoginUser(loginUser);
+            if (string.IsNullOrEmpty(returnUrl))
+            {
+                return RedirectToAction("Dashboard", "User");
+            } else
+            {
+                return RedirectToLocal(returnUrl);
+            }
         }
         //[HttpGet]
         //public ActionResult UpdateProfile()

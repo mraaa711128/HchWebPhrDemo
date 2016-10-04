@@ -10,7 +10,8 @@
 }
 <h3 class="page-header">登入</h3>
 <div class="row">
-    <div class="col-xxxs-push-0 col-xxxs-12 col-xs-push-1 col-xs-10 col-sm-push-3 col-sm-6">
+    @*<div class="col-xxxs-push-0 col-xxxs-12 col-xs-push-1 col-xs-10 col-sm-push-3 col-sm-6">*@
+    <div class="col-xxxs-12 col-sm-push-6 col-sm-6">
         <p class="lead"><span class="fa fa-caret-down"></span> 請輸入帳號密碼：</p>
         <div class="row">
             <div class="col-xxxs-12">
@@ -31,6 +32,7 @@
                                                  new { @id = Html.IdFor(x => x.UserName), @class = "form-control" })
                                 <span class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true"></span>
                                 <span id="inputError2Status" class="sr-only">(error)</span>
+                                @Html.ValidationMessageFor(x => x.UserName, null, new { @class = "control-label"})
                             </div>
                         }
                         else
@@ -51,6 +53,7 @@
                                                   new { @id = Html.IdFor(x => x.Password), @class = "form-control" })
                                 <span class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true"></span>
                                 <span id="inputError2Status" class="sr-only">(error)</span>
+                                @Html.ValidationMessageFor(x => x.Password, null, new { @class = "control-label" })
                             </div>
 
                         }
@@ -73,6 +76,7 @@
                                                  new { @id = Html.IdFor(x => x.ValidCode), @class = "form-control", @maxlength = "5", @autocomplete = "false" })
                                     <span class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true"></span>
                                     <span id="inputError2Status" class="sr-only">(error)</span>
+                                    @Html.ValidationMessageFor(x => x.ValidCode, null, new { @class = "control-label" })
                                 </div>
 
                             }
@@ -121,6 +125,12 @@
                 }
             </div>
         </div>
+    </div>
+    <div class="col-xxxs-12 col-sm-pull-6 col-sm-6">
+        <blockquote>
+            <p class="lead">在各類行動裝置或電腦加入宏其i-care，提供您胎兒映像、檢驗報告、婦科抹片與人類乳突病毒檢驗報告，讓您隨時可查詢屬於您個人化健康管理。</p>
+            @*<footer style="color: black;">宏其醫療社團法人宏其婦幼醫院</footer>*@
+        </blockquote>
     </div>
 </div>
 @section Scripts {

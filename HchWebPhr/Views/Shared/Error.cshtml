@@ -1,5 +1,17 @@
 ﻿@using HchWebPhr.Models.ViewModels
 
+@if (User.Identity.IsAuthenticated == false)
+{
+    Layout = "~/Views/Shared/_TopNavLayout.cshtml";
+    ViewBag.Title = "錯誤";
+    ViewBag.TopBarOnly = true;
+}
+else
+{
+    Layout = "~/Views/Shared/_SideNavLayout.cshtml";
+    ViewBag.Title = "錯誤";
+}
+
 @model ErrorContext
 
 <h3 class="page-header">失敗</h3>
@@ -21,7 +33,14 @@
                         <button id="clear_check" type="button" class="btn btn-default btn-block">取消勾選</button>
                     </div>*@
                 <div class="col-xxxs-6 col-xxxs-push-3">
-                    @Html.ActionLink("回到首頁", "", "", null, new { @class = "btn btn-primary btn-block" })
+                    @if (string.IsNullOrEmpty((string)ViewBag.actionUrl))
+                    {
+                        @Html.ActionLink("回到首頁", "", "", null, new { @class = "btn btn-primary btn-block" })
+                    }
+                    else
+                    {
+                        <a href="@ViewBag.actionUrl" class="btn btn-primary btn-block">@ViewBag.actionDesc</a>
+                    }
                     @*<button id="go_home" type="button" class="btn btn-primary btn-block">回到首頁</button>*@
                 </div>
             </div>

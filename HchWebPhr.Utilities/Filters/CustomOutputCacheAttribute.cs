@@ -1,4 +1,4 @@
-﻿using HchWebPhr.Utilities.Helper;
+﻿using HchWebPhr.Utilities.Helpers;
 using System.Web.Mvc;
 
 namespace HchWebPhr.Utilities.Filters

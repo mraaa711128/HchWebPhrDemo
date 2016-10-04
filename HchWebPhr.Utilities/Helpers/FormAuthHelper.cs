@@ -4,7 +4,7 @@ using System;
 using System.Web;
 using System.Web.Security;
 
-namespace HchWebPhr.Utilities.Helper
+namespace HchWebPhr.Utilities.Helpers
 {
     public static class FormAuthHelper
     {

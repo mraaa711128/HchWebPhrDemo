@@ -22,9 +22,14 @@
                     <span class="fa-stack fa-lg pull-left"><i class="fa fa-image fa-stack-1x"></i></span> 使用者
                 </a>
             </li>*@
-            <li class="@(string.Equals(actionName,"Features")?"active":"")">
+            @*<li class="@(string.Equals(actionName,"Features")?"active":"")">
                 <a href="@Url.Action("Features","Auth")" class="collapsed" data-toggle="collapse" data-target=".sidebar-subitems">
                     <span class="fa-stack fa-lg pull-left"><i class="fa fa-flask fa-stack-1x"></i></span> 功能表
+                </a>
+            </li>*@
+            <li class="@(string.Equals(actionName,"Terms")?"active":"")">
+                <a href="@Url.Action("Terms","Auth")" class="collapsed" data-toggle="collapse" data-target=".sidebar-subitems">
+                    <span class="fa-stack fa-lg pull-left"><i class="fa fa-list fa-stack-1x"></i></span> 使用者條款
                 </a>
             </li>
             @*<li>
@@ -55,7 +60,7 @@
         @*</div>*@
         <hr />
         <footer>
-            <p>&copy; @DateTime.Now.Year</p>
+            <p>&copy; @DateTime.Now.Year - 宏其醫療社團法人宏其婦幼醫院&nbsp;&nbsp;宏其i-care系統</p>
         </footer>
         @*</div>*@
     </div>

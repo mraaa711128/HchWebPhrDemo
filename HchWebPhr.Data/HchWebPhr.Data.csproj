@@ -29,6 +29,15 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Staging|AnyCPU'">
+    <OutputPath>bin\Staging\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
@@ -76,8 +85,13 @@
     <Compile Include="Migrations\201607280902230_AddActivateDateTime.Designer.cs">
       <DependentUpon>201607280902230_AddActivateDateTime.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201609291140321_AddConditionTerm.cs" />
+    <Compile Include="Migrations\201609291140321_AddConditionTerm.Designer.cs">
+      <DependentUpon>201609291140321_AddConditionTerm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountLog.cs" />
+    <Compile Include="Models\ConditionTerm.cs" />
     <Compile Include="Models\Feature.cs" />
     <Compile Include="Models\PhrEntities.cs" />
     <Compile Include="Models\User.cs" />
@@ -87,6 +101,7 @@
     <Compile Include="Repositories\GenericRepository.cs" />
     <Compile Include="Repositories\Interface\IRepository.cs" />
     <Compile Include="Repositories\Interface\IResult.cs" />
+    <Compile Include="Repositories\TermRepository.cs" />
     <Compile Include="Repositories\UserRepository.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -119,6 +134,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201607280902230_AddActivateDateTime.resx">
       <DependentUpon>201607280902230_AddActivateDateTime.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201609291140321_AddConditionTerm.resx">
+      <DependentUpon>201609291140321_AddConditionTerm.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

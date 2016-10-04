@@ -2,7 +2,7 @@
 using System.Configuration;
 using System.Web;
 
-namespace HchWebPhr.Utilities.Helper
+namespace HchWebPhr.Utilities.Helpers
 {
     public class ConfigHelper
     {

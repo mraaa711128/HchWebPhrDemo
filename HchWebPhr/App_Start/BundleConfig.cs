@@ -1,4 +1,4 @@
-﻿using HchWebPhr.Utilities.Helper;
+﻿using HchWebPhr.Utilities.Helpers;
 using System.Web.Optimization;
 using System;
 using System.Web;
@@ -55,7 +55,8 @@ namespace HchWebPhr
                 .Include("~/Content/component/ckeditor/adapters/jquery.js"));
 
             bundles.Add(new ScriptBundle("~/Content/js/scripts")
-                .Include("~/Content/js/captcha.js"));
+                .Include("~/Content/js/captcha.js")
+                .Include("~/Content/js/hchwebphr.js"));
 
             #endregion
 

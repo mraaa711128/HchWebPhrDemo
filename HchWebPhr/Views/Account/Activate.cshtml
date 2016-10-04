@@ -68,6 +68,7 @@
                                                  new { @id = Html.IdFor(x => x.UserName), @class = "form-control" })
                                 <span class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true"></span>
                                 <span id="inputError2Status" class="sr-only">(error)</span>
+                                @Html.ValidationMessageFor(x => x.UserName, null, new { @class = "control-label" })
                             </div>
                         }
                         else
@@ -88,6 +89,7 @@
                                                     new { @id = Html.IdFor(x => x.Password), @class = "form-control" })
                                 <span class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true"></span>
                                 <span id="inputError2Status" class="sr-only">(error)</span>
+                                @Html.ValidationMessageFor(x => x.Password, null, new { @class = "control-label" })
                             </div>
                         }
                         else
@@ -108,6 +110,7 @@
                                                  new { @id = Html.IdFor(x => x.RePassword), @class = "form-control" })
                                 <span class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true"></span>
                                 <span id="inputError2Status" class="sr-only">(error)</span>
+                                @Html.ValidationMessageFor(x => x.RePassword, null, new { @class = "control-label" })
                             </div>
                         }
                         else

@@ -1,6 +1,6 @@
 ﻿@using HchWebPhr.Models.ViewModels
 @using Newtonsoft.Json
-@using HchWebPhr.Utilities.Helper
+@using HchWebPhr.Utilities.Helpers
 
 @model IList<SignUpPatient>
 
@@ -41,7 +41,7 @@
 
     <script type="text/javascript">
         function ConfirmSignUp() {
-            var confirmUrl = '@(Url.Action("SignUpConfirm","Account"))';
+            var confirmUrl = '@(Url.Action("SignUpConfirm","Account", new { Email = ViewBag.ConfirmEmail}))';
             var selObjs = $("#signup_table").bootstrapTable('getSelections');
             if (typeof selObjs !== 'undefined' && selObjs.length > 0) {
                 var confirmPt = selObjs[0];

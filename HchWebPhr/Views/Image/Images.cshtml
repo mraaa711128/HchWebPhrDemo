@@ -1,5 +1,5 @@
 ﻿@using HchWebPhr.Models.ViewModels
-@using HchWebPhr.Utilities.Helper
+@using HchWebPhr.Utilities.Helpers
 @using HchWebPhr.Utilities.Extensions
 
 @model PhotoAlbumInfo
@@ -56,9 +56,9 @@
                 }
 
                 <div class="col-xxxs-12 col-xxs-6 col-sm-4 col-md-3 col-lg-2">
-                    <a href="#" class="btn-image">
+                    @*<a href="#" class="btn-image">*@
                         <img class="img-thumbnail img-responsive center-block" src="@Url.Content(imageUrl)" />
-                    </a>
+                    @*</a>*@
                     @*<h4 class="center-block" style="text-align: center; min-height: 60px;">@imageFileName</h4>*@
                 </div>
             }
@@ -131,6 +131,9 @@
     @Scripts.Render("~/Content/js/photoswipe")
 
     <script type="text/javascript">
+        //var imgList = [];
+        //var photoswipe = null;
+
         function getNaturalSize(idx, elm, callback) {
             if (elm) {
                 if (elm.naturalWidth) {
@@ -151,12 +154,31 @@
             }
         }
 
-
-        $(function () {
-            $(".img-thumbnail").on("error", function (e) {
-                this.src = '@Url.Content("~/Content/img/noimage.png")';
+        function loadPhotoSwipeImage(imgList) {
+            $(".img-thumbnail").each(function (idx, elm) {
+                if (elm) {
+                    var photoItem = { src: elm.src, w: 0, h: 0 };
+                    imgList.push(photoItem);
+                    getNaturalSize(idx, elm, setPhotoSize);
+                }
             });
 
+            //var pswp = $(".pswp")[0];
+            //var options = {
+            //    index: 0
+            //};
+            //photoswipe = new PhotoSwipe(pswp, PhotoSwipeUI_Default, imgList, options);
+        }
+
+        //function setPhotoSize(idx, size) {
+        //    var photo = imgList[idx];
+        //    if (photo) {
+        //        photo.w = size.width;
+        //        photo.h = size.height;
+        //    }
+        //}
+
+        $(function () {
             var imgList = [];
 
             var setPhotoSize = function (idx, size) {
@@ -165,27 +187,50 @@
                     photo.w = size.width;
                     photo.h = size.height;
                 }
-            }
+            };
             
-            $(".btn-image").click(function () {
-                imgList = [];
-
+            var loadImage = function (ImageList) {
                 $(".img-thumbnail").each(function (idx, elm) {
                     if (elm) {
                         var photoItem = { src: elm.src, w: 0, h: 0 };
-                        imgList.push(photoItem);
+                        ImageList.push(photoItem);
                         getNaturalSize(idx, elm, setPhotoSize);
                     }
                 });
-                var idx = $(".btn-image").index(this);
-                var pswp = $(".pswp")[0];
-                var options = {
-                    index: idx
-                };
-                var photoswipe = new PhotoSwipe(pswp, PhotoSwipeUI_Default, imgList, options);
-                photoswipe.init();
+            };
+
+            //$(".img-thumbnail").each(function (idx, elm) {
+            //    if (elm) {
+            //        var photoItem = { src: elm.src, w: 0, h: 0 };
+            //        imgList.push(photoItem);
+            //        getNaturalSize(idx, elm, setPhotoSize);
+            //    }
+            //});
+
+            $(".img-thumbnail").on("error", function (e) {
+                this.src = '@Url.Content("~/Content/img/noimage.png")';
             });
 
+            $(window).load(function (e) {
+                $(this).queue(function () {
+                    loadImage(imgList);
+                    $(this).dequeue();
+                }).queue(function () {
+                    $(".img-thumbnail").click(function () {
+                        //imgList = [];
+
+                        var idx = $(".img-thumbnail").index(this);
+                        var pswp = $(".pswp")[0];
+                        var options = {
+                            index: 0
+                        };
+                        var photoswipe = new PhotoSwipe(pswp, PhotoSwipeUI_Default, imgList, options);
+                        photoswipe.init();
+                        photoswipe.goTo(idx);
+                    });
+                    $(this).dequeue();
+                });
+            });
         });
     </script>
 }

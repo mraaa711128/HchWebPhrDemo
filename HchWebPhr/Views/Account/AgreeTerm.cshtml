@@ -1,0 +1,81 @@
+﻿@using HchWebPhr.Models.FormModels
+
+@model AgreeTermModel
+
+@{
+    Layout = "~/Views/Shared/_TopNavLayout.cshtml";
+    ViewBag.Title = "使用者條款";
+    ViewBag.TopBarOnly = true;
+    ViewBag.NeedAgreeTerm = true;
+}
+
+<h3 class="page-header">@ViewBag.Title</h3>
+<div class="row">
+    <div class="col-xxxs-push-0 col-xxxs-12 col-xs-push-1 col-xs-10">
+        <p class="lead text-center"><span class="fa fa-caret-down"></span> 請閱讀並選擇同意與否 <span class="fa fa-caret-down"></span></p>
+        @using(Html.BeginForm("AgreeTerm", "Account", 
+                              new { returnUrl = ViewBag.returnUrl }, FormMethod.Post, 
+                              new { @role = "form", @class = "form-horizontal" }))
+        {
+            @Html.AntiForgeryToken()
+            <div class="form-group">
+                <div class="col-xxxs-12">
+                    <div id="div_terms">@Html.Raw(HttpUtility.HtmlDecode(Model.ConditionTerm))</div>
+                    @Html.HiddenFor(x => x.ConditionTerm)
+                    @*@Html.TextAreaFor(x => x.ConditionTerm, new { @class = "form-control", @rows = "20", @readonly = true })*@
+                </div>
+            </div>
+            if (ViewData.ModelState.IsValidField("Agree") == false)
+            {
+                <div class="form-group has-error has-feedback">
+                    <div class="col-xxxs-12">
+                        <div class="checkbox">
+                            <label class="col-xxxs-12">
+                                @Html.CheckBoxFor(x => x.Agree) <strong>我同意上方所述各項使用者條款</strong>
+                            </label>
+                        </div>
+                        @Html.ValidationMessageFor(x => x.Agree, null, new { @class = "control-label" })
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="form-group">
+                    <div class="col-xxxs-12">
+                        <div class="checkbox">
+                            <label class="col-xxxs-12">
+                                @Html.CheckBoxFor(x => x.Agree) <strong>我同意上方所述各項使用者條款</strong>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            }
+            <div class="form-group">
+                <div class="col-xxxs-12 col-xs-6">
+                    <button type="submit" class="btn btn-success btn-block">我同意</button>
+                </div>
+                <div class="col-xxxs-12 col-xs-6">
+                    <a href="@Url.Action("Logoff", "Account")" class="btn btn-danger btn-block">不同意</a>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <script type="text/javascript">
+        function changeTermSize() {
+            var termBodyMaxHeight = window.innerHeight - 350;
+            $("#div_terms").css("height", termBodyMaxHeight);
+            $("#div_terms").css("overflow-y", "auto");
+        }
+
+        $(function () {
+            $(window).resize(function () {
+                changeTermSize();
+            });
+
+            changeTermSize();
+        });
+    </script>    
+}

@@ -1,0 +1,47 @@
+﻿@using HchWebPhr.Models.ViewModels
+
+@model LabItemGInfo
+
+@{
+    Layout = "~/Views/Shared/_SideNavLayout.cshtml";
+    ViewBag.Title = "檢驗結果";
+    ViewBag.actionName = "LabList";
+}
+
+<ol class="breadcrumb">
+    <li>@Html.ActionLink("檢驗報告", "LabList", "Lab")</li>
+    <li class="active">@ViewBag.Title</li>
+</ol>
+
+<div class="row">
+    <div class="col-xxxs-12">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h4 class="panel-title">檢驗診斷</h4>
+            </div>
+            <div class="panel-body">
+                <p>
+                    @{
+                        var diagnosis = Model.Diagnosis.Split('\n');
+                    }
+                    @(string.Join("<br />", diagnosis))
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="col-xxxs-12">
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <h4 class="panel-title">建議處置</h4>
+            </div>
+            <div class="panel-body">
+                <p>
+                    @{
+                        var comment = Model.Comment.Split('\n');
+                    }
+                    @(string.Join("<br />", comment))
+                </p>
+            </div>
+        </div>
+    </div>
+</div>

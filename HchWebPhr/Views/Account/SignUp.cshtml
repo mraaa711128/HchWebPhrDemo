@@ -1,5 +1,5 @@
 ﻿@using HchWebPhr.Models.FormModels
-@using HchWebPhr.Utilities.Helper
+@using HchWebPhr.Utilities.Helpers
 @using HchWebPhr.CaptchaLib
 
 @model SignUpModel
@@ -14,7 +14,7 @@
     @Styles.Render("~/Content/css/bootstrap-datetimepicker")
 }
 
-<h3 class="page-header">註冊帳號</h3>
+<h3 class="page-header">註冊帳號&nbsp;<small>(<a href="@Url.Content("~/Content/pdf/register-intro.pdf")" target="_blank">註冊說明</a>)</small></h3>
 <div class="row">
     <div class="col-xxxs-push-0 col-xxxs-12 col-xs-push-1 col-xs-10 col-sm-push-3 col-sm-6">
         <p class="lead"><span class="fa fa-caret-down"></span> 請輸入以下資訊：</p>
@@ -28,6 +28,102 @@
                     @Html.AntiForgeryToken()
                     @*<form role="form" class="form-horizontal">*@
                     <div class="form-group">
+                        @Html.LabelFor(x => x.IdNo,
+                                           new { @class = "col-xxxs-12 col-sm-5 col-md-4 control-label" })
+                        @*<label class="col-xxs-12 col-sm-5 col-md-4 control-label">
+                                病歷號或身分證號：
+                            </label>*@
+                        @if (ViewData.ModelState["IdNo"] != null && ViewData.ModelState["IdNo"].Errors.Count > 0)
+                        {
+                            <div class="col-xxxs-12 col-sm-7 col-md-8 has-error has-feedback">
+                                @Html.TextBoxFor(x => x.IdNo,
+                                                 new { @id = Html.IdFor(x => x.IdNo), @class = "form-control" })
+                                <span class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true"></span>
+                                <span id="inputError2Status" class="sr-only">(error)</span>
+                                @Html.ValidationMessageFor(x => x.IdNo, null, new { @class = "control-label" })
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="col-xxxs-12 col-sm-7 col-md-8">
+                                @Html.TextBoxFor(x => x.IdNo,
+                                                 new { @id = Html.IdFor(x => x.IdNo), @class = "form-control" })
+                                @*<input type="text" class="form-control" />*@
+                            </div>
+                        }
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.BirthDate,
+                                           new { @class = "col-xxxs-12 col-sm-5 col-md-4 control-label" })
+                        @*<label class="col-xxs-12 col-sm-5 col-md-4 control-label">病患生日：</label>*@
+                        @if (ViewData.ModelState["BirthDate"] != null && ViewData.ModelState["BirthDate"].Errors.Count > 0)
+                        {
+                            <div class="col-xxxs-12 col-sm-7 col-md-8 has-error has-feedback">
+                                <div class="input-group date datetime-picker">
+                                    @if (ConfigHelper.GetBoolean("USE_TAIWAN_YEAR"))
+                                    {
+                                        @Html.TextBoxFor(x => x.TwBirthDate,
+                                                new { @id = Html.IdFor(x => x.TwBirthDate), @class = "form-control date-input" })
+                                    }
+                                    else
+                                    {
+                                        @Html.TextBoxFor(x => x.BirthDate, "{0:yyyy/MM/dd}",
+                                                new { @id = Html.IdFor(x => x.BirthDate), @class = "form-control date-input" })
+                                    }
+                                    <span class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true"></span>
+                                    <span id="inputError2Status" class="sr-only">(error)</span>
+                                    @*<input type="text" class="form-control" />*@
+                                    <div class="input-group-addon">
+                                        <span class="fa fa-calendar"></span>
+                                    </div>
+                                </div>
+                                @Html.ValidationMessageFor(x => x.BirthDate, null, new { @class = "control-label" })
+                                @if (ConfigHelper.GetBoolean("USE_TAIWAN_YEAR"))
+                                {
+                                    <label>出生年月日輸入格式為075/01/01、105/01/01</label>
+                                }
+                                else
+                                {
+                                    <label>出生年月日輸入格式為1982/01/01、2016/01/01</label>
+                                }
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="col-xxxs-12 col-sm-7 col-md-8">
+                                <div class="input-group date datetime-picker">
+                                    @if (ConfigHelper.GetBoolean("USE_TAIWAN_YEAR"))
+                                    {
+                                        @Html.TextBoxFor(x => x.TwBirthDate,
+                                                new { @id = Html.IdFor(x => x.TwBirthDate), @class = "form-control date-input" })
+                                    }
+                                    else
+                                    {
+                                        @Html.TextBoxFor(x => x.BirthDate, "{0:yyyy/MM/dd}",
+                                                new { @id = Html.IdFor(x => x.BirthDate), @class = "form-control date-input" })
+                                    }
+                                    @*<input type="text" class="form-control" />*@
+                                    <div class="input-group-addon">
+                                        <span class="fa fa-calendar"></span>
+                                    </div>
+                                </div>
+                                @if (ConfigHelper.GetBoolean("USE_TAIWAN_YEAR"))
+                                {
+                                    <label>出生年月日輸入格式為075/01/01、105/01/01</label>
+                                }
+                                else
+                                {
+                                    <label>出生年月日輸入格式為1982/01/01、2016/01/01</label>
+                                }
+                            </div>
+                        }
+                        @if (ConfigHelper.GetBoolean("USE_TAIWAN_YEAR"))
+                        {
+                            @Html.HiddenFor(x => x.BirthDate,
+                                                new { @id = Html.IdFor(x => x.BirthDate), @class = "form-control" })
+                        }
+                    </div>
+                    <div class="form-group">
                         @Html.LabelFor(x => x.EMail,
                                            new { @class = "col-xxxs-12 col-sm-5 col-md-4 control-label" })
                         @*<label class="col-xxs-12 col-sm-5 col-md-4 control-label">
@@ -40,6 +136,7 @@
                                                  new { @id = Html.IdFor(x => x.EMail), @class = "form-control" })
                                 <span class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true"></span>
                                 <span id="inputError2Status" class="sr-only">(error)</span>
+                                @Html.ValidationMessageFor(x => x.EMail, null, new { @class = "control-label" })
                             </div>
                         }
                         else
@@ -52,51 +149,29 @@
                         }
                     </div>
                     <div class="form-group">
-                        @Html.LabelFor(x => x.BirthDate,
-                                           new { @class = "col-xxxs-12 col-sm-5 col-md-4 control-label" })
-                        @*<label class="col-xxs-12 col-sm-5 col-md-4 control-label">病患生日：</label>*@
-                        <div class="col-xxxs-12 col-sm-7 col-md-8">
-                            <div class="input-group date datetime-picker">
-                                @if (ConfigHelper.GetBoolean("USE_TAIWAN_YEAR"))
-                                {
-                                    @Html.TextBoxFor(x => x.TwBirthDate,
-                                                new { @id = Html.IdFor(x => x.TwBirthDate), @class = "form-control date-input" })
-                                }
-                                else
-                                {
-                                    @Html.TextBoxFor(x => x.BirthDate, "{0:yyyy/MM/dd}",
-                                                new { @id = Html.IdFor(x => x.BirthDate), @class = "form-control date-input" })
-                                }
-                                @*<input type="text" class="form-control" />*@
-                                <div class="input-group-addon">
-                                    <span class="fa fa-calendar"></span>
-                                </div>
-                            </div>
-                            @if (ConfigHelper.GetBoolean("USE_TAIWAN_YEAR"))
-                            {
-                                <label>出生年月日輸入格式為075/01/01、105/01/01</label>
-                            }
-                            else
-                            {
-                                <label>出生年月日輸入格式為1982/01/01、2016/01/01</label>
-                            }
-                        </div>
-                        @if (ConfigHelper.GetBoolean("USE_TAIWAN_YEAR"))
+                        @Html.LabelFor(x => x.ValidCode,
+                                        new { @class = "col-xxxs-12 col-sm-5 col-md-4 control-label" })
+                        @*<label class="col-xxs-12 col-sm-5 col-md-4 control-label">驗證碼：</label>*@
+                        @if (ViewData.ModelState["ValidCode"] != null && ViewData.ModelState["ValidCode"].Errors.Count > 0)
                         {
-                            @Html.HiddenFor(x => x.BirthDate,
-                                                new { @id = Html.IdFor(x => x.BirthDate), @class = "form-control" })
+                            <div class="col-xxxs-12 col-sm-7 col-md-8 has-error has-feedback">
+                                @Html.CaptchaFor(x => x.ValidCode, "GetCaptcha", "Account", null, "Refresh Captcha",
+                                                new { @id = Html.IdFor(x => x.ValidCode), @class = "form-control", @maxlength = "5", @autocomplete = "false" })
+                                <span class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true"></span>
+                                <span id="inputError2Status" class="sr-only">(error)</span>
+                                @Html.ValidationMessageFor(x => x.ValidCode, null, new { @class = "control-label" })
+                                @*<input type="text" class="form-control" />*@
+                            </div>
                         }
-                    </div>
-                        <div class="form-group">
-                            @Html.LabelFor(x => x.ValidCode,
-                                           new { @class = "col-xxxs-12 col-sm-5 col-md-4 control-label" })
-                            @*<label class="col-xxs-12 col-sm-5 col-md-4 control-label">驗證碼：</label>*@
+                        else
+                        {
                             <div class="col-xxxs-12 col-sm-7 col-md-8">
                                 @Html.CaptchaFor(x => x.ValidCode, "GetCaptcha", "Account", null, "Refresh Captcha",
-                                                 new { @id = Html.IdFor(x => x.ValidCode), @class = "form-control", @maxlength = "5", @autocomplete = "false" })
+                                                new { @id = Html.IdFor(x => x.ValidCode), @class = "form-control", @maxlength = "5", @autocomplete = "false" })
                                 @*<input type="text" class="form-control" />*@
                             </div>
-                        </div>
+                        }
+                    </div>
                     if (ViewBag.ErrorCode != null)
                     {
                         <div class="form-group">
@@ -184,7 +259,7 @@
                     }
                 });
 
-                @foreach(KeyValuePair<String, ModelState> field in ViewData.ModelState)
+                @*@foreach(KeyValuePair<String, ModelState> field in ViewData.ModelState)
                 {
                     var field_id = field.Key;
                     var field_obj = field.Value;
@@ -202,7 +277,7 @@
                             container: 'body'
                         });
                     </text>
-                }
+                }*@
             });
     </script>
 }

@@ -1,5 +1,5 @@
 ﻿@using HchWebPhr.Data.Models
-@using HchWebPhr.Utilities.Helper
+@using HchWebPhr.Utilities.Helpers
 
 <!DOCTYPE html>
 <html>
@@ -36,7 +36,7 @@
                     <span class="icon-bar"></span>
                 </button>
                 @*@Html.ActionLink("宏其i-Care", "", "", new { area = "" }, new { @class = "navbar-brand" })*@
-                <a href="@Url.Action("","")" class="navbar-brand">宏其&nbsp;<strong>i-Care</strong></a>
+                <a href="@Url.Action("","")" class="navbar-brand">宏其&nbsp;<strong>i-care</strong>&nbsp;@ConfigHelper.Get("STAGE-TITLE")</a>
             </div>
             <div class="navbar-collapse collapse">
                 @*<ul class="nav navbar-nav">
@@ -48,7 +48,7 @@
                     @if (User.Identity.IsAuthenticated)
                     {
                         User loginUser = FormAuthHelper.GetLoginUser();
-                        if (loginUser != null)
+                        if (loginUser != null && ViewBag.NeedAgreeTerm == null)
                         {
                             <li>
                                 <a href="#" class="dropdown-toggle" 
@@ -65,7 +65,7 @@
                                     @if (loginUser.IsAdmin)
                                     {
                                         <li class="divider"></li>
-                                        <li>@Html.ActionLink("管理者介面", "Dashboard", "Auth")</li>
+                                        <li>@Html.ActionLink("管理使用者條款", "Terms", "Auth")</li>
                                     }
                                     <li class="divider"></li>
                                     <li>@Html.ActionLink("登出","Logoff","Account")</li>
@@ -87,6 +87,10 @@
 
     <div id="modal-notice" class="modal fade"></div>
 
+    <script type="text/javascript">
+        var CKEDITOR_BASEPATH = '@Url.Content("~/Content/component/ckeditor/")';
+    </script>
+
     @Scripts.Render("~/Content/js/jquery")
     @Scripts.Render("~/Content/js/bootstrap")
     @Scripts.Render("~/Content/js/respond")
@@ -98,8 +102,6 @@
     @RenderSection("Scripts", required: false)
 
     <script type="text/javascript">
-        var CKEDITOR_BASEPATH = '@Url.Content("~/Content/component/ckeditor/")';
-
         $(function () {
             $("#btn-sidebar").click(function () {
                 $(".sidebar-wrapper").parent().toggleClass("toggled");

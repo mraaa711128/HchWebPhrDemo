@@ -1,0 +1,165 @@
+﻿@using HchWebPhr.Models.FormModels
+@using HchWebPhr.Utilities.Helpers
+
+@model NewEditTermModel
+
+@{
+    Layout = "~/Views/Shared/_AuthSideNavLayout.cshtml";
+    ViewBag.Title = Model.Id <= 0 ? "新增使用者條款" : "修改使用者條款";
+    ViewBag.actionName = "Terms";
+}
+
+@section Styles {
+    @Styles.Render("~/Content/css/bootstrap-datetimepicker")
+}
+
+<h3 class="page-header">@ViewBag.Title</h3>
+<div class="row">
+    <div class="col-xxxs-push-0 col-xxxs-12 col-xs-push-1 col-xs-10">
+        <p class="lead"><span class="fa fa-caret-down"></span> 請輸入欄位資料：</p>
+        <div class="row">
+            <div class="col-xxxs-12">
+                @using(Html.BeginForm("SaveTerm", "Auth", FormMethod.Post, new { @role = "form", @class = "form-horizontal" }))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.HiddenFor(x => x.Id)
+                    @Html.ValueFor(x => x.Id)
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.EffectiveDateTime,
+                                       new { @class = "col-xxxs-12 col-sm-3 col-md-2 control-label" })
+                        @if (ViewData.ModelState.IsValidField("EffectiveDateTime") == false)
+                        {
+                            <div class="col-xxxs-12 col-sm-4 col-md-4 has-error has-feedback">
+                                <div class="input-group date datetime-picker">
+                                    @if (ConfigHelper.GetBoolean("USE_TAIWAN_YEAR"))
+                                    {
+                                        @Html.TextBoxFor(x => x.TwEffectiveDateTime,
+                                                         new { @id = Html.IdFor(x => x.TwEffectiveDateTime), @class = "form-control date-input" })
+                                    } else
+                                    {
+                                        @Html.TextBoxFor(x => x.EffectiveDateTime, "{0:yyyy/MM/dd}",
+                                                         new { @id = Html.IdFor(x => x.EffectiveDateTime), @class = "form-control date-input" })
+                                    }
+                                    <span class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true"></span>
+                                    <span id="inputError2Status" class="sr-only">(error)</span>
+                                    <div class="input-group-addon">
+                                        <span class="fa fa-calendar"></span>
+                                    </div>
+                                </div>
+                                @Html.ValidationMessageFor(x => x.EffectiveDateTime, null, new { @class = "control-label" })
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="col-xxxs-12 col-sm-4 col-md-4">
+                                <div class="input-group date datetime-picker">
+                                    @if (ConfigHelper.GetBoolean("USE_TAIWAN_YEAR"))
+                                    {
+                                        @Html.TextBoxFor(x => x.TwEffectiveDateTime,
+                                                         new { @id = Html.IdFor(x => x.TwEffectiveDateTime), @class = "form-control date-input" })
+                                    }
+                                    else
+                                    {
+                                        @Html.TextBoxFor(x => x.EffectiveDateTime, "{0:yyyy/MM/dd}",
+                                                         new { @id = Html.IdFor(x => x.EffectiveDateTime), @class = "form-control date-input" })
+                                    }
+                                    <div class="input-group-addon">
+                                        <span class="fa fa-calendar"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                        @if (ConfigHelper.GetBoolean("USE_TAIWAN_YEAR"))
+                        {
+                            @Html.HiddenFor(x => x.EffectiveDateTime,
+                                                    new { @id = Html.IdFor(x => x.EffectiveDateTime), @class = "form-control" })
+                        }
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.ConditionTerm,
+                        new { @class = "col-xxxs-12 col-sm-3 col-md-2 control-label" })
+                        @if (ViewData.ModelState.IsValidField("ConditionTerm") == false)
+                        {
+                            <div class="col-xxxs-12 col-sm-9 col-md-10 has-error has-feedback">
+                                @Html.TextAreaFor(x => x.ConditionTerm,
+                                                  new { @id = Html.IdFor(x => x.ConditionTerm), @class = "form-control" })
+                                <span class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true"></span>
+                                <span id="inputError2Status" class="sr-only">(error)</span>
+                                @Html.ValidationMessageFor(x => x.ConditionTerm, null, new { @class = "control-label" })
+                            </div>
+
+                        }
+                        else
+                        {
+                            <div class="col-xxxs-12 col-sm-9 col-md-10">
+                                @Html.TextAreaFor(x => x.ConditionTerm,
+                                                  new { @id = Html.IdFor(x => x.ConditionTerm), @class = "form-control" })
+                            </div>
+                        }
+                    </div>
+                    <div class="form-group">
+                        <div class="col-xxxs-12 col-sm-3 col-md-2"></div>
+                        <div class="col-xxxs-12 col-sm-9 col-md-10" style="padding: 0px;">
+                            <div class="col-xxxs-6">
+                                <a href="#" class="btn btn-default btn-block" onclick="window.location.reload(true);">重來</a>
+                            </div>
+                            <div class="col-xxxs-6">
+                                <button type="submit" class="btn btn-primary btn-block">儲存</button>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    @Scripts.Render("~/Content/js/bootstrap-datetimepicker")
+    @Scripts.Render("~/Content/js/ckeditor")
+
+    <script type="text/javascript">
+        $(function () {
+            $(".datetime-picker").datetimepicker({
+                @if (ConfigHelper.GetBoolean("USE_TAIWAN_YEAR"))
+                {
+                    <text>format: 'yyy/mm/dd',</text>
+                } else
+                {
+                    <text>format: 'yyyy/mm/dd',</text>
+                }
+                startView: 2,
+                minView: 2,
+                startDate: new Date('@Html.ValueFor(x => x.EffectiveDateTime)'),
+                todayBtn: true,
+                todayHighlight: true,
+                forceParse: true,
+                autoclose: true,
+                pickerPosition: 'bottom-left',
+                keyboardNavigation: false,
+                language: 'zh-TW'
+            }).on('changeDate', function (ev) {
+                @if (ConfigHelper.GetBoolean("USE_TAIWAN_YEAR"))
+                {
+                    <text>
+                        var strDate = ev.date.getFullYear() + '/' + (ev.date.getMonth() + 1) + '/' + ev.date.getDate();
+                        $("#@Html.IdFor(x => x.EffectiveDateTime)").val(strDate);
+                    </text>
+                }
+            });
+
+            $(".date-input").change(function () {
+                $(".datetime-picker").datetimepicker("update");
+                @if (ConfigHelper.GetBoolean("USE_TAIWAN_YEAR"))
+                {
+                    <text>
+                        var date = $(".datetime-picker").datetimepicker('getDate');
+                        var strDate = date.getFullYear() + '/' + (date.getMonth() + 1) + '/' + date.getDate();
+                        $("#@Html.IdFor(x => x.EffectiveDateTime)").val(strDate);
+                    </text>
+                }
+            });
+
+            CKEDITOR.replace('@Html.IdFor(x => x.ConditionTerm)');
+        });
+    </script>    
+}

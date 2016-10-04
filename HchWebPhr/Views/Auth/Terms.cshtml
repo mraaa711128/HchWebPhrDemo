@@ -1,0 +1,112 @@
+﻿@using HchWebPhr.Models.ViewModels
+@using HchWebPhr.Utilities.Helpers
+@using Newtonsoft.Json
+
+@{
+    Layout = "~/Views/Shared/_AuthSideNavLayout.cshtml";
+    ViewBag.Title = "使用者條款";
+    ViewBag.actionName = "Terms";
+}
+
+@model IList<ConditionTermInfo>
+
+@section Styles {
+    @Styles.Render("~/Content/css/bootstrap-table")    
+}
+<h3 class="page-header">@ViewBag.Title</h3>
+<div class="row">
+    <div class="col-xxxs-push-0 col-xxxs-12 col-xs-push-1 col-xs-10">
+        <p class="lead"><span class="fa fa-caret-down"></span> 清單：</p>
+        <div class="row">
+            <div class="col-xxxs-12">
+                <table id="terms_table"></table>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xxxs-12 col-xxxs-push-0 col-md-10 col-md-push-1" style="padding: 0px;">
+                <div class="col-xxxs-6">
+                    @Html.ActionLink("新增條款", "NewTerm", "Auth", null, new { @class = "btn btn-default btn-block" })
+                </div>
+                <div class="col-xxxs-6">
+                    @Html.ActionLink("重新整理", "Terms", "Auth", null, new { @class = "btn btn-primary btn-block" })
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/Content/js/bootstrap-table")
+
+    <script type="text/javascript">
+        function DeleteTerm(termId) {
+            $.ajax({
+                type: 'DELETE',
+                url: '@Url.Action("DeleteTerm", "Auth")?termId=' + termId,
+                async: true,
+                success: function(result){
+                    console.log(result.status + ': ' + result.message);
+                },
+                complete: function() {
+                    window.location.reload(true);
+                }
+            });
+        }
+
+        $(function () {
+            $("#terms_table").bootstrapTable({
+                pagination: true,
+                pageSize: 5,
+                idField: 'Id',
+                columns: [{
+                    field: "Id",
+                    visible: false
+                }, {
+                    @if (ConfigHelper.GetBoolean("USE_TAIWAN_YEAR"))
+                    {
+                        <text>field: 'TwEffectiveDateTime',</text>
+                    } else
+                    {
+                        <text>field: "EffectiveDateTime",</text>
+                    }
+                    title: '生效日期',
+                    align: 'left',
+                    width: '10%'
+                }, {
+                    field: 'TermContent',
+                    title: '使用者條款內容',
+                    align: 'left',
+                    formatter: function (value, row, index) {
+                        return htmlDecode(value);
+                    },
+                    width: '60%'
+                }, {
+                    @if (ConfigHelper.GetBoolean("USE_TAIWAN_YEAR"))
+                    {
+                        <text>field: 'TwLastModifyDateTime',</text>
+                    } else
+                    {
+                        <text>field: "LastModifyDateTime",</text>
+                    }
+                    title: '修改日期',
+                    align: 'left',
+                    width: '10%'
+                }, {
+                    title: '執行',
+                    align: 'left',
+                    formatter: function (value, row, index) {
+                        return '<div class="row">' +
+                               '<div class="col-xxxs-4"><a href="@Url.Action("EditTerm","Auth")?termId=' + row.Id + '" class="btn btn-default btn-block">編輯 <span class="fa fa-pencil"></span></a></div>' +
+                               '<div class="col-xxxs-4"><a href="#" onclick="DeleteTerm(\'' + row.Id + '\');" class="btn btn-default btn-block">刪除 <span class="fa fa-trash"></span></a></div>' +
+                               '<div class="col-xxxs-4"><a href="@Url.Action("NewTerm","Auth")?termId=' + row.Id + '" class="btn btn-default btn-block">複製 <span class="fa fa-files-o"></span></a></div>' +
+                               '</div>';
+                    },
+                    width: '20%'
+                }],
+                data: @Html.Raw(JsonConvert.SerializeObject(Model)),
+                mobileResponsive: true,
+                minWidth: 480
+            });
+        });
+    </script>
+}

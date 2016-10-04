@@ -29,6 +29,7 @@
                                                 new { @id = Html.IdFor(x => x.OriginalEmail), @class = "form-control" })
                                 <span class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true"></span>
                                 <span id="inputError2Status" class="sr-only">(error)</span>
+                                @Html.ValidationMessageFor(x => x.OriginalEmail, null, new { @class = "control-label" })
                             </div>
                         }
                         else
@@ -50,6 +51,7 @@
                                                  new { @id = Html.IdFor(x => x.NewEmail), @class = "form-control" })
                                 <span class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true"></span>
                                 <span id="inputError2Status" class="sr-only">(error)</span>
+                                @Html.ValidationMessageFor(x => x.NewEmail, null, new { @class = "control-label" })
                             </div>
                         }
                         else
@@ -70,6 +72,7 @@
                                                  new { @id = Html.IdFor(x => x.ConfirmNewEmail), @class = "form-control" })
                                 <span class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true"></span>
                                 <span id="inputError2Status" class="sr-only">(error)</span>
+                                @Html.ValidationMessageFor(x => x.ConfirmNewEmail, null, new { @class = "control-label" })
                             </div>
                         }
                         else

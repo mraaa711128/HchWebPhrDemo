@@ -3,7 +3,7 @@ using HchWebPhr.Controllers.Base;
 using HchWebPhr.Models.FormModels;
 using HchWebPhr.Models.ViewModels;
 using HchWebPhr.Utilities.Filters;
-using HchWebPhr.Utilities.Helper;
+using HchWebPhr.Utilities.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;

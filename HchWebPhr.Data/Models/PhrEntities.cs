@@ -25,6 +25,7 @@
         public virtual DbSet<UserInfo> UserInfos { get; set; }
         public virtual DbSet<Feature> Features { get; set; }
         public virtual DbSet<AccountLog> AccountLogs { get; set; }
+        public virtual DbSet<ConditionTerm> ConditionTerms { get; set; }
     }
 
     //public class MyEntity

@@ -74,7 +74,41 @@ namespace HchWebPhr.Biz
                 return false;
             }
         }
-        
+
+        public bool CheckPatientIdentity2(string IdNo, DateTime BirthDate, out IList<SignUpPatient> PatientList)
+        {
+            PatientList = null;
+            if (DateTime.Now - BirthDate < new TimeSpan(365 * 16, 0, 0, 0))
+            {
+                ErrorCode = "400";
+                ErrorMessage = "使用者必須滿16歲方可申請獨立帳號！";
+                return false;
+            }
+            HchService svc = new HchService();
+            IList<PT> PtList = svc.GetPatientByIdNoAndBirthDate(IdNo, BirthDate);
+            if (PtList != null && PtList.Count > 0)
+            {
+                PatientList = PtList.Select(x => new SignUpPatient
+                {
+                    IdNo = x.IdNo,
+                    ChartNo = x.ChartNo,
+                    PatientName = x.PtName,
+                    BirthDate = x.BirthDate.toDateTime(),
+                    Sex = x.Sex,
+                    BloodType = x.BloodType,
+                    MobileNo = x.TelMobile,
+                    Address = x.Address
+                }).ToList();
+                return true;
+            }
+            else
+            {
+                ErrorCode = "404";
+                ErrorMessage = "沒有符合的病人資料！";
+                return false;
+            }
+        }
+
         public bool CheckUserNameAvailability(string UserName)
         {
             var user = this.GetUser(x => x.UserName.Equals(UserName));
@@ -89,7 +123,8 @@ namespace HchWebPhr.Biz
                 Email = patientUser.EMail,
                 ActiveToken = ActivateToken,
                 ActivateDateTime = DateTime.Now,
-                LastLoginTime = DateTime.Now
+                LastLoginTime = DateTime.Now,
+                AgreeDateTime = new DateTime(1900, 1, 1)
             };
             
             var userInfo = new UserInfo {
@@ -312,6 +347,28 @@ namespace HchWebPhr.Biz
             }
             return true;
         }
+
+        public bool AgreeTerm(string UserName)
+        {
+            var resUser = UserRepository.GetRepository();
+            var user = resUser.Get(x => x.UserName.Equals(UserName));
+            if (user == null)
+            {
+                ErrorCode = "404";
+                ErrorMessage = "找不到使用者帳號資料！";
+                return false;
+            }
+            user.AgreeDateTime = DateTime.Now;
+            var rtn = resUser.Update(user);
+            if (rtn <=0)
+            {
+                ErrorCode = "500";
+                ErrorMessage = "更新使用者授權條款同意失敗，請聯絡系統管理員！";
+                return false;
+            }
+            return true;
+        }
+
         public User GetUser(Expression<Func<User, bool>> predicate)
         {
             //var resUser = new UserRepository();
