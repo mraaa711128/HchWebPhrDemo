@@ -161,6 +161,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ImageController.cs" />
     <Compile Include="Controllers\LabController.cs" />
+    <Compile Include="Controllers\MedController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -1220,6 +1221,7 @@
     <Content Include="Views\Auth\Terms.cshtml" />
     <Content Include="Views\Auth\Term.cshtml" />
     <Content Include="Views\Account\AgreeTerm.cshtml" />
+    <Content Include="Views\Med\MedList.cshtml" />
     <None Include="Web.Staging.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

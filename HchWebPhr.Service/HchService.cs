@@ -165,6 +165,38 @@ namespace HchWebPhr.Service
             }
         }
 
+        public IList<ClinicData> GetMedListByChartNoAndDateRange(string ChartNo, DateTime StartDate, DateTime EndDate)
+        {
+            RsMedList result = this.PostRequest<RsMedList>("PHR_0004_001", new[] {
+                new KeyValuePair<string, string>("ChartNo", ChartNo),
+                new KeyValuePair<string, string>("StartDate", StartDate.toTaiwanDate(clearDelimiter: true)),
+                new KeyValuePair<string, string>("EndDate", EndDate.toTaiwanDate(clearDelimiter: true))
+            });
+            if (result == null)
+            {
+                return null;
+            }
+            else
+            {
+                return result.MedList;
+            }
+        }
+
+        public IList<MedDetail> GetMedDetailByChartNoDivNoAndDate(string ChartNo, DateTime ClinicDate, string DivNo)
+        {
+            RsMedDetail result = this.PostRequest<RsMedDetail>("PHR_0004_002", new[] {
+                new KeyValuePair<string, string>("ChartNo", ChartNo),
+                new KeyValuePair<string, string>("ClinicDate", ClinicDate.toTaiwanDate(clearDelimiter: true)),
+                new KeyValuePair<string, string>("DivNo", DivNo)
+            });
+            if (result == null)
+            {
+                return null;
+            } else
+            {
+                return result.MedDetail;
+            }
+        }
         private T PostRequest<T>(string Fid, params KeyValuePair<string,string>[] Paras)
         {
             T resultObj;
@@ -214,6 +246,9 @@ namespace HchWebPhr.Service
                 case "PHR_0003_003":
                 case "PHR_0003_004":
                     return "/PhrLab";
+                case "PHR_0004_001":
+                case "PHR_0004_002":
+                    return "/PhrMed";
                 default:
                     return "";
             }

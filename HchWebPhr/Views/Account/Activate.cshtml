@@ -90,6 +90,7 @@
                                 <span class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true"></span>
                                 <span id="inputError2Status" class="sr-only">(error)</span>
                                 @Html.ValidationMessageFor(x => x.Password, null, new { @class = "control-label" })
+                                <span><strong>溫馨提示：</strong>密碼規則為 8 ~ 30 碼英數字、至少 1碼數字、1碼大寫英文、1碼小寫英文。</span>
                             </div>
                         }
                         else
@@ -97,8 +98,10 @@
                             <div class="col-xxxs-12 col-sm-7 col-md-8">
                                 @Html.PasswordFor(x => x.Password,
                                                     new { @id = Html.IdFor(x => x.Password), @class = "form-control" })
+                                <span><strong>溫馨提示：</strong>密碼規則為 8 ~ 30 碼英數字、至少 1碼數字、1碼大寫英文、1碼小寫英文。</span>
                             </div>
                         }
+                        
                     </div>
                     <div class="form-group">
                         @Html.LabelFor(x => x.RePassword,

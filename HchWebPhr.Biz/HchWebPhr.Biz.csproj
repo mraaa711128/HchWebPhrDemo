@@ -58,6 +58,7 @@
     <Compile Include="ConditionTermBiz.cs" />
     <Compile Include="ImageBiz.cs" />
     <Compile Include="LabBiz.cs" />
+    <Compile Include="MedBiz.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

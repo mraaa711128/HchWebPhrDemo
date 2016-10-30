@@ -1,0 +1,392 @@
+﻿@using HchWebPhr.Models.FormModels
+@using HchWebPhr.Utilities.Helpers
+
+@model SearchMedModel
+
+@{
+    Layout = "~/Views/Shared/_SideNavLayout.cshtml";
+    ViewBag.Title = "用藥紀錄";
+    ViewBag.actionName = "MedList";
+}
+
+@section Styles {
+    @Styles.Render("~/Content/css/bootstrap-datetimepicker")
+    @Styles.Render("~/Content/css/bootstrap-table")
+    @Styles.Render("~/Content/css/load-spinner")
+}
+
+<ol class="breadcrumb">
+    @*<li>@Html.ActionLink("首頁","Index","Home")</li>*@
+    <li class="active">@ViewBag.Title</li>
+</ol>
+<div class="row">
+    @using (Html.BeginForm())
+    {
+        <div class="col-xxxs-12 col-sm-4">
+            <div class="form-group">
+                @Html.LabelFor(x => x.StartDate)
+                <div class="input-group date datetime-picker" id="div_startdate">
+                    @if (ConfigHelper.GetBoolean("USE_TAIWAN_YEAR"))
+                    {
+                        @Html.TextBoxFor(x => x.TwStartDate,
+                                         new { @id = Html.IdFor(x => x.TwStartDate), @class = "form-control date-input" })
+                    }
+                    else
+                    {
+                        @Html.TextBoxFor(x => x.StartDate, "{0:yyyy/MM/dd}",
+                                         new { @id = Html.IdFor(x => x.StartDate), @class = "form-control date-input" })
+                    }
+                    <span class="input-group-addon">
+                        <i class="fa fa-calendar"></i>
+                    </span>
+                </div>
+                @if (ConfigHelper.GetBoolean("USE_TAIWAN_YEAR"))
+                {
+                    @Html.HiddenFor(x => x.StartDate,
+                                    new { @id = Html.IdFor(x => x.StartDate), @class = "form-control" })
+                }
+            </div>
+        </div>
+        <div class="col-xxxs-12 col-sm-4">
+            <div class="form-group">
+                @Html.LabelFor(x => x.EndDate)
+                <div class="input-group date datetime-picker" id="div_enddate">
+                    @if (ConfigHelper.GetBoolean("USE_TAIWAN_YEAR"))
+                    {
+                        @Html.TextBoxFor(x => x.TwEndDate,
+                                         new { @id = Html.IdFor(x => x.TwEndDate), @class = "form-control date-input" })
+                    }
+                    else
+                    {
+                        @Html.TextBoxFor(x => x.EndDate, "{0:yyyy/MM/dd}",
+                                         new { @id = Html.IdFor(x => x.EndDate), @class = "form-control date-input" })
+                    }
+                    <span class="input-group-addon">
+                        <i class="fa fa-calendar"></i>
+                    </span>
+                </div>
+                @if (ConfigHelper.GetBoolean("USE_TAIWAN_YEAR"))
+                {
+                    @Html.HiddenFor(x => x.EndDate,
+                                    new { @id = Html.IdFor(x => x.EndDate), @class = "form-control" })
+                }
+            </div>
+        </div>
+        <div class="col-xxxs-12 col-sm-4">
+            <div class="form-group">
+                @Html.LabelFor(x => x.DivNo)
+                @Html.DropDownListFor(x => x.DivNo, 
+                                      (IList<SelectListItem>)ViewBag.ClinicDivs, 
+                                      new { @id = Html.IdFor(x => x.DivNo), @class = "form-control" })
+            </div>
+        </div>
+    }
+</div>
+<div class="row">
+    <div class="col-xxxs-12">
+        @*@Html.Raw(HttpUtility.HtmlDecode(ViewBag.Remark))*@
+        <h5>備註：</h5>
+        <p>1.提供105年11月1日起之用藥紀錄，資料最多保留三年。</p>
+    </div>
+</div>
+<div class="row">
+    <div class="col-xxxs-12">
+        <table id="table-medlist"></table>
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/Content/js/bootstrap-datetimepicker")
+    @Scripts.Render("~/Content/js/bootstrap-table")
+    @Scripts.Render("~/Content/js/load-spinner")
+
+    @*Script Section Is Not Finished !!*@
+    <script type="text/javascript">
+        function refreshSearchResults() {
+            @*var startDate = $("#@Html.IdFor(x => x.StartDate)").datetimepicker('getDate');
+            var endDate = $("#@Html.IdFor(x => x.EndDate)").datetimepicker('getDate');*@
+            var sdpicker = $(".datetime-picker")[0];
+            var edpicker = $(".datetime-picker")[1];
+
+            var startDate = $(sdpicker).datetimepicker('getDate');
+            var endDate = $(edpicker).datetimepicker('getDate');
+
+            var strStartDate = startDate.getFullYear() + '/' + (startDate.getMonth() + 1) + '/' + startDate.getDate();
+            var strEndDate = endDate.getFullYear() + '/' + (endDate.getMonth() + 1) + '/' + endDate.getDate();
+            var strDiv = $("#@Html.IdFor(x => x.DivNo) option:selected").val();
+            @*var strStartDate = $("#@Html.IdFor(x => x.StartDate)").val();
+            var strEndDate = $("#@Html.IdFor(x => x.EndDate)").val();*@
+
+            //showLoading('載入中...');
+            $("#table-medlist").bootstrapTable('showLoading');
+            searchResult(strStartDate, strEndDate, strDiv);
+        }
+
+        function searchResult(startDate, endDate, divNo) {
+            var searchUrl = '@(Url.Action("GetMedList", "Med"))';
+            //var div_id = "#div_albumlist";
+            var isEmpty = false;
+            $.ajax({
+                method: 'Get',
+                url: searchUrl,
+                data: { StartDate: startDate, EndDate: endDate, DivNo: divNo },
+                cache: false,
+                success: function (data) {
+                    var opts = $("#table-medlist").bootstrapTable('getOptions');
+                    if (data.status === 'success') {
+                        $("#table-medlist").bootstrapTable('load', data.data);
+                    } else {
+                        opts.undefinedText = data.message;
+                        $("#table-medlist").bootstrapTable('removeAll');
+                        $("#table-medlist").bootstrapTable('refreshOptions', opts);
+                    }
+                },
+                fail: function () {
+                    var opts = $("#table-medlist").bootstrapTable('getOptions');
+                    opts.undefinedText = '900-網路連線異常!';
+                    $("#table-medlist").bootstrapTable('removeAll');
+                    $("#table-medlist").bootstrapTable('refreshOptions', opts);
+                },
+                complete: function () {
+                    $("#table-medlist").bootstrapTable('hideLoading');
+                    //hideLoading();
+                },
+                async: true
+            });
+        }
+
+        function expandDetailTable($detail, rowData) {
+            $detail.css('padding', '0');
+            var $table = $detail.html('<table id="table-meditem-' + rowData.Id + '"></table>').find("table");
+            var medItemsData = [];
+            $.ajax({
+                type: 'GET',
+                url: '@Url.Action("GetMedItems", "Med")',
+                data: {ClinicDate: rowData.JsonClinicDate, DivNo: rowData.DivNo},
+                success: function(result) {
+                    if (result.status === 'success') {
+                        medItemsData = result.data;
+                    }
+                },
+                complete: function() {
+                    buildDetailTable($table, medItemsData);
+                },
+                async: true
+            });
+        }
+
+        function buildDetailTable($element, detailData) {
+            $element.bootstrapTable({
+                idField: 'MedCode',
+                pageSize: 10,
+                columns: [{
+                    field: 'MedCode',
+                    title: '藥品代碼',
+                    align: 'left',
+                    width: '10%',
+                    visible: false
+                }, {
+                    field: 'EnglishName',
+                    title: '藥品學名',
+                    align: 'left',
+                    width: '25%',
+                }, {
+                    field: 'ChineseName',
+                    title: '院內商品名',
+                    align: 'left',
+                    width: '25%',
+                }, {
+                    field: 'MedName',
+                    title: '中文名稱',
+                    align: 'left',
+                    width: '25%',
+                }, {
+                    field: 'MethodName',
+                    title: '服用方式',
+                    align: 'left',
+                    width: '5%',
+                }, {
+                    field: 'FreqName',
+                    title: '服用次數',
+                    align: 'left',
+                    width: '10%'
+                }, {
+                    field: 'DoseQtyUnit',
+                    title: '服用數量',
+                    align: 'left',
+                    width: '10%',
+                    formatter: function(value, row, index) {
+                        return row.DoseQty + ' ' + row.DoseUnit;
+                    }
+                }, {
+                    field: 'IndicationName',
+                    title: '適應症',
+                    align: 'left',
+                    width: '20%',
+                    visible: false
+                }, {
+                    field: 'SideEffectName',
+                    title: '副作用',
+                    align: 'left',
+                    width: '20%',
+                    visible: false
+                }],
+                data: detailData,
+                mobileResponsive: true,
+                minWidth: 480
+            });
+        }
+
+        $(function () {
+            var today = new Date();
+            var minDate = new Date('2000-01-01')
+            var currentRow = -1;
+
+            $(".datetime-picker").datetimepicker({
+                @if (ConfigHelper.GetBoolean("USE_TAIWAN_YEAR"))
+                {
+                    <text>format: "yyy/mm/dd",</text>
+                }
+                else
+                {
+                    <text>format: "yyyy/mm/dd",</text>
+                }
+                startView: 2,
+                minView: 2,
+                startDate: minDate,
+                endDate: today,
+                todayBtn: true,
+                todayHighlight: true,
+                forceParse: true,
+                autoclose: true,
+                pickerPosition: 'bottom-left',
+                keyboardNavigation: false,
+                language: 'zh-TW'
+            }).on('changeDate', function (ev) {
+                @if (ConfigHelper.GetBoolean("USE_TAIWAN_YEAR"))
+                {
+                    <text>
+                        var date = ev.date.getFullYear() + '/' + (ev.date.getMonth() + 1) + '/' + ev.date.getDate();
+                        var inputId = $(ev.currentTarget).attr('id');
+                        switch (inputId) {
+                            case "div_startdate":
+                                $("#@Html.IdFor(x => x.StartDate)").val(date);
+                                break;
+                            case "div_enddate":
+                                $("#@Html.IdFor(x => x.EndDate)").val(date);
+                                break;
+                        }
+                    </text>
+                }
+                refreshSearchResults();
+            });
+
+            $(".date-input").change(function () {
+                var inputId = $(this).attr('id');
+                var dtpicker = null;
+                var hiddenId = "";
+                @if (ConfigHelper.GetBoolean("USE_TAIWAN_YEAR"))
+                {
+                    <text>
+                        switch (inputId) {
+                            case "@Html.IdFor(x => x.TwStartDate)":
+                                dtpicker = $('.datetime-picker')[0];
+                                hiddenId = '@Html.IdFor(x => x.StartDate)';
+                                break;
+                            case "@Html.IdFor(x => x.TwEndDate)":
+                                dtpicker = $('.datetime-picker')[1];
+                                hiddenId = '@Html.IdFor(x => x.EndDate)';
+                                break;
+                        }
+                    </text>
+                } else
+                {
+                    <text>
+                        switch (inputId) {
+                            case "@Html.IdFor(x => x.StartDate)":
+                                    dtpicker = $('.datetime-picker')[0];
+                                    break;
+                                case "@Html.IdFor(x => x.EndDate)":
+                                    dtpicker = $('.datetime-picker')[1];
+                                    break;
+                        }
+                    </text>
+                }
+                $(dtpicker).datetimepicker('update');
+                @if (ConfigHelper.GetBoolean("USE_TAIWAN_YEAR"))
+                {
+                    <text>
+                        var date = $(dtpicker).datetimepicker('getDate');
+                        var strDate = date.getFullYear() + "/" + (date.getMonth() + 1) + "/" + date.getDate();
+                        $('#' + hiddenId).val(strDate);
+                    </text>
+                }
+                    @*$("#@Html.IdFor(x => x.StartDate)").datetimepicker("update");
+                    $("#@Html.IdFor(x => x.EndDate)").datetimepicker("update");*@
+                refreshSearchResults();
+            });
+
+            $("select").change(function () {
+                refreshSearchResults();
+            });
+
+
+            $("#table-medlist").bootstrapTable({
+                pagination: true,
+                pageSize: 10,
+                idField: 'Id',
+                undefinedText: '',
+                detailView: true,
+                columns: [{
+                    @if (ConfigHelper.GetBoolean("USE_TAIWAN_YEAR"))
+                    {
+                        <text>field: "TwClinicDate",</text>
+                    }
+                    else
+                    {
+                        <text>field: "JsonClinicDate",</text>
+                    }
+                    title: "看診日期",
+                    align: 'left',
+                    width: '20%'
+                }, {
+                    field: "DivNo",
+                    title: "科別代號",
+                    align: "left",
+                    width: '20%',
+                    visible: false
+                }, {
+                    field: "DivName",
+                    title: "看診科別",
+                    align: "left",
+                    width: '80%'
+                }],
+                data: [],
+                //mobileResponsive: true,
+                minWidth: 480,
+                onExpandRow: function (index, row, $detail) {
+                    expandDetailTable($detail, row);
+                },
+                onClickRow: function (row, $element, field) {
+                    var data = $("#table-medlist").bootstrapTable('getData', true);
+                    var idx = data.findIndex(function (item, index) {
+                        return item.Id == row.Id;
+                    });
+                    if (idx != currentRow) {
+                        if (currentRow >= 0) {
+                            $("#table-medlist").bootstrapTable('collapseRow', currentRow);
+                        }
+                        $("#table-medlist").bootstrapTable('expandRow', idx);
+                        currentRow = idx;
+                    } else {
+                        $("#table-medlist").bootstrapTable('collapseRow', currentRow);
+                        currentRow = -1;
+                    }
+                }
+            });
+
+            refreshSearchResults();
+        });
+
+    </script>
+}

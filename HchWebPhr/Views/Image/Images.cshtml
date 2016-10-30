@@ -25,11 +25,11 @@
     {
         if (ConfigHelper.GetBoolean("USE_TAIWAN_YEAR"))
         {
-            <li class="active">@Model.ExamDate.toTaiwanDate() - @Model.ExamTypeDesc</li>
+            <li class="active">@Model.ExamDate.toTaiwanDate() - @Model.ExamName</li>
         }
         else
         {
-            <li class="active">@Model.ExamDate.ToString("yyyy/MM/dd") - @Model.ExamTypeDesc</li>
+            <li class="active">@Model.ExamDate.ToString("yyyy/MM/dd") - @Model.ExamName</li>
         }
     }
 
