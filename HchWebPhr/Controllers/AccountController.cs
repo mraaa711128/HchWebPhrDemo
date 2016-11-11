@@ -14,7 +14,6 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Net.Mail;
-using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
 using UtilitiesLib.Validators;
@@ -210,7 +209,8 @@ namespace HchWebPhr.Controllers
                 DynamicViewBag vbag = new DynamicViewBag(new Dictionary<string, object> {
                     { "ActiveBaseUrl", Url.Action("Activate", "Account", null, Request.Url.Scheme) },
                 });
-                var htmlMailBody = Razor.Parse<SignUpMailContext>(mailTemp, mailbody,vbag,"");
+                var htmlMailBody = Engine.Razor.RunCompile(mailTemp, "Activate", typeof(SignUpMailContext), mailbody, vbag);
+                //var htmlMailBody = Razor.Parse<SignUpMailContext>(mailTemp, mailbody,vbag,"");
                 SmtpClient mailClient = new SmtpClient();
                 MailMessage mailmsg = new MailMessage
                 {
@@ -402,7 +402,8 @@ namespace HchWebPhr.Controllers
                 DynamicViewBag vbag = new DynamicViewBag(new Dictionary<string, object> {
                     { "ResetPasswordBaseUrl", Url.Action("ResetPassword", "Account", null, Request.Url.Scheme) },
                 });
-                var htmlMailBody = Razor.Parse<ForgetPasswordMailContext>(mailTemp, mailbody,vbag,"");
+                var htmlMailBody = Engine.Razor.RunCompile(mailTemp, "ResetPassword", typeof(ForgetPasswordMailContext), mailbody, vbag);
+                //var htmlMailBody = Razor.Parse<ForgetPasswordMailContext>(mailTemp, mailbody,vbag,"");
                 SmtpClient mailClient = new SmtpClient();
                 MailMessage mailmsg = new MailMessage
                 {
@@ -583,6 +584,12 @@ namespace HchWebPhr.Controllers
                 ViewBag.ErrorMessage = "找不到符合的帳號資料！";
                 return View(FgtUserModel);
             }
+            if (user.UserName == null)
+            {
+                ViewBag.ErrorCode = "404";
+                ViewBag.ErrorMessage = "使用者尚未註冊或未完成註冊程序，請重新註冊！";
+                return View(FgtUserModel);
+            }
             if (this.SendForgetUserNameMail(user) == false)
             {
                 return View("Error", new ErrorContext
@@ -613,7 +620,8 @@ namespace HchWebPhr.Controllers
                 //DynamicViewBag vbag = new DynamicViewBag(new Dictionary<string, object> {
                 //    { "ActiveBaseUrl", Url.Action("Activate", "Account", null, Request.Url.Scheme) },
                 //});
-                var htmlMailBody = Razor.Parse<ForgetUserNameMailContext>(mailTemp, mailbody);
+                var htmlMailBody = Engine.Razor.RunCompile(mailTemp, "ForgetUserName", typeof(ForgetUserNameMailContext), mailbody, null);
+                //var htmlMailBody = Razor.Parse<ForgetUserNameMailContext>(mailTemp, mailbody);
                 SmtpClient mailClient = new SmtpClient();
                 MailMessage mailmsg = new MailMessage
                 {
@@ -710,7 +718,8 @@ namespace HchWebPhr.Controllers
                 DynamicViewBag vbag = new DynamicViewBag(new Dictionary<string, object> {
                     { "ActiveBaseUrl", Url.Action("VerifyEmail", "Account", null, Request.Url.Scheme) },
                 });
-                var htmlMailBody = Razor.Parse<EmailVerifyMailContext>(mailTemp, mailbody, vbag, "");
+                var htmlMailBody = Engine.Razor.RunCompile(mailTemp, "VerifyEmail", typeof(EmailVerifyMailContext), mailbody, vbag);
+                //var htmlMailBody = Razor.Parse<EmailVerifyMailContext>(mailTemp, mailbody, vbag, "");
                 SmtpClient mailClient = new SmtpClient();
                 MailMessage mailmsg = new MailMessage
                 {
