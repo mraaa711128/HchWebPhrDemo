@@ -18,6 +18,8 @@
                                     new { @id = Html.IdFor(x => x.Id), @class = "form-control" })
                     @Html.HiddenFor(x => x.IdNo,
                                     new { @id = Html.IdFor(x => x.IdNo), @class = "form-control" })
+                    @Html.HiddenFor(x => x.BirthDate,
+                                    new { @id = Html.IdFor(x => x.BirthDate), @class = "form-control"})
                     <div class="form-group">
                         @Html.LabelFor(x => x.Name,
                                            new { @class = "col-xxxs-12 col-sm-5 col-md-4 control-label" })
@@ -34,7 +36,7 @@
                         {*@
                             <div class="col-xxxs-12 col-sm-7 col-md-8">
                                 @Html.TextBoxFor(x => x.Name,
-                                                 new { @id = Html.IdFor(x => x.Name), @class = "form-control", @disabled = "true" })
+                                                 new { @id = Html.IdFor(x => x.Name), @class = "form-control readonly", @readonly = "readonly" })
                             </div>
 @*                        }*@
                     </div>
@@ -54,7 +56,7 @@
                         {*@
                             <div class="col-xxxs-12 col-sm-7 col-md-8">
                                 @Html.TextBoxFor(x => x.Email,
-                                                 new { @id = Html.IdFor(x => x.Email), @class = "form-control", @disabled = "true" })
+                                                 new { @id = Html.IdFor(x => x.Email), @class = "form-control readonly", @readonly = "readonly" })
                             </div>
 @*                        }*@
                     </div>

@@ -14,11 +14,12 @@ namespace HchWebPhr.Data.Repositories
 
         public static TermRepository GetRepository()
         {
-            if (repository == null)
-            {
-                repository = new TermRepository();
-            }
-            return repository;
+            //if (repository == null)
+            //{
+            //    repository = new TermRepository();
+            //}
+            //return repository;
+            return new TermRepository();
         }
     }
 }

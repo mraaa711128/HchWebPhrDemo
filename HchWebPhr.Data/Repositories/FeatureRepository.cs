@@ -13,11 +13,12 @@ namespace HchWebPhr.Data.Repositories
         static FeatureRepository repository;
         public static FeatureRepository GetRepository()
         {
-            if (repository == null)
-            {
-                repository = new FeatureRepository();
-            }
-            return repository;
+            //if (repository == null)
+            //{
+            //    repository = new FeatureRepository();
+            //}
+            //return repository;
+            return new FeatureRepository();
         }
     }
 }

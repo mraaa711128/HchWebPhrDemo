@@ -13,11 +13,12 @@ namespace HchWebPhr.Data.Repositories
         static UserRepository repository;
         public static UserRepository GetRepository()
         {
-            if (repository == null)
-            {
-                repository = new UserRepository();
-            }
-            return repository;
+            //if (repository == null)
+            //{
+            //    repository = new UserRepository();
+            //}
+            //return repository;
+            return new UserRepository();
         }
     }
 }

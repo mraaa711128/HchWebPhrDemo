@@ -13,11 +13,12 @@ namespace HchWebPhr.Data.Repositories
         static AccountLogRepository repository;
         public static AccountLogRepository GetRepository()
         {
-            if (repository == null)
-            {
-                repository = new AccountLogRepository();
-            }
-            return repository;
+            //if (repository == null)
+            //{
+            //    repository = new AccountLogRepository();
+            //}
+            //return repository;
+            return new AccountLogRepository();
         }
     }
 }

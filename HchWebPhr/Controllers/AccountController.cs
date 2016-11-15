@@ -253,6 +253,15 @@ namespace HchWebPhr.Controllers
         [AllowAnonymous]
         public ActionResult Activate(string Token)
         {
+            if (string.IsNullOrEmpty(Token))
+            {
+                var error = new ErrorContext
+                {
+                    ErrorCode = "501",
+                    ErrorMessage = "啟動連結錯誤，請重新註冊！"
+                };
+                return View("Error", error);
+            }
             var decryptToken = Encrypt.desDecryptUrlSafeBase64(Token);
             var EMail = decryptToken.Split('|')[0];
             var strSignUpDateTime = decryptToken.Split('|')[1];
