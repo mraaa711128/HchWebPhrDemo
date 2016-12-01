@@ -11,8 +11,8 @@ namespace HchWebPhr.Models.FormModels
     public class LoginModel
     {
         [Required(ErrorMessage = "必填欄位。")]
-        [StringLength(20, ErrorMessage = "輸入限制：20 碼英數字、底線、破折號。")]
-        [RegularExpression(@"(?:\w|[-_.])+", ErrorMessage = "輸入限制：20 碼英數字、底線、破折號。")]
+        [StringLength(60, ErrorMessage = "輸入限制：60 碼英數字、底線、破折號、小數點或小老鼠。")]
+        [RegularExpression(@"(?:\d|[a-z]|[A-Z]|[-_.@])+", ErrorMessage = "輸入限制：60 碼英數字、底線、破折號、小數點或小老鼠。")]
         [Display(Name = "使用者帳號")]
         public string UserName { get; set; }
         [Required(ErrorMessage = "必填欄位。")]

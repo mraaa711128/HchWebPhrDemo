@@ -137,6 +137,7 @@
                                 <span class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true"></span>
                                 <span id="inputError2Status" class="sr-only">(error)</span>
                                 @Html.ValidationMessageFor(x => x.EMail, null, new { @class = "control-label" })
+                                <span><strong>溫馨提示：</strong>不建議使用Yahoo信箱，認證信易被歸類為垃圾信件。</span>
                             </div>
                         }
                         else
@@ -145,6 +146,7 @@
                                 @Html.TextBoxFor(x => x.EMail,
                                                  new { @id = Html.IdFor(x => x.EMail), @class = "form-control" })
                                 @*<input type="text" class="form-control" />*@
+                                <span><strong>溫馨提示：</strong>不建議使用Yahoo信箱，認證信易被歸類為垃圾信件。</span>
                             </div>
                         }
                     </div>

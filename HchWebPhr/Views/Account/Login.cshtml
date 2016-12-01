@@ -12,7 +12,7 @@
 <div class="row">
     @*<div class="col-xxxs-push-0 col-xxxs-12 col-xs-push-1 col-xs-10 col-sm-push-3 col-sm-6">*@
     <div class="col-xxxs-12 col-sm-push-6 col-sm-6">
-        <p class="lead"><span class="fa fa-caret-down"></span> 請輸入帳號密碼：</p>
+        <p class="lead"><span class="fa fa-caret-down"></span> 請輸入帳號密碼：<small>(第一次使用請先<a href="@Url.Action("SignUp", "Account")"><strong>註冊帳號</strong></a>)</small></p>
         <div class="row">
             <div class="col-xxxs-12">
                 @using (Html.BeginForm("Login",
@@ -128,7 +128,7 @@
     </div>
     <div class="col-xxxs-12 col-sm-pull-6 col-sm-6">
         <blockquote>
-            <p class="lead">在各類行動裝置或電腦加入宏其i-care，提供您胎兒映像、檢驗報告、婦科抹片、人類乳突病毒與新柏氏抹片檢驗報告，讓您隨時可查詢屬於您個人化健康管理。</p>
+            <p class="lead">宏其 i-care 提供您在宏其婦幼的胎兒映像、檢驗報告、婦科抹片、人類乳突病毒與新柏氏抹片檢驗報告，讓您隨時可在各類行動裝置或電腦查詢屬於您個人化健康管理。</p>
             @*<footer style="color: black;">宏其醫療社團法人宏其婦幼醫院</footer>*@
         </blockquote>
     </div>

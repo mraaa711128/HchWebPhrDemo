@@ -114,10 +114,10 @@ namespace HchWebPhr.Controllers
         public ActionResult SignUp(SignUpModel mSignUp)
         {
             //SignupModel
-            if (TaiwanIDValidator.validTaiwanId(mSignUp.IdNo) == false)
-            {
-                ModelState.AddModelError("IdNo", "身分證字號驗證錯誤!");
-            }
+            //if (TaiwanIDValidator.validTaiwanId(mSignUp.IdNo) == false)
+            //{
+            //    ModelState.AddModelError("IdNo", "身分證字號驗證錯誤!");
+            //}
             if (ModelState.IsValid == false) { return View(mSignUp); }
             var acc = new AccountBiz();
             IList<SignUpPatient> PtList = null;
@@ -306,7 +306,7 @@ namespace HchWebPhr.Controllers
             var activateUser = new ActivateModel
             {
                 Id = user.UserId,
-                UserName = user.UserName,
+                UserName = user.Email,
                 Name = user.UserInfo.Name,
                 IdNo = user.UserInfo.IdNo,
                 Email = EMail,
