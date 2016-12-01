@@ -18,6 +18,11 @@ namespace HchWebPhr.Biz
 {
     public class AccountBiz : BaseBiz
     {
+        protected internal UserRepository UserRepo { get; set; }
+        public AccountBiz()
+        {
+            UserRepo = UserRepository.GetRepository();
+        }
         public bool CheckAuthentication(String UserName, String EncryptPasswd)
         {
             if (String.IsNullOrEmpty(UserName) || String.IsNullOrEmpty(EncryptPasswd))
@@ -26,8 +31,7 @@ namespace HchWebPhr.Biz
                 ErrorMessage = "帳號或密碼錯誤！";
                 return false;
             }
-            var usr = UserRepository.GetRepository();
-            var user = usr.Get(x => x.UserName.Equals(UserName));
+            var user = UserRepo.Get(x => x.UserName.Equals(UserName));
             if (user == null)
             {
                 ErrorCode = "404";
@@ -140,9 +144,8 @@ namespace HchWebPhr.Biz
 
             user.UserInfo = userInfo;
 
-            var usr = UserRepository.GetRepository();
             //var exist_user = usr.Get(x => x.Email.Equals(patientUser.EMail) && x.UserInfo.BirthDate == patientUser.BirthDate);
-            var exist_user = usr.Get(x => x.UserInfo.IdNo.Equals(patientUser.IdNo) && x.UserInfo.BirthDate == patientUser.BirthDate);
+            var exist_user = UserRepo.Get(x => x.UserInfo.IdNo.Equals(patientUser.IdNo) && x.UserInfo.BirthDate == patientUser.BirthDate);
             if (exist_user != null)
             {
                 if (exist_user.IsActive == false) {
@@ -150,7 +153,7 @@ namespace HchWebPhr.Biz
                     exist_user.ActiveToken = ActivateToken;
                     exist_user.ActivateDateTime = DateTime.Now;
                     exist_user.LastLoginTime = DateTime.Now;
-                    var rtn = usr.Update(exist_user);
+                    var rtn = UserRepo.Update(exist_user);
                     if (rtn <= 0)
                     {
                         this.ErrorCode = "900";
@@ -165,7 +168,7 @@ namespace HchWebPhr.Biz
                 }
             } else
             {
-                var rtn2 = usr.Create(user);
+                var rtn2 = UserRepo.Create(user);
                 if (rtn2 <= 0)
                 {
                     this.ErrorCode = "900";
@@ -178,8 +181,7 @@ namespace HchWebPhr.Biz
 
         public bool ActivateUser(ActivateModel activateUser)
         {
-            var resUser = UserRepository.GetRepository();
-            var user = resUser.Get(x => x.UserId == activateUser.Id);
+            var user = UserRepo.Get(x => x.UserId == activateUser.Id);
             if (user == null) {
                 ErrorCode = "404";
                 ErrorMessage = "帳號啟用失敗，請聯絡系統管理員！";
@@ -195,7 +197,7 @@ namespace HchWebPhr.Biz
             user.LastLoginIp = IP.GetAddress();
             try
             {
-                var rtn = resUser.Update(user);
+                var rtn = UserRepo.Update(user);
                 return (rtn > 0);
             }
             catch (Exception ex)
@@ -217,8 +219,7 @@ namespace HchWebPhr.Biz
             }
             else
             {
-                var usr = UserRepository.GetRepository();
-                var user = usr.Get(x => x.UserName.Equals(UserName));
+                var user = UserRepo.Get(x => x.UserName.Equals(UserName));
                 if (user == null)
                 {
                     ErrorCode = "400";
@@ -229,7 +230,7 @@ namespace HchWebPhr.Biz
                 {
                     user.LastLoginTime = DateTime.Now;
                     user.LastLoginIp = IpAddress;
-                    if (usr.Update(user) <= 0)
+                    if (UserRepo.Update(user) <= 0)
                     {
                         ErrorCode = "500";
                         ErrorMessage = "更新使用者資料失敗，請聯絡系統管理員！";
@@ -259,8 +260,7 @@ namespace HchWebPhr.Biz
             ForgetPasswordToken = Encrypt.desEncryptUrlSafeBase64(ForgetPwdUser.UserName + "|" + ForgetPwdUser.Password + "|" + DateTime.Now.ToString());
             ForgetPwdUser.ForgetPasswordToken = ForgetPasswordToken;
             //var resUser = new UserRepository();
-            var resUser = UserRepository.GetRepository();
-            if (resUser.Update(ForgetPwdUser) <= 0)
+            if (UserRepo.Update(ForgetPwdUser) <= 0)
             {
                 ErrorCode = "500";
                 ErrorMessage = "無法正確產生忘記密碼驗證連結，請聯絡系統管理員！";
@@ -271,8 +271,7 @@ namespace HchWebPhr.Biz
 
         public bool UpdatePassword(string UserName, string EncryptNewPassword)
         {
-            var resUser = UserRepository.GetRepository();
-            var user = resUser.Get(x => x.UserName.Equals(UserName));
+            var user = UserRepo.Get(x => x.UserName.Equals(UserName));
             if (user == null)
             {
                 ErrorCode = "400";
@@ -280,7 +279,7 @@ namespace HchWebPhr.Biz
                 return false;
             }
             user.Password = EncryptNewPassword;
-            var rtn = resUser.Update(user);
+            var rtn = UserRepo.Update(user);
             if (rtn <=0)
             {
                 ErrorCode = "500";
@@ -292,8 +291,7 @@ namespace HchWebPhr.Biz
 
         public bool UpdateProfileImage(string UserName, string ImageUrl)
         {
-            var resUser = UserRepository.GetRepository();
-            var user = resUser.Get(x => x.UserName.Equals(UserName));
+            var user = UserRepo.Get(x => x.UserName.Equals(UserName));
             if (user == null)
             {
                 ErrorCode = "404";
@@ -301,7 +299,7 @@ namespace HchWebPhr.Biz
                 return false;
             }
             user.UserInfo.ProfileImage = ImageUrl;
-            var rtn = resUser.Update(user);
+            var rtn = UserRepo.Update(user);
             if (rtn <=0)
             {
                 ErrorCode = "500";
@@ -317,8 +315,7 @@ namespace HchWebPhr.Biz
             VerifyToken = Encrypt.desEncryptUrlSafeBase64(VerifyUser.UserName + "|" + NewEmail + "|" + DateTime.Now.ToString());
             VerifyUser.ActiveToken = VerifyToken;
             //var resUser = new UserRepository();
-            var resUser = UserRepository.GetRepository();
-            if (resUser.Update(VerifyUser) <= 0)
+            if (UserRepo.Update(VerifyUser) <= 0)
             {
                 ErrorCode = "500";
                 ErrorMessage = "無法正確產生電子郵件驗證連結，請聯絡系統管理員！";
@@ -329,8 +326,7 @@ namespace HchWebPhr.Biz
 
         public bool UpdateEmail(string UserName, string Email)
         {
-            var resUser = UserRepository.GetRepository();
-            var user = resUser.Get(x => x.UserName.Equals(UserName));
+            var user = UserRepo.Get(x => x.UserName.Equals(UserName));
             if (user == null)
             {
                 ErrorCode = "404";
@@ -338,7 +334,7 @@ namespace HchWebPhr.Biz
                 return false;
             }
             user.Email = Email;
-            var rtn = resUser.Update(user);
+            var rtn = UserRepo.Update(user);
             if (rtn <= 0)
             {
                 ErrorCode = "500";
@@ -350,8 +346,7 @@ namespace HchWebPhr.Biz
 
         public bool AgreeTerm(string UserName)
         {
-            var resUser = UserRepository.GetRepository();
-            var user = resUser.Get(x => x.UserName.Equals(UserName));
+            var user = UserRepo.Get(x => x.UserName.Equals(UserName));
             if (user == null)
             {
                 ErrorCode = "404";
@@ -359,7 +354,7 @@ namespace HchWebPhr.Biz
                 return false;
             }
             user.AgreeDateTime = DateTime.Now;
-            var rtn = resUser.Update(user);
+            var rtn = UserRepo.Update(user);
             if (rtn <=0)
             {
                 ErrorCode = "500";
@@ -372,8 +367,7 @@ namespace HchWebPhr.Biz
         public User GetUser(Expression<Func<User, bool>> predicate)
         {
             //var resUser = new UserRepository();
-            var resUser = UserRepository.GetRepository();
-            return resUser.Get(predicate);
+            return UserRepo.Get(predicate);
         }
     }
 }

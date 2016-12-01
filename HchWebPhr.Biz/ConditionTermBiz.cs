@@ -13,10 +13,14 @@ namespace HchWebPhr.Biz
 {
     public class ConditionTermBiz : BaseBiz
     {
+        protected internal TermRepository TermRepo { get; set; }
+        public ConditionTermBiz()
+        {
+            TermRepo = TermRepository.GetRepository();
+        }
         public ConditionTerm GetEffectiveTerm(DateTime EffectiveDateTime)
         {
-            var termRep = TermRepository.GetRepository();
-            var term = termRep.GetMany(x => x.EffectiveDateTime >= EffectiveDateTime && x.EffectiveDateTime <= DateTime.Now)
+            var term = TermRepo.GetMany(x => x.EffectiveDateTime >= EffectiveDateTime && x.EffectiveDateTime <= DateTime.Now)
                                .OrderByDescending(x => x.EffectiveDateTime)
                                .ThenByDescending(x => x.LastModifyDateTime)
                                .FirstOrDefault();
@@ -25,27 +29,24 @@ namespace HchWebPhr.Biz
 
         public IList<ConditionTermInfo> GetAllTerms()
         {
-            var termRep = TermRepository.GetRepository();
-            return termRep.GetAll().OrderByDescending(x => x.EffectiveDateTime)
-                                   .ThenByDescending(x => x.LastModifyDateTime)
-                                   .Select(x => new ConditionTermInfo
-                                   {
-                                       Id = x.ConditionTermId.ToString(),
-                                       EffectiveDateTime = x.EffectiveDateTime,
-                                       TermContent = x.TermContent,
-                                       LastModifyDateTime = x.LastModifyDateTime
-                                   }).ToList();
+            return TermRepo.GetAll().OrderByDescending(x => x.EffectiveDateTime)
+                                    .ThenByDescending(x => x.LastModifyDateTime)
+                                    .Select(x => new ConditionTermInfo
+                                    {
+                                        Id = x.ConditionTermId.ToString(),
+                                        EffectiveDateTime = x.EffectiveDateTime,
+                                        TermContent = x.TermContent,
+                                        LastModifyDateTime = x.LastModifyDateTime
+                                    }).ToList();
         }
 
         public ConditionTerm GetTerm(int TermId)
         {
-            var termRep = TermRepository.GetRepository();
-            return termRep.Get(x => x.ConditionTermId.Equals(TermId));
+            return TermRepo.Get(x => x.ConditionTermId.Equals(TermId));
         }
 
         public bool SaveTerm(NewEditTermModel termModel)
         {
-            var termRep = TermRepository.GetRepository();
             var needCreate = termModel.Id <= 0 ? true : false;
             ConditionTerm term = null;
             if (needCreate)
@@ -53,7 +54,7 @@ namespace HchWebPhr.Biz
                 term = new ConditionTerm();
             } else
             {
-                term = termRep.Get(x => x.ConditionTermId.Equals(termModel.Id));
+                term = TermRepo.Get(x => x.ConditionTermId.Equals(termModel.Id));
             }
             term.EffectiveDateTime = termModel.EffectiveDateTime;
             term.TermContent = termModel.ConditionTerm;
@@ -61,11 +62,11 @@ namespace HchWebPhr.Biz
             int rtn = -1;
             if (needCreate)
             {
-                rtn = termRep.Create(term);
+                rtn = TermRepo.Create(term);
             }
             else
             {
-                rtn = termRep.Update(term);
+                rtn = TermRepo.Update(term);
             }
             if (rtn <= 0)
             {
@@ -78,11 +79,10 @@ namespace HchWebPhr.Biz
 
         public bool DeleteTerm(int termId)
         {
-            var termRep = TermRepository.GetRepository();
-            var term = termRep.Get(x => x.ConditionTermId.Equals(termId));
+            var term = TermRepo.Get(x => x.ConditionTermId.Equals(termId));
             if (term != null)
             {
-                var rtn = termRep.Delete(term);
+                var rtn = TermRepo.Delete(term);
                 if (rtn > 0 ) { return true; }
             }
             ErrorCode = "404";

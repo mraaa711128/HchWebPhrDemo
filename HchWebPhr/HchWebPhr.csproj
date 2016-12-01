@@ -1183,6 +1183,7 @@
     <Content Include="Content\component\ckeditor\samples\toolbarconfigurator\lib\codemirror\LICENSE" />
     <Content Include="Content\pdf\nofile.pdf" />
     <Content Include="Content\pdf\register-intro.pdf" />
+    <Content Include="Content\pdf\QnA.pdf" />
     <None Include="NLog.xsd">
       <SubType>Designer</SubType>
     </None>
