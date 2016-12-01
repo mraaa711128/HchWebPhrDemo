@@ -17,7 +17,7 @@ namespace HchWebPhr.Models.FormModels
         public string UserName { get; set; }
         [Required(ErrorMessage = "必填欄位。")]
         [StringLength(30, ErrorMessage = "輸入限制：6 ~ 30 碼英數字且其中需包含英文及數字。")]
-        [RegularExpression(@"^(?=.+([a-z]|[A-Z]|\d)).{6,30}$", ErrorMessage = "輸入限制：6 ~ 30 碼英數字且其中需包含英文及數字。")]
+        [RegularExpression(@"^(?=(\d)+([a-z]|[A-Z])+(\d)?|(\d)?([a-z]|[A-Z])+(\d)+).{6,30}$", ErrorMessage = "輸入限制：6 ~ 30 碼英數字且其中需包含英文及數字。")]
         [Display(Name = "登入密碼")]
         public string Password { get; set; }
         [Required(ErrorMessage = "必填欄位")]
