@@ -10,7 +10,7 @@ namespace HchWebPhr.Models.FormModels
 {
     public class ForgetPasswordModel
     {
-        [Editable(allowEdit: false)]
+        [Required(ErrorMessage = "必填欄位!")]
         [Display(Name = "使用者帳號")]
         public string UserName { get; set; }
         [Required(ErrorMessage = "必填欄位!")]

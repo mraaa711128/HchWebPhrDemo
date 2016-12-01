@@ -14,7 +14,7 @@ namespace HchWebPhr.Models.FormModels
         public string Password { get; set; }
         [Required(ErrorMessage = "必填欄位。")]
         [Display(Name = "新密碼")]
-        [RegularExpression(@"^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,30}$", ErrorMessage = "輸入限制：8 ~ 30 碼英數字、至少 1碼數字、1碼大寫英文、1碼小寫英文。")]
+        [RegularExpression(@"^(?=.+([a-z]|[A-Z]|\d)).{6,30}$", ErrorMessage = "輸入限制：8 ~ 30 碼英數字、至少 1碼數字、1碼大寫英文、1碼小寫英文。")]
         public string NewPassword { get; set; }
         [Required(ErrorMessage = "必填欄位")]
         [Compare("NewPassword", ErrorMessage = "必須輸入相同的密碼！")]
