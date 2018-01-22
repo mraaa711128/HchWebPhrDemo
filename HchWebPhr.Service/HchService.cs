@@ -197,6 +197,23 @@ namespace HchWebPhr.Service
                 return result.MedDetail;
             }
         }
+
+        public IList<PregnancyCheckDetail> GetPregnancyListByChartNoAndDateRange(string ChartNo, DateTime StartDate, DateTime EndDate)
+        {
+            RsCheckDetail result = this.PostRequest<RsCheckDetail>("PHR_0005_001", new[] {
+                new KeyValuePair<string, string>("ChartNo", ChartNo),
+                new KeyValuePair<string, string>("StartDate", StartDate.toTaiwanDate(clearDelimiter: true)),
+                new KeyValuePair<string, string>("EndDate", EndDate.toTaiwanDate(clearDelimiter: true))
+            });
+            if (result == null)
+            {
+                return null;
+            } else
+            {
+                return result.CheckDetail;
+            }
+        }
+
         private T PostRequest<T>(string Fid, params KeyValuePair<string,string>[] Paras)
         {
             T resultObj;
@@ -249,6 +266,8 @@ namespace HchWebPhr.Service
                 case "PHR_0004_001":
                 case "PHR_0004_002":
                     return "/PhrMed";
+                case "PHR_0005_001":
+                    return "/PhrPregnancy";
                 default:
                     return "";
             }
