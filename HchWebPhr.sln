@@ -15,9 +15,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HchWebPhr.CaptchaLib", "Hch
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HchWebPhr.Biz", "HchWebPhr.Biz\HchWebPhr.Biz.csproj", "{57408A53-5251-46D2-A078-61F122DE819C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShareDll", "..\HchWebApi\ShareDll\ShareDll.csproj", "{C8EC7E6E-392C-4808-8666-4C64AD12ABFB}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HchWebPhr.Service", "HchWebPhr.Service\HchWebPhr.Service.csproj", "{0E73667B-ECE6-4CDA-AAD8-5892D9954CB8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShareDll", "..\HchShareDll\ShareDll\ShareDll.csproj", "{C8EC7E6E-392C-4808-8666-4C64AD12ABFB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -62,18 +62,18 @@ Global
 		{57408A53-5251-46D2-A078-61F122DE819C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{57408A53-5251-46D2-A078-61F122DE819C}.Staging|Any CPU.ActiveCfg = Staging|Any CPU
 		{57408A53-5251-46D2-A078-61F122DE819C}.Staging|Any CPU.Build.0 = Staging|Any CPU
-		{C8EC7E6E-392C-4808-8666-4C64AD12ABFB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C8EC7E6E-392C-4808-8666-4C64AD12ABFB}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C8EC7E6E-392C-4808-8666-4C64AD12ABFB}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C8EC7E6E-392C-4808-8666-4C64AD12ABFB}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C8EC7E6E-392C-4808-8666-4C64AD12ABFB}.Staging|Any CPU.ActiveCfg = Staging|Any CPU
-		{C8EC7E6E-392C-4808-8666-4C64AD12ABFB}.Staging|Any CPU.Build.0 = Staging|Any CPU
 		{0E73667B-ECE6-4CDA-AAD8-5892D9954CB8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{0E73667B-ECE6-4CDA-AAD8-5892D9954CB8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0E73667B-ECE6-4CDA-AAD8-5892D9954CB8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0E73667B-ECE6-4CDA-AAD8-5892D9954CB8}.Release|Any CPU.Build.0 = Release|Any CPU
 		{0E73667B-ECE6-4CDA-AAD8-5892D9954CB8}.Staging|Any CPU.ActiveCfg = Staging|Any CPU
 		{0E73667B-ECE6-4CDA-AAD8-5892D9954CB8}.Staging|Any CPU.Build.0 = Staging|Any CPU
+		{C8EC7E6E-392C-4808-8666-4C64AD12ABFB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C8EC7E6E-392C-4808-8666-4C64AD12ABFB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C8EC7E6E-392C-4808-8666-4C64AD12ABFB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C8EC7E6E-392C-4808-8666-4C64AD12ABFB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C8EC7E6E-392C-4808-8666-4C64AD12ABFB}.Staging|Any CPU.ActiveCfg = Release|Any CPU
+		{C8EC7E6E-392C-4808-8666-4C64AD12ABFB}.Staging|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

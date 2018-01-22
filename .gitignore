@@ -8,3 +8,4 @@
 *.suo
 /packages
 *.psess
+*.DS_Store
