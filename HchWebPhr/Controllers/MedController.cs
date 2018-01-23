@@ -17,6 +17,7 @@ namespace HchWebPhr.Controllers
     public class MedController : JsonNetController
     {
         // GET: Med
+        [HttpGet]
         public ActionResult MedList(string StartDate, string EndDate)
         {
             DateTime startDate, endDate;

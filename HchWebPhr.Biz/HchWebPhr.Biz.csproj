@@ -59,9 +59,14 @@
     <Compile Include="ImageBiz.cs" />
     <Compile Include="LabBiz.cs" />
     <Compile Include="MedBiz.cs" />
+    <Compile Include="PregnancyBiz.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\HchShareDll\ShareDll\ShareDll.csproj">
+      <Project>{c8ec7e6e-392c-4808-8666-4c64ad12abfb}</Project>
+      <Name>ShareDll</Name>
+    </ProjectReference>
     <ProjectReference Include="..\HchWebPhr.Data\HchWebPhr.Data.csproj">
       <Project>{cece6974-3835-47e2-893b-fd9f7d9ba177}</Project>
       <Name>HchWebPhr.Data</Name>

@@ -1,0 +1,306 @@
+﻿@using HchWebPhr.Models.FormModels
+@using HchWebPhr.Utilities.Helpers
+
+@model SearchPregnancyModel
+
+@{
+    Layout = "~/Views/Shared/_SideNavLayout.cshtml";
+    ViewBag.Title = "產檢紀錄";
+    ViewBag.actionName = "PregnancyList";
+}
+
+@section Styles {
+    @Styles.Render("~/Content/css/bootstrap-datetimepicker")
+    @Styles.Render("~/Content/css/bootstrap-table")
+    @Styles.Render("~/Content/css/load-spinner")    
+}
+
+<ol class="breadcrumb">
+    @*<li>@Html.ActionLink("首頁","Index","Home")</li>*@
+    <li class="active">@ViewBag.Title</li>
+</ol>
+<div class="row">
+    @using (Html.BeginForm())
+    {
+        <div class="col-xxxs-12 col-sm-3">
+            <div class="form-group">
+                @Html.LabelFor(x => x.StartDate)
+                <div class="input-group date datetime-picker" id="div_startdate">
+                    @if (ConfigHelper.GetBoolean("USE_TAIWAN_YEAR"))
+                {
+                        @Html.TextBoxFor(x => x.TwStartDate,
+                            new { @id = Html.IdFor(x => x.TwStartDate), @class = "form-control date-input" })
+                    }
+                    else
+                    {
+                        @Html.TextBoxFor(x => x.StartDate, "{0:yyyy/MM/dd}",
+                            new { @id = Html.IdFor(x => x.StartDate), @class = "form-control date-input" })
+                    }
+                    <span class="input-group-addon">
+                        <i class="fa fa-calendar"></i>
+                    </span>
+                </div>
+                @if (ConfigHelper.GetBoolean("USE_TAIWAN_YEAR"))
+                {
+                    @Html.HiddenFor(x => x.StartDate,
+                        new { @id = Html.IdFor(x => x.StartDate), @class = "form-control" })
+                }
+            </div>
+        </div>
+        <div class="col-xxxs-12 col-sm-3">
+            <div class="form-group">
+                @Html.LabelFor(x => x.EndDate)
+                <div class="input-group date datetime-picker" id="div_enddate">
+                    @if (ConfigHelper.GetBoolean("USE_TAIWAN_YEAR"))
+                {
+                        @Html.TextBoxFor(x => x.TwEndDate,
+                            new { @id = Html.IdFor(x => x.TwEndDate), @class = "form-control date-input" })
+                    }
+                    else
+                    {
+                        @Html.TextBoxFor(x => x.EndDate, "{0:yyyy/MM/dd}",
+                            new { @id = Html.IdFor(x => x.EndDate), @class = "form-control date-input" })
+                    }
+                    <span class="input-group-addon">
+                        <i class="fa fa-calendar"></i>
+                    </span>
+                </div>
+                @if (ConfigHelper.GetBoolean("USE_TAIWAN_YEAR"))
+                {
+                    @Html.HiddenFor(x => x.EndDate,
+                        new { @id = Html.IdFor(x => x.EndDate), @class = "form-control" })
+                }
+            </div>
+        </div>
+    }
+</div>
+<div class="row">
+    <div class="col-xxxs-12">
+        @*@Html.Raw(HttpUtility.HtmlDecode(ViewBag.Remark))*@
+        <h5>備註：</h5>
+        @*<p>1.提供105年8月1日起健保產檢檢驗報告。</p>
+        <p>2.提供105年8月1日起子宮頸抹片檢驗、HPV人類乳突病毒檢驗。</p>
+        <p>3.提供105年10月1日起X染色體脆折症檢驗、脊髓性產前染色體檢驗、非侵入性產前染色體檢驗。</p>
+        <p>4.提供105年11月1日起新柏氏抹片檢驗。</p>*@
+    </div>
+</div>
+<div class="row">
+    <div class="col-xxxs-12">
+        <table id="table-preglist"></table>
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/Content/js/bootstrap-datetimepicker")
+    @Scripts.Render("~/Content/js/bootstrap-table")
+    @Scripts.Render("~/Content/js/load-spinner")
+
+    <script type="text/javascript">
+        function refreshSearchResults() {
+            @*var startDate = $("#@Html.IdFor(x => x.StartDate)").datetimepicker('getDate');
+            var endDate = $("#@Html.IdFor(x => x.EndDate)").datetimepicker('getDate');*@
+            var sdpicker = $(".datetime-picker")[0];
+            var edpicker = $(".datetime-picker")[1];
+
+            var startDate = $(sdpicker).datetimepicker('getDate');
+            var endDate = $(edpicker).datetimepicker('getDate');
+
+            var strStartDate = startDate.getFullYear() + '/' + (startDate.getMonth() + 1) + '/' + startDate.getDate();
+            var strEndDate = endDate.getFullYear() + '/' + (endDate.getMonth() + 1) + '/' + endDate.getDate();
+            @*var strStartDate = $("#@Html.IdFor(x => x.StartDate)").val();
+            var strEndDate = $("#@Html.IdFor(x => x.EndDate)").val();*@
+            //$("#div_albumlist").html("");
+            isNoResult = true;
+
+            //showLoading('載入中...');
+            $("#table-preglist").bootstrapTable('showLoading');
+            searchResult(strStartDate, strEndDate);
+        }
+
+        function searchResult(startDate, endDate) {
+            var searchUrl = '@(Url.Action("GetPregnancyList", "Pregnancy"))';
+            var isEmpty = false;
+            $.ajax({
+                method: 'Get',
+                url: searchUrl,
+                data: { StartDate: startDate, EndDate: endDate },
+                cache: false,
+                success: function (data) {
+                    var opts = $("#table-preglist").bootstrapTable('getOptions');
+                    if (data.status === 'success') {
+                        $("#table-preglist").bootstrapTable('load', data.data);
+                    } else {
+                        opts.undefinedText = data.message;
+                        $("#table-preglist").bootstrapTable('removeAll');
+                        $("#table-preglist").bootstrapTable('refreshOptions', opts);
+                    }
+                },
+                fail: function () {
+                    var opts = $("#table-preglist").bootstrapTable('getOptions');
+                    opts.undefinedText = '900-網路連線異常!';
+                    $("#table-preglist").bootstrapTable('removeAll');
+                    $("#table-preglist").bootstrapTable('refreshOptions', opts);
+                },
+                complete: function () {
+                    $("#table-preglist").bootstrapTable('hideLoading');
+                    //hideLoading();
+                },
+                async: true
+            });
+        }
+
+        $(function () {
+            var today = new Date();
+            var minDate = new Date('2000-01-01')
+
+            $(".datetime-picker").datetimepicker({
+                @if (ConfigHelper.GetBoolean("USE_TAIWAN_YEAR"))
+                    {
+                        <text>format: "yyy/mm/dd",</text>
+                    }
+                else
+                {
+                    <text>format: "yyyy/mm/dd",</text>
+                }
+                startView: 2,
+                minView: 2,
+                startDate: minDate,
+                endDate: today,
+                todayBtn: true,
+                todayHighlight: true,
+                forceParse: true,
+                autoclose: true,
+                pickerPosition: 'bottom-left',
+                keyboardNavigation: false,
+                language: 'zh-TW'
+            }).on('changeDate', function (ev) {
+                @if (ConfigHelper.GetBoolean("USE_TAIWAN_YEAR"))
+                {
+                    <text>
+                var date = ev.date.getFullYear() + '/' + (ev.date.getMonth() + 1) + '/' + ev.date.getDate();
+                var inputId = $(ev.currentTarget).attr('id');
+                switch (inputId) {
+                    case "div_startdate":
+                        $("#@Html.IdFor(x => x.StartDate)").val(date);
+                        break;
+                    case "div_enddate":
+                        $("#@Html.IdFor(x => x.EndDate)").val(date);
+                        break;
+                }
+                </text>
+                }
+                refreshSearchResults();
+            });
+
+            $(".date-input").change(function () {
+                var inputId = $(this).attr('id');
+                var dtpicker = null;
+                var hiddenId = "";
+                @if (ConfigHelper.GetBoolean("USE_TAIWAN_YEAR"))
+                {
+                    <text>
+                        switch (inputId) {
+                            case "@Html.IdFor(x => x.TwStartDate)":
+                                dtpicker = $('.datetime-picker')[0];
+                                hiddenId = '@Html.IdFor(x => x.StartDate)';
+                                break;
+                            case "@Html.IdFor(x => x.TwEndDate)":
+                                dtpicker = $('.datetime-picker')[1];
+                                hiddenId = '@Html.IdFor(x => x.EndDate)';
+                                break;
+                        }
+                    </text>
+                } else
+                {
+                    <text>
+                        switch (inputId) {
+                            case "@Html.IdFor(x => x.StartDate)":
+                                dtpicker = $('.datetime-picker')[0];
+                                break;
+                            case "@Html.IdFor(x => x.EndDate)":
+                                dtpicker = $('.datetime-picker')[1];
+                                break;
+                        }
+                    </text>
+                }
+                $(dtpicker).datetimepicker('update');
+                @if (ConfigHelper.GetBoolean("USE_TAIWAN_YEAR"))
+                {
+                    <text>
+                        var date = $(dtpicker).datetimepicker('getDate');
+                        var strDate = date.getFullYear() + "/" + (date.getMonth() + 1) + "/" + date.getDate();
+                        $('#' + hiddenId).val(strDate);
+                    </text>
+                }
+                @*$("#@Html.IdFor(x => x.StartDate)").datetimepicker("update");
+                $("#@Html.IdFor(x => x.EndDate)").datetimepicker("update");*@
+                refreshSearchResults();
+            });
+
+            $("#table-preglist").bootstrapTable({
+                pagination: true,
+                pageSize: 10,
+                //idField: 'LabNo',
+                undefinedText: '',
+                columns: [{
+                    @if (ConfigHelper.GetBoolean("USE_TAIWAN_YEAR"))
+                    {
+                        <text>field: "TwCheckUpDate",</text>
+                    }
+                    else
+                    {
+                        <text>field: "JsonCheckUpDate",</text>
+                    }
+                    title: '檢查日期',
+                    align: 'left',
+                    width: '20%'
+                }, {
+                    field: 'Weeks',
+                    title: '懷孕週數',
+                    align: 'left',
+                    width: '10%'
+                }, {
+                    field: 'BodyWeight',
+                    title: '孕婦體重(Kg)',
+                    align: 'left',
+                    width: '10%',
+                }, {
+                    field: 'bpSystolic',
+                    title: '孕婦血壓-收縮(mmHg)',
+                    align: 'left',
+                    width: '20%',
+                }, {
+                    field: 'bpDiastolic',
+                    title: '孕婦血壓-舒張(mmHg)',
+                    align: 'left',
+                    width: '20%',
+                }, {
+                    field: 'Albuminuria',
+                    title: '孕婦尿蛋白',
+                    align: 'left',
+                    width: '10%'
+                }, {
+                    field: 'Glucosuria',
+                    title: '孕婦尿糖',
+                    align: 'left',
+                    width: '10%'
+                }, {
+                    field: 'View',
+                    title: '查看結果',
+                    align: 'left',
+                    visible: false,
+                    width: '0%',
+                    formatter: function (value, row, index) {
+                        htmlButton = '<a class="btn btn-info btn-block" href="@Url.Action("LabResult", "Lab")' + '?LabNo=' + row.LabNo + '&LabType=' + row.LabType + '"><i class="fa fa-eye"></i>&nbsp;查看結果</a>';
+                        return '<div class="col-xxxs-12">' + htmlButton + '</div>';
+                    }
+                }],
+                data: [],
+                mobileResponsive: true,
+                minWidth: 480
+            });
+
+            refreshSearchResults();
+        });
+    </script>
+}
