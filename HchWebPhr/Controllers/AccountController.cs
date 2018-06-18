@@ -306,7 +306,8 @@ namespace HchWebPhr.Controllers
             var activateUser = new ActivateModel
             {
                 Id = user.UserId,
-                UserName = user.Email,
+                //UserName = user.Email,
+                UserName = "",
                 Name = user.UserInfo.Name,
                 IdNo = user.UserInfo.IdNo,
                 Email = EMail,

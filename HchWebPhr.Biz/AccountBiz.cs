@@ -49,10 +49,10 @@ namespace HchWebPhr.Biz
         public bool CheckPatientIdentity(string EMail, DateTime BirthDate, out IList<SignUpPatient> PatientList)
         {
             PatientList = null;
-            if (DateTime.Now - BirthDate < new TimeSpan(365 * 16,0,0,0))
+            if (DateTime.Now - BirthDate < new TimeSpan(365 * 14,0,0,0))
             {
                 ErrorCode = "400";
-                ErrorMessage = "使用者必須滿16歲方可申請獨立帳號！";
+                ErrorMessage = "使用者必須滿14歲方可申請獨立帳號！";
                 return false;
             }
             HchService svc = new HchService();
@@ -82,10 +82,10 @@ namespace HchWebPhr.Biz
         public bool CheckPatientIdentity2(string IdNo, DateTime BirthDate, out IList<SignUpPatient> PatientList)
         {
             PatientList = null;
-            if (DateTime.Now - BirthDate < new TimeSpan(365 * 16, 0, 0, 0))
+            if (DateTime.Now - BirthDate < new TimeSpan(365 * 14, 0, 0, 0))
             {
                 ErrorCode = "400";
-                ErrorMessage = "使用者必須滿16歲方可申請獨立帳號！";
+                ErrorMessage = "使用者必須滿14歲方可申請獨立帳號！";
                 return false;
             }
             HchService svc = new HchService();

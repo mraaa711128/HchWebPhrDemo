@@ -28,12 +28,12 @@
                 </a>
             </li>
             <li class="@(string.Equals(actionName,"MedList")?"active":"")">
-                <a href="@Url.Action("MedList", "Med")" class="collapsed" data-toggle="collapse" data-target=".sidebar-subitems">
+                @*<a href="@Url.Action("MedList", "Med")" class="collapsed" data-toggle="collapse" data-target=".sidebar-subitems">
                     <span class="fa-stack fa-lg pull-left"><i class="fa fa-medkit fa-stack-1x"></i></span> 用藥記錄(測試中)
-                </a>
-                @*<a href="#" class="collapsed" data-toggle="collapse" data-target=".sidebar-subitems">
-                    <span class="fa-stack fa-lg pull-left"><i class="fa fa-medkit fa-stack-1x"></i></span> 用藥記錄(建構中)
                 </a>*@
+                <a href="#" class="collapsed" data-toggle="collapse" data-target=".sidebar-subitems">
+                    <span class="fa-stack fa-lg pull-left"><i class="fa fa-medkit fa-stack-1x"></i></span> 用藥記錄(建構中)
+                </a>
             </li>
             <li class="@(string.Equals(actionName, "PregnancyList")?"active":"")">
                 <a href="@Url.Action("PregnancyList", "Pregnancy")" class="collapsed" data-toggle="collapse" data-target=".sidebar-subitems">
