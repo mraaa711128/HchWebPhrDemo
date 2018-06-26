@@ -28,11 +28,8 @@
                 </a>
             </li>
             <li class="@(string.Equals(actionName,"MedList")?"active":"")">
-                @*<a href="@Url.Action("MedList", "Med")" class="collapsed" data-toggle="collapse" data-target=".sidebar-subitems">
+                <a href="@Url.Action("MedList", "Med")" class="collapsed" data-toggle="collapse" data-target=".sidebar-subitems">
                     <span class="fa-stack fa-lg pull-left"><i class="fa fa-medkit fa-stack-1x"></i></span> 用藥記錄(測試中)
-                </a>*@
-                <a href="#" class="collapsed" data-toggle="collapse" data-target=".sidebar-subitems">
-                    <span class="fa-stack fa-lg pull-left"><i class="fa fa-medkit fa-stack-1x"></i></span> 用藥記錄(建構中)
                 </a>
             </li>
             <li class="@(string.Equals(actionName, "PregnancyList")?"active":"")">
@@ -40,9 +37,9 @@
                     <span class="fa-stack fa-lg pull-left"><i class="fa fa-heartbeat fa-stack-1x"></i></span> 產檢紀錄(測試中)
                 </a>
             </li>
-            <li>
-                <a href="#" class="collapsed" data-toggle="collapse" data-target=".sidebar-subitems">
-                    <span class="fa-stack fa-lg pull-left"><i class="fa fa-stethoscope fa-stack-1x"></i></span> 寶寶疫苗紀錄(建構中)
+            <li class="@(string.Equals(actionName, "VaccineList")?"active":"")">
+                <a href="@Url.Action("VaccineList", "Vaccine")" class="collapsed" data-toggle="collapse" data-target=".sidebar-subitems">
+                    <span class="fa-stack fa-lg pull-left"><i class="fa fa-stethoscope fa-stack-1x"></i></span> 寶寶疫苗紀錄(測試中)
                 </a>
             </li>
             @*<ul class="sidebar-subitems collapse">

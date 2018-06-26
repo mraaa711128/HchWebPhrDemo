@@ -214,6 +214,34 @@ namespace HchWebPhr.Service
             }
         }
 
+        public IList<ChildData> GetChildrenListByMomChartNo(string ChartNo)
+        {
+            RsChildData result = this.PostRequest<RsChildData>("PHR_0006_001", new[] {
+                new KeyValuePair<string, string>("ChartNo", ChartNo)
+            });
+            if (result == null)
+            {
+                return null;
+            } else
+            {
+                return result.ChildData;
+            }
+        }
+
+        public IList<Vaccine> GetChildrenVaccineDetailListByChildChartNo(string ChartNo)
+        {
+            RsVaccine result = this.PostRequest<RsVaccine>("PHR_0006_002", new[] {
+                new KeyValuePair<string, string>("ChartNo", ChartNo)
+            });
+            if (result == null)
+            {
+                return null;
+            } else
+            {
+                return result.VaccineList;
+            }
+        }
+
         private T PostRequest<T>(string Fid, params KeyValuePair<string,string>[] Paras)
         {
             T resultObj;
@@ -268,6 +296,9 @@ namespace HchWebPhr.Service
                     return "/PhrMed";
                 case "PHR_0005_001":
                     return "/PhrPregnancy";
+                case "PHR_0006_001":
+                case "PHR_0006_002":
+                    return "/PhrVaccine";
                 default:
                     return "";
             }

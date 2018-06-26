@@ -87,6 +87,8 @@
     <Compile Include="ViewModels\SignUpMailContext.cs" />
     <Compile Include="ViewModels\SignUpPatient.cs" />
     <Compile Include="ViewModels\SuccessContext.cs" />
+    <Compile Include="ViewModels\VaccineChildInfo.cs" />
+    <Compile Include="ViewModels\VaccineDetailInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

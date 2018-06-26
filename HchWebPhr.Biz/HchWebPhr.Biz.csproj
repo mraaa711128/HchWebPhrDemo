@@ -61,6 +61,7 @@
     <Compile Include="MedBiz.cs" />
     <Compile Include="PregnancyBiz.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="VaccineBiz.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\HchShareDll\ShareDll\ShareDll.csproj">
