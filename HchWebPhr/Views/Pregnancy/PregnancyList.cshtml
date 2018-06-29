@@ -78,8 +78,8 @@
     <div class="col-xxxs-12">
         @*@Html.Raw(HttpUtility.HtmlDecode(ViewBag.Remark))*@
         <h5>備註：</h5>
-        @*<p>1.提供105年8月1日起健保產檢檢驗報告。</p>
-        <p>2.提供105年8月1日起子宮頸抹片檢驗、HPV人類乳突病毒檢驗。</p>
+        <p>1.提供107年1月1日起健保產檢檢查紀錄。</p>
+        @*<p>2.提供105年8月1日起子宮頸抹片檢驗、HPV人類乳突病毒檢驗。</p>
         <p>3.提供105年10月1日起X染色體脆折症檢驗、脊髓性產前染色體檢驗、非侵入性產前染色體檢驗。</p>
         <p>4.提供105年11月1日起新柏氏抹片檢驗。</p>*@
     </div>
@@ -95,7 +95,7 @@
     @Scripts.Render("~/Content/js/bootstrap-table")
     @Scripts.Render("~/Content/js/load-spinner")
 
-    <script type="text/javascript">
+<script type="text/javascript">
         function refreshSearchResults() {
             @*var startDate = $("#@Html.IdFor(x => x.StartDate)").datetimepicker('getDate');
             var endDate = $("#@Html.IdFor(x => x.EndDate)").datetimepicker('getDate');*@
@@ -149,15 +149,84 @@
             });
         }
 
+        function expandDetailTable($detail, data) {
+            $detail.css('padding', '0');
+            var $table = $detail.html('<table id="table-pregnancy-' + data.PregnancyTimes + '"></table>').find("table");
+            buildPregnancyTable($table, data);
+        }
+
+        function buildPregnancyTable($element, data) {
+             $element.bootstrapTable({
+                pagination: true,
+                pageSize: 10,
+                detailView: false,
+                undefinedText: '',
+                columns: [{
+                    @if (ConfigHelper.GetBoolean("USE_TAIWAN_YEAR")) {
+                        <text>field: "TwCheckUpDate",</text>
+                    }
+                    else {
+                        <text>field: "JsonCheckUpDate",</text>
+                    }
+                    title: '檢查日期',
+                    align: 'left',
+                    width: '20%'
+                }, {
+                    field: 'Weeks',
+                    title: '懷孕週數',
+                    align: 'left',
+                    width: '10%'
+                }, {
+                    field: 'BodyWeight',
+                    title: '孕婦體重(Kg)',
+                    align: 'left',
+                    width: '10%',
+                }, {
+                    field: 'bpSystolic',
+                    title: '孕婦血壓-收縮(mmHg)',
+                    align: 'left',
+                    width: '20%',
+                }, {
+                    field: 'bpDiastolic',
+                    title: '孕婦血壓-舒張(mmHg)',
+                    align: 'left',
+                    width: '20%',
+                }, {
+                    field: 'Albuminuria',
+                    title: '孕婦尿蛋白',
+                    align: 'left',
+                    width: '10%'
+                }, {
+                    field: 'Glucosuria',
+                    title: '孕婦尿糖',
+                    align: 'left',
+                    width: '10%'
+                }, {
+                    field: 'View',
+                    title: '查看結果',
+                    align: 'left',
+                    visible: false,
+                    width: '0%',
+                    formatter: function (value, row, index) {
+                        htmlButton = '<a class="btn btn-info btn-block" href="@Url.Action("LabResult", "Lab")' + '?LabNo=' + row.LabNo + '&LabType=' + row.LabType + '"><i class="fa fa-eye"></i>&nbsp;查看結果</a>';
+                        return '<div class="col-xxxs-12">' + htmlButton + '</div>';
+                    }
+                }],
+                data: data.DetailList,
+                mobileResponsive: true,
+                minWidth: 480
+            });
+        }
+
         $(function () {
             var today = new Date();
             var minDate = new Date('2000-01-01')
 
             $(".datetime-picker").datetimepicker({
                 @if (ConfigHelper.GetBoolean("USE_TAIWAN_YEAR"))
-                    {
-                        <text>format: "yyy/mm/dd",</text>
-                    }
+                {
+                    <text>format: "yyy/mm/dd",</text>
+                }
                 else
                 {
                     <text>format: "yyyy/mm/dd",</text>
@@ -238,69 +307,43 @@
             });
 
             $("#table-preglist").bootstrapTable({
-                pagination: true,
-                pageSize: 10,
-                //idField: 'LabNo',
-                undefinedText: '',
+                idField: 'PregnancyTime',
+                detailView: true,
+                pageSize: 5,
+                showHeader: false,
                 columns: [{
-                    @if (ConfigHelper.GetBoolean("USE_TAIWAN_YEAR"))
-                    {
-                        <text>field: "TwCheckUpDate",</text>
-                    }
-                    else
-                    {
-                        <text>field: "JsonCheckUpDate",</text>
-                    }
-                    title: '檢查日期',
+                    field: 'PregnancyTime',
+                    title: '懷孕胎數',
                     align: 'left',
-                    width: '20%'
+                    visible: false
                 }, {
-                    field: 'Weeks',
-                    title: '懷孕週數',
+                    field: 'Description',
+                    title: '說明',
                     align: 'left',
-                    width: '10%'
-                }, {
-                    field: 'BodyWeight',
-                    title: '孕婦體重(Kg)',
-                    align: 'left',
-                    width: '10%',
-                }, {
-                    field: 'bpSystolic',
-                    title: '孕婦血壓-收縮(mmHg)',
-                    align: 'left',
-                    width: '20%',
-                }, {
-                    field: 'bpDiastolic',
-                    title: '孕婦血壓-舒張(mmHg)',
-                    align: 'left',
-                    width: '20%',
-                }, {
-                    field: 'Albuminuria',
-                    title: '孕婦尿蛋白',
-                    align: 'left',
-                    width: '10%'
-                }, {
-                    field: 'Glucosuria',
-                    title: '孕婦尿糖',
-                    align: 'left',
-                    width: '10%'
-                }, {
-                    field: 'View',
-                    title: '查看結果',
-                    align: 'left',
-                    visible: false,
-                    width: '0%',
                     formatter: function (value, row, index) {
-                        htmlButton = '<a class="btn btn-info btn-block" href="@Url.Action("LabResult", "Lab")' + '?LabNo=' + row.LabNo + '&LabType=' + row.LabType + '"><i class="fa fa-eye"></i>&nbsp;查看結果</a>';
-                        return '<div class="col-xxxs-12">' + htmlButton + '</div>';
+                        @if (ConfigHelper.GetBoolean("USE_TAIWAN_YEAR"))
+                        {
+                            <text>var FirstDate = row.TwFirstCheckDate;</text>
+                            <text>var LastDate = row.TwLastCheckDate;</text>
+                        } else {
+                            <text>var FirstDate = row.JsonFirstCheckDate;</text>
+                            <text>var LastDate = row.JsonLastCheckDate;</text>
+                        }
+                        var times = row.PregnancyTime.toString();
+                        return '第' + times + '胎  (' + FirstDate + ' ~ ' + LastDate + ')';
                     }
                 }],
                 data: [],
-                mobileResponsive: true,
+                detailFormatter: function (index, row, $element) {
+                    if (typeof row.DetailList !== 'undefined' && row.DetailList.length > 0) {
+                        expandDetailTable($element, row);
+                    }
+                },
+                //mobileResponsive: true,
                 minWidth: 480
             });
 
             refreshSearchResults();
         });
-    </script>
+</script>
 }

@@ -83,6 +83,7 @@
     <Compile Include="ViewModels\PhotoAlbumInfo.cs" />
     <Compile Include="ViewModels\PhotoInfo.cs" />
     <Compile Include="ViewModels\PregnancyDetailInfo.cs" />
+    <Compile Include="ViewModels\PregnancyListInfo.cs" />
     <Compile Include="ViewModels\SelectListModel.cs" />
     <Compile Include="ViewModels\SignUpMailContext.cs" />
     <Compile Include="ViewModels\SignUpPatient.cs" />
