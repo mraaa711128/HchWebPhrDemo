@@ -909,6 +909,8 @@
     <Content Include="Content\img\features\Diagnosis.jpg" />
     <Content Include="Content\img\features\Labtories.jpg" />
     <Content Include="Content\img\features\Medicine.jpg" />
+    <Content Include="Content\img\features\Register.jpg" />
+    <Content Include="Content\img\features\RoomStatus.jpg" />
     <Content Include="Content\img\features\Shots.jpg" />
     <Content Include="Content\img\noimage.png" />
     <Content Include="Content\img\sliderback.jpg" />
@@ -1185,8 +1187,8 @@
     <Content Include="Content\component\ckeditor\samples\toolbarconfigurator\font\fontello.woff" />
     <Content Include="Content\component\ckeditor\samples\toolbarconfigurator\lib\codemirror\LICENSE" />
     <Content Include="Content\pdf\nofile.pdf" />
-    <Content Include="Content\pdf\register-intro.pdf" />
     <Content Include="Content\pdf\QnA.pdf" />
+    <Content Include="Content\pdf\register-intro.pdf" />
     <None Include="NLog.xsd">
       <SubType>Designer</SubType>
     </None>
