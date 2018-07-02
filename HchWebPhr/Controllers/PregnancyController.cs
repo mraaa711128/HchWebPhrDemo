@@ -12,6 +12,7 @@ using HchWebPhr.Utilities.Helpers;
 
 namespace HchWebPhr.Controllers
 {
+    [Authorize]
     public class PregnancyController : JsonNetController
     {
         // GET: Pregnancy

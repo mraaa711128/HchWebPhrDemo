@@ -129,6 +129,7 @@
                     var opts = $("#table-preglist").bootstrapTable('getOptions');
                     if (data.status === 'success') {
                         $("#table-preglist").bootstrapTable('load', data.data);
+                        $("#table-preglist").bootstrapTable('collapseAllRows', false);
                     } else {
                         opts.undefinedText = data.message;
                         $("#table-preglist").bootstrapTable('removeAll');
@@ -220,7 +221,7 @@
 
         $(function () {
             var today = new Date();
-            var minDate = new Date('2018-01-01')
+            var minDate = new Date('2000-01-01')
 
             $(".datetime-picker").datetimepicker({
                 @if (ConfigHelper.GetBoolean("USE_TAIWAN_YEAR"))
