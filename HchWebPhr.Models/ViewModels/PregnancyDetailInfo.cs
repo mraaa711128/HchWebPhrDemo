@@ -25,7 +25,7 @@ namespace HchWebPhr.Models.ViewModels
         public decimal BodyWeight { get; set; }         //體重(單位:公斤)
         public int bpSystolic { get; set; }             //收縮壓(單位:mmHg)
         public int bpDiastolic { get; set; }            //舒張壓(單位:mmHg)
-        public int Albuminuria { get; set; }            //蛋白尿
-        public int Glucosuria { get; set; }             //尿糖
+        public string Albuminuria { get; set; }            //蛋白尿
+        public string Glucosuria { get; set; }             //尿糖
     }
 }

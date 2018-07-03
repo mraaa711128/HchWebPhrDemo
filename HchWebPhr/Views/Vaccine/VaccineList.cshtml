@@ -1,0 +1,172 @@
+﻿@using HchWebPhr.Models.ViewModels
+@using HchWebPhr.Utilities.Helpers
+@using Newtonsoft.Json
+
+@model IList<VaccineChildInfo>
+
+@{
+    Layout = "~/Views/Shared/_SideNavLayout.cshtml";
+    ViewBag.Title = "寶寶疫苗紀錄";
+    ViewBag.actionName = "VaccineList";
+}
+
+@section Styles {
+    @Styles.Render("~/Content/css/bootstrap-table")
+}
+
+@*<h2>VaccineList</h2>*@
+
+<ol class="breadcrumb">
+    @*<li>@Html.ActionLink("首頁","Index","Home")</li>*@
+    <li class="active">@ViewBag.Title</li>
+</ol>
+<div class="row">
+    <div class="col-xxxs-12">
+        @*@Html.Raw(HttpUtility.HtmlDecode(ViewBag.Remark))*@
+        <h5>備註：</h5>
+        <p>1.僅提供宏其施打的疫苗資料。</p>
+        @*<p>2.提供105年8月1日起子宮頸抹片檢驗、HPV人類乳突病毒檢驗。</p>
+        <p>3.提供105年10月1日起X染色體脆折症檢驗、脊髓性產前染色體檢驗、非侵入性產前染色體檢驗。</p>
+        <p>4.提供105年11月1日起新柏氏抹片檢驗。</p>*@
+    </div>
+</div>
+<div class="row">
+    <div class="col-xxxs-12">
+        <table id="table-childrenlist"></table>
+    </div>
+</div>
+
+
+@section Scripts {
+    @Scripts.Render("~/Content/js/bootstrap-table")
+
+    <script type="text/javascript">
+        function expandDetailTable($detail, childData) {
+            $detail.css('padding', '0');
+            var $table = $detail.html('<table id="table-vaccine-' + childData.ChartNo + '"></table>').find("table");
+            buildVaccineTable($table, childData);
+        }
+
+
+        function buildChildrenTable($element, childrenData) {
+            $element.bootstrapTable({
+                idField: 'ChartNo',
+                detailView: true,
+                pageSize: 5,
+                showHeader: false,
+                columns: [{
+                    field: 'ChartNo',
+                    title: '病歷號碼',
+                    align: 'left',
+                    visible: false
+                }, {
+                    field: 'PtName',
+                    title: '寶寶姓名',
+                    align: 'left',
+                    width: '100%',
+                    formatter: function (value, row, index) {
+                        var PtName = row.PtName;
+                        var Sex = row.Sex == 'M' ? '男' : '女';
+                        @if (ConfigHelper.GetBoolean("USE_TAIWAN_YEAR"))
+                        {
+                            <text>var BirthDate = row.TwBirthDate;</text>
+                        } else {
+                            <text>var BirthDate = row.JsonBirthDate;</text>
+                        }
+
+                        return PtName + ' (' + Sex + ') - ' + BirthDate;
+                    }
+                }],
+                data: childrenData,
+                detailFormatter: function (index, row, $element) {
+                    if (typeof row !== 'undefined' && row.ChartNo.length > 0) {
+                        expandDetailTable($element, row);
+                    }
+                },
+                //mobileResponsive: true,
+                minWidth: 480
+            });
+            $element.bootstrapTable('collapseAllRows', false);
+        }
+
+        function buildVaccineTable($element, childData) {
+            $element.bootstrapTable({
+                detailView: false,
+                pageSize: 10,
+                columns: [{
+                    @if (ConfigHelper.GetBoolean("USE_TAIWAN_YEAR"))
+                    {
+                        <text>field: 'TwInjectDate',</text>
+                    } else
+                    {
+                        <text>field: 'JsonInjectDate',</text>
+                    }
+                    title: '注射日期',
+                    align: 'left',
+                    width: '10%'
+                }, {
+                    field: 'VaccineCode',
+                    title: '疫苗代碼',
+                    align: 'left',
+                    width: '10%'
+                }, {
+                    field: 'VaccineName',
+                    title: '疫苗名稱',
+                    align: 'left',
+                    width: '20%'
+                }, {
+                    field: 'Height',
+                    title: '身高(cm)',
+                    align: 'left',
+                    width: '10%'
+                }, {
+                    field: 'HeightRate',
+                    title: '身高生長率(%)',
+                    align: 'left',
+                    width: '10%'
+                }, {
+                    field: 'Weight',
+                    title: '體重(g)',
+                    align: 'left',
+                    width: '10%'
+                }, {
+                    field: 'WeightRate',
+                    title: '體重生長率(%)',
+                    align: 'left',
+                    width: '10%'
+                }, {
+                    field: 'HeadCircumference',
+                    title: '頭圍(cm)',
+                    align: 'left',
+                    width: '10%'
+                }, {
+                    field: 'HeadCircumferenceRate',
+                    title: '頭圍生長率(%)',
+                    align: 'left',
+                    width: '10%'
+                }, {
+                    field: 'Temperature',
+                    title: '溫度(°C)',
+                    align: 'left',
+                    width: '10%'
+                }],
+                mobileResponsive: true,
+                minWidth: 480,
+                url: '@(Url.Action("GetChildVaccineList", "Vaccine"))' + '?ChartNo=' + childData.ChartNo,
+                responseHandler: function (res) {
+                    if (res.status == 'success') {
+                        return res.data;
+                    } else {
+                        return [];
+                    }
+                }
+            });
+        }
+
+        $(function () {
+            var childrenData = @Html.Raw(JsonConvert.SerializeObject(Model));
+            var $childrenTable = $('#table-childrenlist');
+            buildChildrenTable($childrenTable, childrenData);
+        });
+    </script>
+}

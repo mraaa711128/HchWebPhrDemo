@@ -12,6 +12,7 @@ using HchWebPhr.Utilities.Helpers;
 
 namespace HchWebPhr.Controllers
 {
+    [Authorize]
     public class PregnancyController : JsonNetController
     {
         // GET: Pregnancy
@@ -25,7 +26,7 @@ namespace HchWebPhr.Controllers
 
             var searchModel = new SearchPregnancyModel
             {
-                StartDate = new DateTime(2016, 8, 1),
+                StartDate = new DateTime(2018, 1, 1),
                 EndDate = DateTime.Today
             };
 
@@ -45,7 +46,7 @@ namespace HchWebPhr.Controllers
             var user = FormAuthHelper.GetLoginUser();
             var ChartNo = user.UserInfo.ChartNo;
 
-            IList<PregnancyDetailInfo> pregList = new List<PregnancyDetailInfo>();
+            IList<PregnancyListInfo> pregList = new List<PregnancyListInfo>();
             var PregBiz = new PregnancyBiz();
             if (PregBiz.GetPregnancyListByChartNoAndDateRange(ChartNo, StartDate, EndDate, out pregList) == false)
             {
