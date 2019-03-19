@@ -20,6 +20,7 @@
     "respond": "~1.4.2",
     "photoswipe": "4.1.1",
     "caman": "4.1.2",
-    "cropper": "2.3.0"
+    "cropper": "2.3.0",
+    "pdfjs-dist": "v2.1.266"
   }
 }
