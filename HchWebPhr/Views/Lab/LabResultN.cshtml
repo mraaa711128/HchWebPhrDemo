@@ -7,7 +7,8 @@
     ViewBag.Title = "檢驗結果";
     ViewBag.actionName = "LabList";
 }
-@{ 
+@{
+    string viewerContentPath = "~/Content/component/pdf.js-gh-pages/web/viewer.html";
     string pdfContentPath = "~/Content/pdf";
     string pdfNoFile = "/nofile.pdf";
     string finalNoFilePath = pdfContentPath + pdfNoFile;
@@ -40,13 +41,13 @@
         $(function () {
             $.get('@Url.Content(finalPdfFilePath)').
                 done(function (data) {
-                    var htmlObj = '<iframe src="~/Content/component/pdf.js-gh-pages/web/viewer.html?file=@Url.Content(finalPdfFilePath)">' +
+                    var htmlObj = '<iframe src="@Url.Content(viewerContentPath)?file=@Url.Content(finalPdfFilePath)">' +
                                     '<p>您的瀏覽器不支援使用Pdf Reader，請按<a href="@Url.Content(finalPdfFilePath)">下載檔案</a></p>' +
                                   '</iframe>';
                     $(".embed-responsive").html(htmlObj);
                 }).
                 fail(function () {
-                    var htmlObj = '<iframe src="~/Content/component/pdf.js-gh-pages/web/viewer.html?file=@Url.Content(finalNoFilePath)">' +
+                    var htmlObj = '<iframe src="@Url.Content(viewerContentPath)?file=@Url.Content(finalNoFilePath)">' +
                                     '<p>找不到對應的檔案</p>' +
                                   '</iframe>';
                     $(".embed-responsive").html(htmlObj);
