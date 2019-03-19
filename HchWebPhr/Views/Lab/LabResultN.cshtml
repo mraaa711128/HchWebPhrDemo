@@ -40,13 +40,13 @@
         $(function () {
             $.get('@Url.Content(finalPdfFilePath)').
                 done(function (data) {
-                    var htmlObj = '<iframe src="@Url.Content(finalPdfFilePath)#zoom=50" scrolling="auto">' +
+                    var htmlObj = '<iframe src="https://docs.google.com/viewer?url=@Url.Content(finalPdfFilePath)&embedded=true" scrolling="auto">' +
                                     '<p>您的瀏覽器不支援使用Pdf Reader，請按<a href="@Url.Content(finalPdfFilePath)">下載檔案</a></p>' +
                                   '</iframe>';
                     $(".embed-responsive").html(htmlObj);
                 }).
                 fail(function () {
-                    var htmlObj = '<iframe src="@Url.Content(finalNoFilePath)#zoom=50" scrolling="auto">' +
+                    var htmlObj = '<iframe src="https://docs.google.com/viewer?url=@Url.Content(finalNoFilePath)&embedded=true" scrolling="auto">' +
                                     '<p>找不到對應的檔案</p>' +
                                   '</iframe>';
                     $(".embed-responsive").html(htmlObj);
