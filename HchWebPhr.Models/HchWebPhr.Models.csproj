@@ -80,6 +80,7 @@
     <Compile Include="ViewModels\LabListInfo.cs" />
     <Compile Include="ViewModels\MedItemInfo.cs" />
     <Compile Include="ViewModels\MedListInfo.cs" />
+    <Compile Include="ViewModels\PatientChildInfo.cs" />
     <Compile Include="ViewModels\PhotoAlbumInfo.cs" />
     <Compile Include="ViewModels\PhotoInfo.cs" />
     <Compile Include="ViewModels\PregnancyDetailInfo.cs" />

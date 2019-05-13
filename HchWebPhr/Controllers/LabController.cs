@@ -39,6 +39,23 @@ namespace HchWebPhr.Controllers
         }
 
         [HttpGet]
+        public ActionResult ChildLabList()
+        {
+            var user = FormAuthHelper.GetLoginUser();
+            var chartNo = user.UserInfo.ChartNo;
+
+            IList<PatientChildInfo> childrenList = null;
+            var labBiz = new LabBiz();
+
+            if (labBiz.GetChildrenList(chartNo, out childrenList) == false)
+            {
+                childrenList = new List<PatientChildInfo>();
+            }
+
+            return View(childrenList);
+        }
+
+        [HttpGet]
         [AjaxOnly]
         public JsonNetResult GetLabList(DateTime StartDate, DateTime EndDate)
         {
@@ -48,7 +65,7 @@ namespace HchWebPhr.Controllers
 
             IList<LabListInfo> labList = null;
             var labBiz = new LabBiz();
-            if (labBiz.GetLabList(ChartNo, StartDate, EndDate, out labList) == false)
+            if (labBiz.GetLabList(ChartNo, StartDate, EndDate, false, out labList) == false)
             {
                 return new JsonNetResult
                 {
@@ -57,6 +74,27 @@ namespace HchWebPhr.Controllers
                 };
             }
             return new Base.JsonNetResult
+            {
+                ContentType = "application/json",
+                Data = new { status = "success", data = labList }
+            };
+        }
+
+        [HttpGet]
+        [AjaxOnly]
+        public JsonNetResult GetChildLabList(string ChartNo, DateTime StartDate, DateTime EndDate)
+        {
+            IList<LabListInfo> labList = null;
+            var labBiz = new LabBiz();
+            if (labBiz.GetLabList(ChartNo, StartDate, EndDate, true, out labList) == false)
+            {
+                return new JsonNetResult
+                {
+                    ContentType = "application/json",
+                    Data = new { status = "fail", message = labBiz.ErrorCode + "-" + labBiz.ErrorMessage }
+                };
+            }
+            return new JsonNetResult
             {
                 ContentType = "application/json",
                 Data = new { status = "success", data = labList }

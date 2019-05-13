@@ -1,0 +1,158 @@
+﻿@using HchWebPhr.Models.ViewModels
+@using HchWebPhr.Utilities.Helpers
+@using Newtonsoft.Json
+
+@model IList<PatientChildInfo>
+
+@{
+    Layout = "~/Views/Shared/_SideNavLayout.cshtml";
+    ViewBag.Title = "寶寶檢驗報告";
+    ViewBag.actionName = "ChildLabList";
+
+}
+
+@section Styles {
+    @Styles.Render("~/Content/css/bootstrap-table")
+}
+
+<ol class="breadcrumb">
+    <li class="active">@ViewBag.Title</li>
+</ol>
+<div class="row">
+    <div class="col-xxxs-12">
+        @*@Html.Raw(HttpUtility.HtmlDecode(ViewBag.Remark))*@
+        <h5>備註：</h5>
+        @*<p>1.提供105年8月1日起健保產檢檢驗報告。</p>
+            <p>2.提供105年8月1日起子宮頸抹片檢驗、HPV人類乳突病毒檢驗。</p>
+            <p>3.提供105年10月1日起X染色體脆折症檢驗、脊髓性產前染色體檢驗、非侵入性產前染色體檢驗。</p>
+            <p>4.提供105年11月1日起新柏氏抹片檢驗。</p>*@
+    </div>
+</div>
+<div class="row">
+    <div class="col-xxxs-12">
+        <table id="table-childrenlist"></table>
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/Content/js/bootstrap-table")
+
+    <script type="text/javascript">
+        function expandDetailTable($detail, childData) {
+            $detail.css('padding', '0');
+            var $table = $detail.html('<table id="table-lab-' + childData.ChartNo + '"></table>').find("table");
+            buildLabTable($table, childData);
+        }
+
+
+        function buildChildrenTable($element, childrenData) {
+            $element.bootstrapTable({
+                idField: 'ChartNo',
+                detailView: true,
+                pageSize: 5,
+                showHeader: false,
+                columns: [{
+                    field: 'ChartNo',
+                    title: '病歷號碼',
+                    align: 'left',
+                    visible: false
+                }, {
+                    field: 'PtName',
+                    title: '寶寶姓名',
+                    align: 'left',
+                    width: '100%',
+                    formatter: function (value, row, index) {
+                        var PtName = row.PtName;
+                        var Sex = row.Sex == 'M' ? '男' : '女';
+                        @if (ConfigHelper.GetBoolean("USE_TAIWAN_YEAR"))
+                        {
+                            <text>var BirthDate = row.TwBirthDate;</text>
+                        } else {
+                            <text>var BirthDate = row.JsonBirthDate;</text>
+                        }
+
+                        return PtName + ' (' + Sex + ') - ' + BirthDate;
+                    }
+                }],
+                data: childrenData,
+                detailFormatter: function (index, row, $element) {
+                    if (typeof row !== 'undefined' && row.ChartNo.length > 0) {
+                        expandDetailTable($element, row);
+                    }
+                },
+                //mobileResponsive: true,
+                minWidth: 480
+            });
+            $element.bootstrapTable('collapseAllRows', false);
+        }
+
+        function buildLabTable($element, childData) {
+            var days = parseInt(@(ConfigHelper.GetInteger("CHILD_LAB_DAYS")));
+            var bDate = new Date(childData.JsonBirthDate);
+            var eDate = new Date();
+            eDate.setDate(bDate.getDate() + days);
+
+            $element.bootstrapTable({
+                detailView: false,
+                pageSize: 10,
+                columns: [{
+                    @if (ConfigHelper.GetBoolean("USE_TAIWAN_YEAR"))
+                    {
+                        <text>field: "TwLabDate",</text>
+                    }
+                    else
+                    {
+                        <text>field: "JsonLabDate",</text>
+                    }
+                    title: "檢驗日期",
+                    align: 'left',
+                    width: '20%'
+                }, {
+                    field: "LabNo",
+                    title: "檢驗單號",
+                    align: "left",
+                    width: '20%'
+                }, {
+                    field: "LabName",
+                    title: "檢驗項目",
+                    align: "left",
+                    width: '40%',
+                    formatter: function (value, row, index) {
+                        var labnames = value.split(';');
+                        var nametext = '';
+                        $.each(labnames, function (index, value) {
+                            nametext += value;
+                            nametext += '<br />';
+                        });
+                        return nametext;
+                    }
+                }, {
+                    field: "View",
+                    title: "查看結果",
+                    align: "left",
+                    width: '20%',
+                    formatter: function (value, row, index) {
+                        htmlButton = '<a class="btn btn-info btn-block" href="@Url.Action("LabResult", "Lab")' + '?LabNo=' + row.LabNo + '&LabType=' + row.LabType + '"><i class="fa fa-eye"></i>&nbsp;查看結果</a>';
+                        return '<div class="col-xxxs-12">' + htmlButton + '</div>';
+                    }
+                }],
+                mobileResponsive: true,
+                minWidth: 480,
+                url: '@(Url.Action("GetChildLabList", "Lab"))' + '?ChartNo=' + childData.ChartNo + '&StartDate=' + childData.JsonBirthDate + '&EndDate=' + eDate.format('yyyy/MM/dd'),
+                responseHandler: function (res) {
+                    if (res.status == 'success') {
+                        return res.data;
+                    } else {
+                        return [];
+                    }
+                }
+            });
+        }
+
+        $(function () {
+            var childrenData = @Html.Raw(JsonConvert.SerializeObject(Model));
+            var $childrenTable = $('#table-childrenlist');
+            buildChildrenTable($childrenTable, childrenData);
+        });
+    </script>
+}

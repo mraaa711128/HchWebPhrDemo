@@ -1631,6 +1631,7 @@
     <Content Include="Views\Med\MedList.cshtml" />
     <Content Include="Views\Pregnancy\PregnancyList.cshtml" />
     <Content Include="Views\Vaccine\VaccineList.cshtml" />
+    <Content Include="Views\Lab\ChildLabList.cshtml" />
     <None Include="Web.Staging.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

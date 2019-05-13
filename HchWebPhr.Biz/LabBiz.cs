@@ -13,11 +13,18 @@ namespace HchWebPhr.Biz
 {
     public class LabBiz : BaseBiz
     {
-        public bool GetLabList(string ChartNo, DateTime StartDate, DateTime EndDate, out IList<LabListInfo> LabList)
+        public bool GetLabList(string ChartNo, DateTime StartDate, DateTime EndDate, bool IsChild, out IList<LabListInfo> LabList)
         {
             LabList = new List<LabListInfo>();
             var svc = new HchService();
-            var labList = svc.GetLabListByChartNoAndDateRange(ChartNo, StartDate, EndDate);
+            IList<LabList> labList;
+            if (IsChild)
+            {
+                labList = svc.GetLabListByChartNoAndDateRange(ChartNo, StartDate, EndDate);
+            } else
+            {
+                labList = svc.GetChildLabListByChartNoAndDateRange(ChartNo, StartDate, EndDate);
+            }
             if (labList.IsNullOrEmpty())
             {
                 this.ErrorCode = "404";
@@ -116,5 +123,27 @@ namespace HchWebPhr.Biz
             };
             return true;
         }
+
+        public bool GetChildrenList(string MomChartNo, out IList<PatientChildInfo> ChildrenList)
+        {
+            ChildrenList = new List<PatientChildInfo>();
+            var svc = new HchService();
+            var list = svc.GetChildrenListByMomChartNo(MomChartNo);
+            if (list.IsNullOrEmpty())
+            {
+                this.ErrorCode = "404";
+                this.ErrorMessage = "找不到任何子女紀錄!";
+                return false;
+            }
+            ChildrenList = list.Select(c => new PatientChildInfo
+            {
+                ChartNo = c.ChartNo,
+                PtName = c.PtName,
+                Sex = c.Sex,
+                BirthDate = c.BirthDate.toDateTime()
+            }).ToList();
+            return true;
+        }
+
     }
 }

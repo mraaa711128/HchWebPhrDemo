@@ -115,6 +115,23 @@ namespace HchWebPhr.Service
             }
         }
 
+        public IList<LabList> GetChildLabListByChartNoAndDateRange(string ChartNo, DateTime StartDate, DateTime EndDate)
+        {
+            RsLabList result = this.PostRequest<RsLabList>("PHR_0003_005", new[] {
+                new KeyValuePair<string, string>("ChartNo", ChartNo),
+                new KeyValuePair<string, string>("StartDate", StartDate.toTaiwanDate(clearDelimiter: true)),
+                new KeyValuePair<string, string>("EndDate", EndDate.toTaiwanDate(clearDelimiter: true))
+            });
+            if (result == null)
+            {
+                return null;
+            }
+            else
+            {
+                return result.LabList;
+            }
+        }
+
         public IList<LabItem> GetNormalLabResultByLabNo(string LabNo)
         {
             RsLabItemX result = this.PostRequest<RsLabItemX>("PHR_0003_002", new[] {
