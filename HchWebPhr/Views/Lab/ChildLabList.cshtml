@@ -91,6 +91,7 @@
             var bDate = new Date(childData.JsonBirthDate);
             var eDate = new Date();
             eDate.setDate(bDate.getDate() + days);
+            var endDate = eDate.getFullYear() + '/' + (eDate.getMonth() + 1) + '/' + eDate.getDate();
 
             $element.bootstrapTable({
                 detailView: false,
@@ -138,7 +139,7 @@
                 }],
                 mobileResponsive: true,
                 minWidth: 480,
-                url: '@(Url.Action("GetChildLabList", "Lab"))' + '?ChartNo=' + childData.ChartNo + '&StartDate=' + childData.JsonBirthDate + '&EndDate=' + eDate.format('yyyy/MM/dd'),
+                url: '@(Url.Action("GetChildLabList", "Lab"))' + '?ChartNo=' + childData.ChartNo + '&StartDate=' + childData.JsonBirthDate + '&EndDate=' + endDate,
                 responseHandler: function (res) {
                     if (res.status == 'success') {
                         return res.data;

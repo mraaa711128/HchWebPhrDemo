@@ -20,10 +20,11 @@ namespace HchWebPhr.Biz
             IList<LabList> labList;
             if (IsChild)
             {
-                labList = svc.GetLabListByChartNoAndDateRange(ChartNo, StartDate, EndDate);
-            } else
-            {
                 labList = svc.GetChildLabListByChartNoAndDateRange(ChartNo, StartDate, EndDate);
+            }
+            else
+            {
+                labList = svc.GetLabListByChartNoAndDateRange(ChartNo, StartDate, EndDate);
             }
             if (labList.IsNullOrEmpty())
             {
