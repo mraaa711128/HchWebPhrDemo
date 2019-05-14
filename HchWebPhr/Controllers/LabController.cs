@@ -102,9 +102,23 @@ namespace HchWebPhr.Controllers
         }
 
         [HttpGet]
-        public ActionResult LabResult(string LabNo, string LabType)
+        public ActionResult LabResult(string LabNo, string LabType, string Source = "Lab")
         {
             var labBiz = new LabBiz();
+            ViewBag.actionName = Source + "List";
+            ViewBag.controlName = Source;
+            switch (Source)
+            {
+                case "Baby":
+                    ViewBag.actionTitle = "寶貝紀錄";
+                    break;
+                case "Lab":
+                    ViewBag.actionTitle = "檢驗報告";
+                    break;
+                default:
+                    break;
+            }
+
             switch (LabType)
             {
                 case Utilities.Types.LabType.Normal:

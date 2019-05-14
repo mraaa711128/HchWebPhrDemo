@@ -309,6 +309,7 @@ namespace HchWebPhr.Service
                 case "PHR_0003_002":
                 case "PHR_0003_003":
                 case "PHR_0003_004":
+                case "PHR_0003_005":
                     return "/PhrLab";
                 case "PHR_0004_001":
                 case "PHR_0004_002":

@@ -5,11 +5,11 @@
 @{
     Layout = "~/Views/Shared/_SideNavLayout.cshtml";
     ViewBag.Title = "檢驗結果";
-    ViewBag.actionName = "LabList";
+    //ViewBag.actionName = "LabList";
 }
 
 <ol class="breadcrumb">
-    <li>@Html.ActionLink("檢驗報告", "LabList", "Lab")</li>
+    <li>@Html.ActionLink((string)ViewBag.actionTitle, (string)ViewBag.actionName, (string)ViewBag.controlName)</li>
     <li class="active">@ViewBag.Title</li>
 </ol>
 

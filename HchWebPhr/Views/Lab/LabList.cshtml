@@ -286,7 +286,7 @@
                     align: "left",
                     width: '20%',
                     formatter: function (value, row, index) {
-                        htmlButton = '<a class="btn btn-info btn-block" href="@Url.Action("LabResult", "Lab")' + '?LabNo=' + row.LabNo + '&LabType=' + row.LabType + '"><i class="fa fa-eye"></i>&nbsp;查看結果</a>';
+                        htmlButton = '<a class="btn btn-info btn-block" href="@Url.Action("LabResult", "Lab")' + '?LabNo=' + row.LabNo + '&LabType=' + row.LabType + '&Source=Lab' + '"><i class="fa fa-eye"></i>&nbsp;查看結果</a>';
                         return '<div class="col-xxxs-12">' + htmlButton + '</div>';
                     }
                 }],
