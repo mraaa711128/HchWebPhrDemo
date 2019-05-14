@@ -11,7 +11,9 @@ namespace HchWebPhr.Service
     {
         const string ApiToken = "B79CFD08-A462-47BA-95B3-5259A6632539";
 #if DEBUG || STAGE
-    #if IN_HCH
+    #if DEBUG_API
+            const string ApiBaseUrl = "http://localhost:56694/";
+    #elif IN_HCH
             const string ApiBaseUrl = "http://192.168.10.169/WebApiTest";
     #else
             const string ApiBaseUrl = "http://web.hch.org.tw/WebApiTest";

@@ -53,6 +53,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AuthBiz.cs" />
+    <Compile Include="BabyBiz.cs" />
     <Compile Include="Base\BaseBiz.cs" />
     <Compile Include="AccountBiz.cs" />
     <Compile Include="ConditionTermBiz.cs" />

@@ -32,7 +32,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\</OutputPath>
-    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;DEBUG_API</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -158,6 +158,7 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AuthController.cs" />
+    <Compile Include="Controllers\BabyController.cs" />
     <Compile Include="Controllers\Base\JsonNetController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ImageController.cs" />
@@ -1010,6 +1011,7 @@
     <Content Include="Content\img\ajax-loading.gif" />
     <Content Include="Content\img\avatars\profile.jpg" />
     <Content Include="Content\img\features\Albums.jpg" />
+    <Content Include="Content\img\features\Baby.jpg" />
     <Content Include="Content\img\features\Diagnosis.jpg" />
     <Content Include="Content\img\features\Labtories.jpg" />
     <Content Include="Content\img\features\Medicine.jpg" />
@@ -1632,6 +1634,7 @@
     <Content Include="Views\Pregnancy\PregnancyList.cshtml" />
     <Content Include="Views\Vaccine\VaccineList.cshtml" />
     <Content Include="Views\Lab\ChildLabList.cshtml" />
+    <Content Include="Views\Baby\BabyList.cshtml" />
     <None Include="Web.Staging.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
