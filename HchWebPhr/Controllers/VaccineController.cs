@@ -39,12 +39,12 @@ namespace HchWebPhr.Controllers
 
         [HttpGet]
         [AjaxOnly]
-        public JsonNetResult GetChildVaccineList(string ChartNo)
+        public JsonNetResult GetChildVaccineList(string ChartNo, DateTime StartDate, DateTime EndDate)
         {
             IList<VaccineDetailInfo> vaccineList = null;
             var vacBiz = new VaccineBiz();
 
-            if (vacBiz.GetChildVaccineList(ChartNo, out vaccineList) == false)
+            if (vacBiz.GetChildVaccineList(ChartNo, StartDate, EndDate, out vaccineList) == false)
             {
                 return new JsonNetResult
                 {

@@ -2,12 +2,16 @@
 @using HchWebPhr.Utilities.Helpers
 @using Newtonsoft.Json
 
-@model IList<PatientChildInfo>
+@model PatientChildrenListInfo
 
 @{
     Layout = "~/Views/Shared/_SideNavLayout.cshtml";
     ViewBag.Title = "寶貝紀錄";
     ViewBag.actionName = "BabyList";
+
+    var vChildrenList = Model.VaccineChildrenList;
+    var lChildrenList = Model.LabChildrenList;
+    
 }
 
 @section Styles {
@@ -24,7 +28,7 @@
         <div class="col-xxxs-12">
             @*@Html.Raw(HttpUtility.HtmlDecode(ViewBag.Remark))*@
             <h5>備註：</h5>
-            <p>1.僅提供宏其施打的疫苗資料。</p>
+            <p>1.僅提供寶寶七歲以前於宏其施打的疫苗資料。</p>
             @*<p>2.提供105年8月1日起子宮頸抹片檢驗、HPV人類乳突病毒檢驗。</p>
                 <p>3.提供105年10月1日起X染色體脆折症檢驗、脊髓性產前染色體檢驗、非侵入性產前染色體檢驗。</p>
                 <p>4.提供105年11月1日起新柏氏抹片檢驗。</p>*@
@@ -47,6 +51,7 @@
                 <p>2.提供105年8月1日起子宮頸抹片檢驗、HPV人類乳突病毒檢驗。</p>
                 <p>3.提供105年10月1日起X染色體脆折症檢驗、脊髓性產前染色體檢驗、非侵入性產前染色體檢驗。</p>
                 <p>4.提供105年11月1日起新柏氏抹片檢驗。</p>*@
+            <p>1.僅提供108年6月1日以後於宏其出生之寶寶六個月內的血型、黃疸檢驗報告。</p>
         </div>
     </div>
     <div class="row">
@@ -115,6 +120,12 @@
         }
 
         function buildVaccineTable($element, childData) {
+            var sDate = new Date(childData.JsonBirthDate);
+            var eDate = new Date(childData.JsonBirthDate);
+            var vYears = parseInt('@ConfigHelper.GetInteger("CHILD_VACCINE_YEARS")');
+            eDate.setDate(eDate.getDate() + vYears * 365);
+            var startDate = sDate.getFullYear() + '/' + (sDate.getMonth() + 1) + '/' + sDate.getDate();
+            var endDate = eDate.getFullYear() + '/' + (eDate.getMonth() + 1) + '/' + eDate.getDate();
             $element.bootstrapTable({
                 detailView: false,
                 pagination: true,
@@ -181,7 +192,7 @@
                 }],
                 mobileResponsive: true,
                 minWidth: 480,
-                url: '@(Url.Action("GetChildVaccineList", "Vaccine"))' + '?ChartNo=' + childData.ChartNo,
+                url: '@(Url.Action("GetChildVaccineList", "Vaccine"))' + '?ChartNo=' + childData.ChartNo + '&StartDate=' + startDate + '&EndDate=' + endDate,
                 responseHandler: function (res) {
                     if (res.status == 'success') {
                         return res.data;
@@ -193,10 +204,11 @@
         }
 
         function buildLabTable($element, childData) {
-            var days = parseInt(@(ConfigHelper.GetInteger("CHILD_LAB_DAYS")));
-            var bDate = new Date(childData.JsonBirthDate);
-            var eDate = new Date();
-            eDate.setDate(bDate.getDate() + days);
+            var sDate = new Date(childData.JsonBirthDate);
+            var eDate = new Date(childData.JsonBirthDate);
+            var days = parseInt('@(ConfigHelper.GetInteger("CHILD_LAB_DAYS"))');
+            eDate.setDate(eDate.getDate() + days);
+            var startDate = sDate.getFullYear() + '/' + (sDate.getMonth() + 1) + '/' + sDate.getDate();
             var endDate = eDate.getFullYear() + '/' + (eDate.getMonth() + 1) + '/' + eDate.getDate();
 
             $element.bootstrapTable({
@@ -246,7 +258,7 @@
                 }],
                 mobileResponsive: true,
                 minWidth: 480,
-                url: '@(Url.Action("GetChildLabList", "Lab"))' + '?ChartNo=' + childData.ChartNo + '&StartDate=' + childData.JsonBirthDate + '&EndDate=' + endDate,
+                url: '@(Url.Action("GetChildLabList", "Lab"))' + '?ChartNo=' + childData.ChartNo + '&StartDate=' + startDate + '&EndDate=' + endDate,
                 responseHandler: function (res) {
                     if (res.status == 'success') {
                         return res.data;
@@ -279,11 +291,12 @@
         $(function () {
             registerCollapseButton();
 
-            var childrenData = @Html.Raw(JsonConvert.SerializeObject(Model));
+            var vChildrenData = @Html.Raw(JsonConvert.SerializeObject(vChildrenList));
             var $vaccineChildTable = $('#table-vaccine-childrenlist');
-            buildChildrenTable('vaccine', $vaccineChildTable, childrenData);
+            buildChildrenTable('vaccine', $vaccineChildTable, vChildrenData);
+            var lChildrenData = @Html.Raw(JsonConvert.SerializeObject(lChildrenList));
             var $labChildTable = $('#table-lab-childrenlist');
-            buildChildrenTable('lab', $labChildTable, childrenData);
+            buildChildrenTable('lab', $labChildTable, lChildrenData);
         });
     </script>
 }

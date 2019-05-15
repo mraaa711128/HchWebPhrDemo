@@ -34,11 +34,11 @@ namespace HchWebPhr.Biz
             return true;
         }
 
-        public bool GetChildVaccineList(string ChildChartNo, out IList<VaccineDetailInfo> VaccineList)
+        public bool GetChildVaccineList(string ChildChartNo, DateTime StartDate, DateTime EndDate, out IList<VaccineDetailInfo> VaccineList)
         {
             VaccineList = new List<VaccineDetailInfo>();
             var svc = new HchService();
-            var list = svc.GetChildrenVaccineDetailListByChildChartNo(ChildChartNo);
+            var list = svc.GetChildrenVaccineDetailListByChildChartNoAndDateRange(ChildChartNo, StartDate, EndDate);
             if (list.IsNullOrEmpty ())
             {
                 this.ErrorCode = "404";

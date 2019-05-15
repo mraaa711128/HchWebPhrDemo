@@ -4,6 +4,7 @@ using HchWebPhr.Utilities.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 
@@ -32,7 +33,21 @@ namespace HchWebPhr.Controllers
                 childrenList = new List<PatientChildInfo>();
             }
 
-            return View(childrenList);
+            Task<IList<PatientChildInfo>> vacTask = Task.Run<IList<PatientChildInfo>>(() => {
+                return childrenList.ToList();
+            });
+            Task<IList<PatientChildInfo>> labTask = Task.Run<IList<PatientChildInfo>>(() => {
+                return childrenList.Where(c => c.BirthDate >= new DateTime(2019, 6, 1))
+                                   .ToList();
+            });
+            Task.WaitAll(vacTask, labTask);
+            var result = new PatientChildrenListInfo
+            {
+                VaccineChildrenList = vacTask.Result,
+                LabChildrenList = labTask.Result
+            };
+
+            return View(result);
         }
     }
 }

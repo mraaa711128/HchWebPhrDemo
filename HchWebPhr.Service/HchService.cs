@@ -247,10 +247,12 @@ namespace HchWebPhr.Service
             }
         }
 
-        public IList<Vaccine> GetChildrenVaccineDetailListByChildChartNo(string ChartNo)
+        public IList<Vaccine> GetChildrenVaccineDetailListByChildChartNoAndDateRange(string ChartNo, DateTime StartDate, DateTime EndDate)
         {
             RsVaccine result = this.PostRequest<RsVaccine>("PHR_0006_002", new[] {
-                new KeyValuePair<string, string>("ChartNo", ChartNo)
+                new KeyValuePair<string, string>("ChartNo", ChartNo),
+                new KeyValuePair<string, string>("StartDate", StartDate.toTaiwanDate(clearDelimiter: true)),
+                new KeyValuePair<string, string>("EndDate", EndDate.toTaiwanDate(clearDelimiter: true))
             });
             if (result == null)
             {

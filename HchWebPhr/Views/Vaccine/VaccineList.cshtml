@@ -90,6 +90,10 @@
         }
 
         function buildVaccineTable($element, childData) {
+            var sDate = new Date(childData.JsonBirthDate);
+            var eDate = new Date(childData.JsonBirthDate);
+            var vYears = parseInt('@ConfigHelper.GetInteger("CHILD_VACCINE_YEARS")');
+            eDate.setDate(eDate.getDate() + vYears * 365);
             $element.bootstrapTable({
                 detailView: false,
                 pageSize: 10,
