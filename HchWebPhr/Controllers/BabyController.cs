@@ -37,9 +37,9 @@ namespace HchWebPhr.Controllers
                 return childrenList.ToList();
             });
             Task<IList<PatientChildInfo>> labTask = Task.Run<IList<PatientChildInfo>>(() => {
-                //return childrenList.Where(c => c.BirthDate >= new DateTime(2019, 6, 1))
-                //                   .ToList();
-                return childrenList.ToList();
+                return childrenList.Where(c => c.BirthDate >= new DateTime(2019, 6, 1))
+                                   .ToList();
+                //return childrenList.ToList();
             });
             Task.WaitAll(vacTask, labTask);
             var result = new PatientChildrenListInfo
