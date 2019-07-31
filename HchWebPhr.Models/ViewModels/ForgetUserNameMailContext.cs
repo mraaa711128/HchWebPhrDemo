@@ -19,5 +19,6 @@ namespace HchWebPhr.Models.ViewModels
             }
         }
         public string IdNo { get; set; }
+        public string Email { get; set; }
     }
 }
