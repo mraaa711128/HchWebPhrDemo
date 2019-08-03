@@ -622,7 +622,8 @@ namespace HchWebPhr.Controllers
                 UserName = FgtUser.UserName,
                 PatientName = FgtUser.UserInfo.Name,
                 BirthDate = FgtUser.UserInfo.BirthDate,
-                IdNo = FgtUser.UserInfo.IdNo
+                IdNo = FgtUser.UserInfo.IdNo,
+                Email = FgtUser.Email
             };
             try
             {
