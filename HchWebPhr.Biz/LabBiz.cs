@@ -4,6 +4,7 @@ using HchWebPhr.Service;
 using HchWebPhr.Utilities.Extensions;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -121,6 +122,31 @@ namespace HchWebPhr.Biz
             LabResultN = new LabItemNInfo
             {
                 PdfFilePath = PdfFilePath.Replace("\\", "/")
+            };
+            return true;
+        }
+
+        public bool GetLabResultS(string LabNo, out LabItemSInfo LabResultS)
+        {
+            LabResultS = null;
+            var VideoFilePath = "";
+            var svc = new HchService();
+            if (svc.GetVideoLabResultByLabNo(LabNo, out VideoFilePath) == false)
+            {
+                this.ErrorCode = "404";
+                this.ErrorMessage = "找不到此檢驗單(" + LabNo + ")的檢驗結果";
+                return false;
+            }
+            var videoFile = new FileInfo(VideoFilePath);
+            if (!videoFile.Exists)
+            {
+                this.ErrorCode = "404";
+                this.ErrorMessage = "找不到此檢驗單(" + LabNo + ")的影像檔案";
+                return false;
+            }
+            LabResultS = new LabItemSInfo
+            {
+                VideoFilePath = videoFile.Name
             };
             return true;
         }

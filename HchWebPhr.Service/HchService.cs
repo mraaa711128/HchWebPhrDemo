@@ -184,6 +184,22 @@ namespace HchWebPhr.Service
             }
         }
 
+        public bool GetVideoLabResultByLabNo(string LabNo, out string VideoResultFilePath)
+        {
+            VideoResultFilePath = "";
+            RsLabItemS result = this.PostRequest<RsLabItemS>("PHR_0003_006", new[] {
+                new KeyValuePair<string, string>("LabNo", LabNo)
+            });
+            if (result == null)
+            {
+                return false;
+            } else
+            {
+                VideoResultFilePath = result.FileAddress;
+                return true;
+            }
+        }
+
         public IList<ClinicData> GetMedListByChartNoAndDateRange(string ChartNo, DateTime StartDate, DateTime EndDate)
         {
             RsMedList result = this.PostRequest<RsMedList>("PHR_0004_001", new[] {
@@ -312,6 +328,7 @@ namespace HchWebPhr.Service
                 case "PHR_0003_003":
                 case "PHR_0003_004":
                 case "PHR_0003_005":
+                case "PHR_0003_006":
                     return "/PhrLab";
                 case "PHR_0004_001":
                 case "PHR_0004_002":

@@ -11,5 +11,6 @@ namespace HchWebPhr.Utilities.Types
         public const string Normal = "X";
         public const string Diagnosis = "G";
         public const string Pdf = "N";
+        public const string Video = "S";
     }
 }

@@ -32,7 +32,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;IN_HCH;</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;IN_HCH;DEBUG_API;</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -1635,6 +1635,7 @@
     <Content Include="Views\Vaccine\VaccineList.cshtml" />
     <Content Include="Views\Lab\ChildLabList.cshtml" />
     <Content Include="Views\Baby\BabyList.cshtml" />
+    <Content Include="Views\Lab\LabResultS.cshtml" />
     <None Include="Web.Staging.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

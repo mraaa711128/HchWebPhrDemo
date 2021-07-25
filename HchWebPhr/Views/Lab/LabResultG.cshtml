@@ -22,9 +22,17 @@
             <div class="panel-body">
                 <p>
                     @{
-                        var diagnosis = Model.Diagnosis.Split('\n');
+                        var diagnosis = String.IsNullOrEmpty(Model.Diagnosis) ?
+                            new string[] { } : Model.Diagnosis.Split('\n');
+                        if (diagnosis == null || diagnosis.Length <= 0)
+                        {
+                            @("檢驗尚在進行中,如有疑問請聯繫醫院,謝謝。")
+                        }
+                        else
+                        {
+                            @(string.Join("<br />", diagnosis))
+                        }
                     }
-                    @(string.Join("<br />", diagnosis))
                 </p>
             </div>
         </div>
@@ -37,9 +45,17 @@
             <div class="panel-body">
                 <p>
                     @{
-                        var comment = Model.Comment.Split('\n');
+                        var comment = String.IsNullOrEmpty(Model.Comment) ?
+                            new string[] { } : Model.Comment.Split('\n');
+                        if (comment == null || comment.Length <= 0)
+                        {
+                            @("檢驗尚在進行中,如有疑問請聯繫醫院,謝謝。")
+                        }
+                        else
+                        {
+                            @(string.Join("<br />", comment))
+                        }
                     }
-                    @(string.Join("<br />", comment))
                 </p>
             </div>
         </div>

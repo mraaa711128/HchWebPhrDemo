@@ -76,6 +76,7 @@
     <Compile Include="ViewModels\ForgetUserNameMailContext.cs" />
     <Compile Include="ViewModels\LabItemGInfo.cs" />
     <Compile Include="ViewModels\LabItemNInfo.cs" />
+    <Compile Include="ViewModels\LabItemSInfo.cs" />
     <Compile Include="ViewModels\LabItemXInfo.cs" />
     <Compile Include="ViewModels\LabListInfo.cs" />
     <Compile Include="ViewModels\MedItemInfo.cs" />

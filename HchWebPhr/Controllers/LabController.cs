@@ -142,6 +142,13 @@ namespace HchWebPhr.Controllers
                         //NLog
                     }
                     return View("LabResultN", resultModelN);
+                case Utilities.Types.LabType.Video:
+                    LabItemSInfo resultModelS = null;
+                    if (labBiz.GetLabResultS(LabNo, out resultModelS) == false)
+                    {
+                        //NLog
+                    }
+                    return View("LabResultS", resultModelS);
                 default:
                     return new EmptyResult();
             }
