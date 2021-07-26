@@ -23,7 +23,7 @@
 
 <div class="row">
     <div class="col-xxxs-12">
-        <div class="embed-responsive embed-responsive-16by9" style="padding-bottom: 150%;">
+        <div class="embed-responsive embed-responsive-16by9">
             @*@if (string.IsNullOrEmpty(finalVideoFilePath))
             {
                 <div class="alert alert-danger">
@@ -50,7 +50,7 @@
             $.get('@Url.Content(finalVideoFilePath)').
                 done(function (data) {
                     var htmlObj = '<video controls autoplay>' +
-                                    '<source src="@finalVideoFilePath" type="video/mp4">' +
+                                    '<source src="@Url.Content(finalVideoFilePath)" type="video/mp4">' +
                                     '<p>您的瀏覽器不支援使用Video Player，請按<a href="@Url.Content(finalVideoFilePath)">下載檔案</a></p>' +
                                   '</video>';
                     $(".embed-responsive").html(htmlObj);
