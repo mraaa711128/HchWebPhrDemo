@@ -8,13 +8,13 @@
     //ViewBag.actionName = "LabList";
     string videoContentPath = "~/Content/video";
     string finalVideoFilePath = "";
-    if (Model != null)
-    {
-        if (!string.IsNullOrEmpty(Model.VideoFilePath))
+        if (string.IsNullOrEmpty(Model.VideoFilePath))
+        {
+            finalVideoFilePath = videoContentPath + "/nofile.mp4";
+        } else
         {
             finalVideoFilePath = videoContentPath + "/semenvideo/" + Model.VideoFilePath;
         }
-    }
 }
 <ol class="breadcrumb">
     <li>@Html.ActionLink((string)ViewBag.actionTitle, (string)ViewBag.actionName, (string)ViewBag.controlName)</li>

@@ -129,24 +129,27 @@ namespace HchWebPhr.Biz
         public bool GetLabResultS(string LabNo, out LabItemSInfo LabResultS)
         {
             LabResultS = null;
-            var VideoFilePath = "";
+            var videoFilePath = "";
             var svc = new HchService();
-            if (svc.GetVideoLabResultByLabNo(LabNo, out VideoFilePath) == false)
+            if (svc.GetVideoLabResultByLabNo(LabNo, out videoFilePath) == false)
             {
                 this.ErrorCode = "404";
                 this.ErrorMessage = "找不到此檢驗單(" + LabNo + ")的檢驗結果";
                 return false;
             }
-            var videoFile = new FileInfo(VideoFilePath);
-            if (!videoFile.Exists)
+            if (!string.IsNullOrEmpty(videoFilePath))
             {
-                this.ErrorCode = "404";
-                this.ErrorMessage = "找不到此檢驗單(" + LabNo + ")的影像檔案";
-                return false;
+                var videoFile = new FileInfo(videoFilePath);
+                if (videoFile != null && videoFile.Exists) {
+                    videoFilePath = videoFile.Name; 
+                } else
+                {
+                    videoFilePath = "";
+                }
             }
             LabResultS = new LabItemSInfo
             {
-                VideoFilePath = videoFile.Name
+                VideoFilePath = videoFilePath
             };
             return true;
         }
