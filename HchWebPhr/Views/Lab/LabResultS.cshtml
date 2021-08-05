@@ -8,13 +8,20 @@
     //ViewBag.actionName = "LabList";
     string videoContentPath = "~/Content/video";
     string finalVideoFilePath = "";
-        if (string.IsNullOrEmpty(Model.VideoFilePath))
+    if (string.IsNullOrEmpty(Model.VideoFilePath))
+    {
+        finalVideoFilePath = videoContentPath + "/nofile.mp4";
+    } else
+    {
+        if (Model.IsExpired)
         {
-            finalVideoFilePath = videoContentPath + "/nofile.mp4";
+            finalVideoFilePath = videoContentPath + "/expired.mp4";
         } else
         {
             finalVideoFilePath = videoContentPath + "/semenvideo/" + Model.VideoFilePath;
+
         }
+    }
 }
 <ol class="breadcrumb">
     <li>@Html.ActionLink((string)ViewBag.actionTitle, (string)ViewBag.actionName, (string)ViewBag.controlName)</li>
@@ -24,23 +31,11 @@
 <div class="row">
     <div class="col-xxxs-12">
         <div class="embed-responsive embed-responsive-16by9">
-            @*@if (string.IsNullOrEmpty(finalVideoFilePath))
-            {
-                <div class="alert alert-danger">
-                    <p>找不到對應的影像檔案</p>
-                </div>
-            }
-            else
-            {
-                <video controls autoplay>
-                    <source src="@finalVideoFilePath" type="video/mp4">
-                    <p>您的瀏覽器不支援使用Pdf Reader，請按<a href="@Url.Content(finalVideoFilePath)">下載檔案</a></p>
-                </video>
-            }*@
-            @*<object data="@Url.Content(finalPdfFilePath)" type="application/pdf">
-                    <p>您的瀏覽器不支援使用Pdf Reader，請按<a href="@Url.Content(finalPdfFilePath)">下載檔案</a></p>
-                </object>*@
         </div>
+        @if (!string.IsNullOrEmpty(Model.VideoFilePath) && !Model.IsExpired)
+        {
+            <a href="@Url.Content(finalVideoFilePath)" download="@(Model.VideoFilePath)">下載影像</a>
+        }
     </div>
 </div>
 
@@ -57,7 +52,7 @@
                 }).
                 fail(function () {
                     var htmlObj = '<div class="alert alert-danger">' +
-                                    '<p>找不到對應的影像檔案</p>' +
+                                    '<p>@(Model.IsExpired ? "您的報告已超過一個月的瀏覽期限 !!" : "您的報告尚未完成, 請稍後再試 !!")</p>' +
                                   '</div>';
                     $(".embed-responsive").html(htmlObj);
                 });

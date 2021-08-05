@@ -130,8 +130,9 @@ namespace HchWebPhr.Biz
         {
             LabResultS = null;
             var videoFilePath = "";
+            DateTime reportDateTime = DateTime.MinValue;
             var svc = new HchService();
-            if (svc.GetVideoLabResultByLabNo(LabNo, out videoFilePath) == false)
+            if (svc.GetVideoLabResultByLabNo(LabNo, out videoFilePath, out reportDateTime) == false)
             {
                 this.ErrorCode = "404";
                 this.ErrorMessage = "找不到此檢驗單(" + LabNo + ")的檢驗結果";
@@ -149,7 +150,8 @@ namespace HchWebPhr.Biz
             }
             LabResultS = new LabItemSInfo
             {
-                VideoFilePath = videoFilePath
+                VideoFilePath = videoFilePath,
+                IsExpired = DateTime.Today - reportDateTime <= new TimeSpan(30, 0, 0, 0)
             };
             return true;
         }

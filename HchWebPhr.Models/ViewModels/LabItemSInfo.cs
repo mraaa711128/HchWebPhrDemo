@@ -9,5 +9,6 @@ namespace HchWebPhr.Models.ViewModels
     public class LabItemSInfo
     {
         public string VideoFilePath { get; set; }
+        public bool IsExpired { get; set; }
     }
 }

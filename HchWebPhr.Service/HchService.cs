@@ -184,9 +184,10 @@ namespace HchWebPhr.Service
             }
         }
 
-        public bool GetVideoLabResultByLabNo(string LabNo, out string VideoResultFilePath)
+        public bool GetVideoLabResultByLabNo(string LabNo, out string VideoResultFilePath, out DateTime ReportDateTime)
         {
             VideoResultFilePath = "";
+            ReportDateTime = DateTime.MinValue;
             RsLabItemS result = this.PostRequest<RsLabItemS>("PHR_0003_006", new[] {
                 new KeyValuePair<string, string>("LabNo", LabNo)
             });
@@ -196,6 +197,7 @@ namespace HchWebPhr.Service
             } else
             {
                 VideoResultFilePath = result.FileAddress;
+                ReportDateTime = result.ReportDateTime;
                 return true;
             }
         }
