@@ -199,7 +199,7 @@ namespace HchWebPhr.Service
             } else
             {
                 VideoResultFilePath = result.FileAddress;
-                ReportDateTime = result.ReportDateTime;
+                ReportDateTime = (result.IsExist ? result.ReportDateTime : DateTime.MaxValue);
                 return true;
             }
         }
