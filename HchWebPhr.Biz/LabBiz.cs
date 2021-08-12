@@ -151,7 +151,7 @@ namespace HchWebPhr.Biz
             LabResultS = new LabItemSInfo
             {
                 VideoFilePath = videoFilePath,
-                IsExpired = DateTime.Today - reportDateTime <= new TimeSpan(30, 0, 0, 0)
+                IsExpired = ((DateTime.Today - reportDateTime) > new TimeSpan(30, 0, 0, 0))
             };
             return true;
         }

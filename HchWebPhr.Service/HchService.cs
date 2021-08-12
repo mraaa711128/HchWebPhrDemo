@@ -15,6 +15,8 @@ namespace HchWebPhr.Service
             const string ApiBaseUrl = "http://localhost:56694/";
     #elif IN_HCH
             const string ApiBaseUrl = "http://192.168.10.169/WebApiTest";
+    #elif DEBUG_PAGE_IN_PROD
+            const string ApiBaseUrl = "http://192.168.10.169/WebApi";
     #else
             const string ApiBaseUrl = "http://web.hch.org.tw/WebApiTest";
     #endif
