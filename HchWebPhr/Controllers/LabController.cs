@@ -153,5 +153,12 @@ namespace HchWebPhr.Controllers
                     return new EmptyResult();
             }
         }
+        [HttpGet]
+        public ActionResult LabResultDownload(string FilePath) {
+            var path = Server.MapPath(FilePath);
+            if (System.IO.File.Exists(path) == false) { return new EmptyResult(); }
+            var fileInfo = new System.IO.FileInfo(path);
+            return File(path, "video/mp4", fileInfo.Name);
+        }
     }
 }

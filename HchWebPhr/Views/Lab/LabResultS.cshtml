@@ -34,7 +34,8 @@
         </div>
         @if (!string.IsNullOrEmpty(Model.VideoFilePath) && !Model.IsExpired)
         {
-            <a href="@Url.Content(finalVideoFilePath)" download="@(Model.VideoFilePath)">下載影像</a>
+            @*<a href="@Url.Content(finalVideoFilePath)" download="@(Model.VideoFilePath)">下載影像</a>*@
+            @Html.ActionLink("下載影像", "LabResultDownload", "Lab", new { FilePath = finalVideoFilePath }, new { Target = "_blank" })
         }
     </div>
 </div>
@@ -46,7 +47,9 @@
                 done(function (data) {
                     var htmlObj = '<video controls autoplay>' +
                                     '<source src="@Url.Content(finalVideoFilePath)" type="video/mp4">' +
-                                    '<p>您的瀏覽器不支援使用Video Player，請按<a href="@Url.Content(finalVideoFilePath)">下載檔案</a></p>' +
+                                    '<p>您的瀏覽器不支援使用Video Player，請按' +
+                                        '@Html.ActionLink("下載影像", "LabResultDownload", "Lab", new { FilePath = finalVideoFilePath }, new { Target = "_blank" })' +
+                                    '</p>' +
                                   '</video>';
                     $(".embed-responsive").html(htmlObj);
                 }).
