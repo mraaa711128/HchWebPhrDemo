@@ -12,6 +12,8 @@ namespace UtilitiesLib.Validators
         public static bool validTaiwanId(string ID)
         {
             Dictionary<string, int> map = new Dictionary<string, int> {
+                { "8", 8 },
+                { "9", 9 },
                 { "A", 10 },
                 { "B", 11 },
                 { "C", 12 },
@@ -41,7 +43,7 @@ namespace UtilitiesLib.Validators
             };
             int[] multiplier = new int[] {1,9,8,7,6,5,4,3,2,1 };
             Regex regexpLocal = new Regex("^[A-Z](1|2)[0-9]{8}");
-            Regex regexpForiegn = new Regex("^[A-Z](A|B|C|D)[0-9]{8}");
+            Regex regexpForiegn = new Regex("^[A-Z](A|B|C|D|8|9)[0-9]{8}");
             int[] idNums = new int[10];
             if (regexpLocal.IsMatch(ID) == true)
             {
