@@ -30,7 +30,7 @@
                         }
                         else
                         {
-                            @(string.Join("<br />", diagnosis))
+                            @Html.Raw(string.Join("<br />", diagnosis))
                         }
                     }
                 </p>
@@ -53,7 +53,7 @@
                         }
                         else
                         {
-                            @(string.Join("<br />", comment))
+                            @Html.Raw(string.Join("<br />", comment))
                         }
                     }
                 </p>
