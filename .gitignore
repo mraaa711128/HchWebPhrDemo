@@ -10,3 +10,12 @@
 *.psess
 *.DS_Store
 .vs
+/HchWebPhr/Web.Staging.config
+/HchWebPhr/Web.Release.config
+/HchWebPhr/Web.Debug.config
+/HchWebPhr/Web.Staging.config
+/HchWebPhr/Web.Release.config
+/HchWebPhr/Web.Debug.config
+/HchWebPhr/Web.config
+/HchWebPhr/Web.Base.config
+/HchWebPhr/web.config
