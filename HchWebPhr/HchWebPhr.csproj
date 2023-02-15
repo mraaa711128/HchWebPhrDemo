@@ -1637,6 +1637,9 @@
     <Content Include="Views\Lab\ChildLabList.cshtml" />
     <Content Include="Views\Baby\BabyList.cshtml" />
     <Content Include="Views\Lab\LabResultS.cshtml" />
+    <None Include="Web.Base.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
     <None Include="Web.Staging.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -1716,4 +1719,7 @@
   </Target>
   <Target Name="AfterBuild">
   </Target> -->
+  <Target Name="BeforeBuild">
+    <TransformXml Source="Web.Base.config" Transform="Web.$(Configuration).config" Destination="Web.config" />
+  </Target>
 </Project>
