@@ -258,6 +258,7 @@
                     {
                         <text>
                             var date = $(".datetime-picker").datetimepicker('getDate');
+                            date.setHours(date.getHours() + 1);
                             var strDate = date.getFullYear() + '/' + (date.getMonth() + 1) + '/' + date.getDate();
                             $("#@Html.IdFor(x => x.BirthDate)").val(strDate);
                         </text>
